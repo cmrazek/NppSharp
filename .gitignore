@@ -1,0 +1,6 @@
+*.FileListAbsolute.txt
+*.user
+
+/debug/*
+/NppSharpCS/obj/*
+/release/*
