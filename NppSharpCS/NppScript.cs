@@ -88,7 +88,7 @@ namespace NppSharp
 		/// <summary>
 		/// Launches the 'Find in Files' dialog.
 		/// </summary>
-		/// <param name="dirs">The directories to be searched.</param>
+		/// <param name="dir">The directory to be searched.</param>
 		/// <param name="filters">The file filters to be searched.</param>
 		public void LaunchFindInFiles(string dir, string filters)
 		{
@@ -98,7 +98,7 @@ namespace NppSharp
 		/// <summary>
 		/// Triggers a menu item command.
 		/// </summary>
-		/// <param name="commandId">The ID of the command to be triggered.</param>
+		/// <param name="command">The ID of the command to be triggered.</param>
 		public void MenuCommand(MenuCommand command)
 		{
 			Plugin.NppIntf.MenuCommand((int)command);
@@ -190,8 +190,8 @@ namespace NppSharp
 
 		/// <summary>
 		/// Reloads the current file.
-		/// <param name="withAlert">If true, Notepad++ will show an alert box will be displayed.</param>
 		/// </summary>
+		/// <param name="withAlert">If true, Notepad++ will show an alert box to confirm.</param>
 		public void ReloadFile(bool withAlert)
 		{
 			Plugin.NppIntf.ReloadFile(withAlert);
@@ -201,7 +201,7 @@ namespace NppSharp
 		/// Reloads a file given the file name.  If the file is not already open, then this has no effect.
 		/// </summary>
 		/// <param name="fileName">The pathname of the file to be reloaded.</param>
-		/// <param name="withAlert">If true, Notepad++ will show an alert box will be displayed.</param>
+		/// <param name="withAlert">If true, Notepad++ will show an alert box to confirm.</param>
 		public void ReloadFile(string fileName, bool withAlert)
 		{
 			Plugin.NppIntf.ReloadFile(fileName, withAlert);
@@ -220,6 +220,7 @@ namespace NppSharp
 		/// <summary>
 		/// Saves the current document.
 		/// </summary>
+		/// <returns>True if successful, otherwise false.</returns>
 		public bool SaveFile()
 		{
 			return Plugin.NppIntf.SaveFile();
@@ -229,6 +230,7 @@ namespace NppSharp
 		/// Saves the current document to another file name.
 		/// </summary>
 		/// <param name="fileName">The pathname of the file to be written.</param>
+		/// <returns>True if successful, otherwise false.</returns>
 		public bool SaveFileAs(string fileName)
 		{
 			return Plugin.NppIntf.SaveFileAs(fileName);
@@ -238,6 +240,7 @@ namespace NppSharp
 		/// Saves a copy of the current document to another file name.
 		/// </summary>
 		/// <param name="fileName">The pathname of the file to be written.</param>
+		/// <returns>True if successful, otherwise false.</returns>
 		public bool SaveFileCopyAs(string fileName)
 		{
 			return Plugin.NppIntf.SaveFileCopyAs(fileName);
@@ -246,6 +249,7 @@ namespace NppSharp
 		/// <summary>
 		/// Saves all open documents.
 		/// </summary>
+		/// <returns>True if successful, otherwise false.</returns>
 		public bool SaveAllFiles()
 		{
 			return Plugin.NppIntf.SaveAllFiles();
@@ -524,6 +528,7 @@ namespace NppSharp
 		/// Removes the selection and sets the caret at pos.
 		/// (The caret is not scrolled into view)
 		/// </summary>
+		/// <param name="pos">The new start/end position for the selection.</param>
 		public void SetEmptySelection(int pos)
 		{
 			Plugin.NppIntf.SetEmptySelection(pos);
@@ -703,12 +708,12 @@ namespace NppSharp
 		/// <summary>
 		/// Triggered when Notepad++ has finished loading, and sends out the 'ready' notification to all plugins.
 		/// </summary>
-		public event EventHandler Ready;
+		public event NppEventHandler Ready;
 
 		/// <summary>
 		/// Triggered when Notepad++ is about to shutdown.
 		/// </summary>
-		public event EventHandler Shutdown;
+		public event NppEventHandler Shutdown;
 
 		/// <summary>
 		/// Triggered before a file has started closing.
@@ -758,12 +763,12 @@ namespace NppSharp
 		/// <summary>
 		/// Triggered before a file has started loading.
 		/// </summary>
-		public event EventHandler FileLoading;
+		public event NppEventHandler FileLoading;
 
 		/// <summary>
 		/// Triggered when a file could not be loaded due to an error.
 		/// </summary>
-		public event EventHandler FileLoadFailed;
+		public event NppEventHandler FileLoadFailed;
 
 		/// <summary>
 		/// Triggered when the file tab-order has changed (user dragged a tab).
@@ -800,13 +805,13 @@ namespace NppSharp
 
 		internal void OnReady(object sender, EventArgs e)
 		{
-			EventHandler ev = Ready;
+			NppEventHandler ev = Ready;
 			if (ev != null) ev(this, e);
 		}
 
 		internal void OnShutdown(object sender, EventArgs e)
 		{
-			EventHandler ev = Shutdown;
+			NppEventHandler ev = Shutdown;
 			if (ev != null) ev(this, e);
 		}
 
@@ -866,13 +871,13 @@ namespace NppSharp
 
 		internal void OnFileLoading(object sender, EventArgs e)
 		{
-			EventHandler ev = FileLoading;
+			NppEventHandler ev = FileLoading;
 			if (ev != null) ev(this, e);
 		}
 
 		internal void OnFileLoadFailed(object sender, EventArgs e)
 		{
-			EventHandler ev = FileLoadFailed;
+			NppEventHandler ev = FileLoadFailed;
 			if (ev != null) ev(this, e);
 		}
 

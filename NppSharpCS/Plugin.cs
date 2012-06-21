@@ -19,14 +19,23 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.IO;
 
 namespace NppSharp
 {
+	/// <summary>
+	/// Main class that manages the NppSharp plugin.
+	/// </summary>
+	[System.Runtime.CompilerServices.CompilerGenerated]	// To stop it from appearing in the help file
 	public static class Plugin
 	{
 		#region Construction
 		private static INpp _npp = null;
 
+		/// <summary>
+		/// Initializes the plugin.
+		/// </summary>
+		/// <param name="npp">The Notepad++ interface object.</param>
 		public static void Initialize(INpp npp)
 		{
 			_npp = npp;
@@ -47,7 +56,10 @@ namespace NppSharp
 		#endregion
 
 		#region Error Handling
-
+		/// <summary>
+		/// Displays an error message to the user.
+		/// </summary>
+		/// <param name="message">The message to be displayed.</param>
 		public static void ShowError(string message)
 		{
 			try
@@ -60,6 +72,10 @@ namespace NppSharp
 			{ }
 		}
 
+		/// <summary>
+		/// Displays an error caused by an exception to the user.
+		/// </summary>
+		/// <param name="ex">The exception that caused the error.</param>
 		public static void ShowError(Exception ex)
 		{
 			try
@@ -73,6 +89,11 @@ namespace NppSharp
 			{ }
 		}
 
+		/// <summary>
+		/// Displays an error caused by an exception to the user, with additional info.
+		/// </summary>
+		/// <param name="ex">The exception that caused the error.</param>
+		/// <param name="message">Additional info text.</param>
 		public static void ShowError(Exception ex, string message)
 		{
 			try
@@ -100,11 +121,16 @@ namespace NppSharp
 		{
 			PluginCommand cmd = new PluginCommand("Show &Output Window");
 			cmd.Execute += OnShowOutputWindow;
-			cmd.SortOrder = -3;
+			cmd.SortOrder = -4;
 			_npp.SetShowOutputWindowCommandIndex(AddCommand(cmd));
 
 			cmd = new PluginCommand("NppSharp &Settings");
 			cmd.Execute += OnSettings;
+			cmd.SortOrder = -3;
+			AddCommand(cmd);
+
+			cmd = new PluginCommand("Show &Help File");
+			cmd.Execute += OnShowHelpFile;
 			cmd.SortOrder = -2;
 			AddCommand(cmd);
 
@@ -184,6 +210,9 @@ namespace NppSharp
 			private set { _showOutputWindowCommandIndex = value; }
 		}
 
+		/// <summary>
+		/// Gets the output window object.
+		/// </summary>
 		public static OutputView Output
 		{
 			get { return _output; }
@@ -220,19 +249,62 @@ namespace NppSharp
 			}
 		}
 		#endregion
+
+		#region Help File
+		private static void OnShowHelpFile(object data)
+		{
+			try
+			{
+				string helpFileName = string.Concat("file://", Path.Combine(_npp.NppDir, Res.HelpFileName));
+				Help.ShowHelp(Control.FromHandle(_npp.Window.Handle), helpFileName);
+			}
+			catch (Exception ex)
+			{
+				ShowError(ex);
+			}
+		}
+		#endregion
 	}
 
+	/// <summary>
+	/// A view (editor) visible within Notepad++
+	/// </summary>
 	public enum EditorView
 	{
+		/// <summary>
+		/// The main view.
+		/// </summary>
 		Main = 0,
+
+		/// <summary>
+		/// The alternate view.
+		/// </summary>
 		Sub = 1
 	}
 
+	/// <summary>
+	/// Notepad++ selection mode.
+	/// </summary>
 	public enum SelectionMode
 	{
+		/// <summary>
+		/// Normal text selection mode.
+		/// </summary>
 		Normal = 0,
+
+		/// <summary>
+		/// Rectangle selection mode.
+		/// </summary>
 		Rectangle = 1,
+
+		/// <summary>
+		/// Lines selection mode.
+		/// </summary>
 		Lines = 2,
+
+		/// <summary>
+		/// Thin selection mode.
+		/// </summary>
 		Thin = 3
 	}
 }

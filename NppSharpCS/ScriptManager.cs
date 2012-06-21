@@ -90,7 +90,7 @@ namespace NppSharp
 			get
 			{
 				List<string> dirs = Settings.GetStringList(Res.Reg_ScriptDirs);
-				if (dirs == null)
+				if (dirs == null || dirs.Count == 0)
 				{
 					dirs = new List<string>();
 					dirs.Add(Path.Combine(Plugin.NppIntf.NppDir, Res.ScriptDir));

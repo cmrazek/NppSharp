@@ -117,10 +117,10 @@ namespace NppSharp
 		void	OnFileLoadFailed();
 		void	OnFileOrderChanged(unsigned int bufferId);
 
-		virtual event EventHandler^					GetCommands;
-		virtual event EventHandler^					RegisterToolbarIcons;
-		virtual event EventHandler^					Ready;
-		virtual event EventHandler^					Shutdown;
+		virtual event NppEventHandler^				GetCommands;
+		virtual event NppEventHandler^				RegisterToolbarIcons;
+		virtual event NppEventHandler^				Ready;
+		virtual event NppEventHandler^				Shutdown;
 		virtual event FileEventHandler^				FileClosing;
 		virtual event FileEventHandler^				FileClosed;
 		virtual event FileEventHandler^				FileOpening;
@@ -130,8 +130,8 @@ namespace NppSharp
 		virtual event FileEventHandler^				FileActivated;
 		virtual event LanguageTypeEventHandler^		LanguageChanged;
 		virtual event FileEventHandler^				StyleUpdate;
-		virtual event EventHandler^					FileLoading;
-		virtual event EventHandler^					FileLoadFailed;
+		virtual event NppEventHandler^				FileLoading;
+		virtual event NppEventHandler^				FileLoadFailed;
 		virtual event FileEventHandler^				FileOrderChanged;
 		virtual event ExecuteCommandEventHandler^	CommandExecuted;
 

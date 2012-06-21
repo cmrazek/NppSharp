@@ -30,7 +30,7 @@ namespace NppSharp
 		private Pen _nonePen = null;
 		private SolidBrush _colorBrush = null;
 
-		public event EventHandler ColorChanged;
+		public event NppEventHandler ColorChanged;
 
 		public ColorPicker()
 		{
@@ -59,7 +59,7 @@ namespace NppSharp
 					_color = dlg.Color;
 					Invalidate();
 
-					EventHandler ev = ColorChanged;
+					NppEventHandler ev = ColorChanged;
 					if (ev != null) ev(this, new EventArgs());
 				}
 			}

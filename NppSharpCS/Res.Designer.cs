@@ -68,6 +68,15 @@ namespace NppSharp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to plugins\config\NppSharp\NppSharpDoc.chm.
+        /// </summary>
+        internal static string HelpFileName {
+            get {
+                return ResourceManager.GetString("HelpFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (default).
         /// </summary>
         internal static string OutputWindowStyleOverride {
@@ -167,7 +176,7 @@ namespace NppSharp {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to plugins\config\NppSharp.
+        ///   Looks up a localized string similar to plugins\config\NppSharp\Scripts.
         /// </summary>
         internal static string ScriptDir {
             get {

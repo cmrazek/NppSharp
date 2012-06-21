@@ -20,10 +20,18 @@ using System.Text;
 
 namespace NppSharp
 {
+	/// <summary>
+	/// Specifies that a command is to be visible on the Notepad++ toolbar.
+	/// </summary>
 	public class NppToolbarIconAttribute : Attribute
 	{
 		private string _property = "";
 
+		/// <summary>
+		/// Gets or sets the name of the property that will retrieve the toolbar icon.
+		/// The property must be declared as:
+		/// public Bitmap <i>PropertyName</i> { get; }
+		/// </summary>
 		public string Property
 		{
 			get { return _property; }

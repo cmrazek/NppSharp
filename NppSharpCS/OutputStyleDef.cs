@@ -25,6 +25,7 @@ namespace NppSharp
 	/// <summary>
 	/// Defines elements of a style for output window text.
 	/// </summary>
+	[System.Runtime.CompilerServices.CompilerGenerated]	// To stop it from appearing in the help file
 	public class OutputStyleDef
 	{
 		#region Static

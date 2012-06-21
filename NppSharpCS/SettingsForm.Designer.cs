@@ -191,7 +191,7 @@ namespace NppSharp
 			this.clrBack.Name = "clrBack";
 			this.clrBack.Size = new System.Drawing.Size(40, 20);
 			this.clrBack.TabIndex = 12;
-			this.clrBack.ColorChanged += new NppSharp.EventHandler(this.clrBack_ColorChanged);
+			this.clrBack.ColorChanged += new NppSharp.NppEventHandler(this.clrBack_ColorChanged);
 			// 
 			// clrFore
 			// 
@@ -202,7 +202,7 @@ namespace NppSharp
 			this.clrFore.Name = "clrFore";
 			this.clrFore.Size = new System.Drawing.Size(40, 20);
 			this.clrFore.TabIndex = 11;
-			this.clrFore.ColorChanged += new NppSharp.EventHandler(this.clrFore_ColorChanged);
+			this.clrFore.ColorChanged += new NppSharp.NppEventHandler(this.clrFore_ColorChanged);
 			// 
 			// lblBack
 			// 

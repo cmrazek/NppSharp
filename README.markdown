@@ -7,7 +7,7 @@ Notepad++ plugin to run scripts written in C#/.NET
 - This is licensed under [GNU General Public License v3](http://www.gnu.org/licenses/gpl.txt).
 
 ## Download:
-- Setup: ([Download](https://github.com/cmrazek/NppSharp/blob/master/Setup/Output/NppSharp%20Setup%201.0.exe))
+- Setup: ([Download](https://github.com/cmrazek/NppSharp/blob/master/Download/NppSharp_Setup_1.0.1.exe))
 - Source: ([Download](https://github.com/cmrazek/NppSharp/zipball/master))
 
 ## Requirements:
@@ -17,3 +17,7 @@ Notepad++ plugin to run scripts written in C#/.NET
 ## Contact:
 - Chris Mrazek (cmrazek)
 - Email: chrismrazek@gmail.com
+
+## ChangeLog:
+Version 1.0.1 - 2012-06-21:
+- Added API documentation.

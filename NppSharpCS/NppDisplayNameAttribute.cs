@@ -31,7 +31,7 @@ namespace NppSharp
 		/// <summary>
 		/// Constructs the display name attribute.
 		/// </summary>
-		/// <param name="displayName"></param>
+		/// <param name="displayName">The name of the command, as it will be displayed on the menu item.</param>
 		public NppDisplayNameAttribute(string displayName)
 		{
 			_displayName = displayName;

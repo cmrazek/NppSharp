@@ -24,22 +24,37 @@ using System.Windows.Forms;
 
 namespace NppSharp
 {
+	/// <summary>
+	/// A window that displays an error.
+	/// </summary>
 	public partial class ErrorForm : Form
 	{
 		private string _message = "";
 		private string _details = "";
 
+		/// <summary>
+		/// Constructs the error form.
+		/// </summary>
 		public ErrorForm()
 		{
 			InitializeComponent();
 		}
 
+		/// <summary>
+		/// Constructs the error form.
+		/// </summary>
+		/// <param name="message">The text to appear in the message tab.</param>
 		public ErrorForm(string message)
 		{
 			_message = message;
 			InitializeComponent();
 		}
 
+		/// <summary>
+		/// Constructs the error form.
+		/// </summary>
+		/// <param name="message">The text to appear in the message tab.</param>
+		/// <param name="details">The text to appear in the details tab.</param>
 		public ErrorForm(string message, string details)
 		{
 			_message = message;
@@ -74,12 +89,18 @@ namespace NppSharp
 			MessageBox.Show(this, ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
+		/// <summary>
+		/// Gets or sets the message text.
+		/// </summary>
 		public string Message
 		{
 			get { return _message; }
 			set { _message = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the details text.
+		/// </summary>
 		public string Details
 		{
 			get { return _details; }

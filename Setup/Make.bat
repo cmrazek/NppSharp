@@ -15,5 +15,11 @@ if not exist output mkdir output
 
 copy ..\release\NppSharp.dll bin\
 copy ..\release\NppSharpInterface.dll bin\
+copy ..\NppSharpCS\bin\Release\NppSharpInterface.XML bin\
+copy ..\Help\Output\NppSharpDoc.chm bin\
 
 %makensis% NppSharpSetup.nsi
+if errorlevel 1 (
+	echo MakeNSIS Failed.
+	goto :eof
+)

@@ -6,7 +6,7 @@ License
 	This is licensed under GNU General Public License v3 (http://www.gnu.org/licenses/gpl.txt).
 
 Download:
-	Setup:  https://github.com/cmrazek/NppSharp/blob/master/Setup/Output/NppSharp%20Setup%201.0.exe
+	Setup:  https://github.com/cmrazek/NppSharp/blob/master/Download/NppSharp_Setup_1.0.1.exe
 	Source: https://github.com/cmrazek/NppSharp/zipball/master
 
 Requirements:
@@ -16,3 +16,8 @@ Requirements:
 Contact:
 	Chris Mrazek (cmrazek)
 	Email: chrismrazek@gmail.com
+
+ChangeLog:
+
+Version 1.0.1 - 2012-06-21:
+- Added API documentation.

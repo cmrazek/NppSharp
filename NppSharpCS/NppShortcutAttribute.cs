@@ -29,6 +29,13 @@ namespace NppSharp
 	{
 		private NppShortcut _shortcut;
 
+		/// <summary>
+		/// Creates a new NppShortcut attribute.
+		/// </summary>
+		/// <param name="ctrl">Control key required?</param>
+		/// <param name="alt">Alt key required?</param>
+		/// <param name="shift">Shift key required?</param>
+		/// <param name="keyCode">The virtual key code.</param>
 		public NppShortcutAttribute(bool ctrl, bool alt, bool shift, Keys keyCode)
 		{
 			_shortcut = new NppShortcut(ctrl, alt, shift, keyCode);

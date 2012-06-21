@@ -12,12 +12,17 @@
 *.user
 
 BuildLog.htm
+Thumbs.db
 
+/debug/*
+/Help/Output/*
 /NppSharp/Debug/*.res
 /NppSharp/Debug/*.dep
 /NppSharp/Release/*.res
 /NppSharp/Release/*.dep
 /NppSharpCS/bin/*
 /NppSharpCS/obj/*
+/release/*
 /Setup/Bin/*
 /Setup/Redist/*
+/Setup/Output/*

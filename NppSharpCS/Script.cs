@@ -84,7 +84,6 @@ namespace NppSharp
 		/// <summary>
 		/// Constructs the script object.
 		/// </summary>
-		/// <param name="plugin">The plugin object.</param>
 		/// <param name="fileName">The script's file name.</param>
 		private Script(string fileName)
 		{
@@ -96,7 +95,6 @@ namespace NppSharp
 		/// <summary>
 		/// Compiles a .cs script, and processes the assembly.
 		/// </summary>
-		/// <param name="plugin">The plugin object.</param>
 		/// <param name="fileName">The script's file name.</param>
 		/// <returns>If the script could be successfully compiled, and contains command methods,
 		/// then returns a new script object.  Null otherwise.</returns>
@@ -216,7 +214,6 @@ namespace NppSharp
 		/// <summary>
 		/// Loads a pre-compiled assembly and processes it.
 		/// </summary>
-		/// <param name="plugin">The plugin object.</param>
 		/// <param name="fileName">The assembly's file name.</param>
 		/// <returns>If the assembly could be loaded, and contains command methods, then it returns
 		/// a new script object.  Null otherwise.</returns>
