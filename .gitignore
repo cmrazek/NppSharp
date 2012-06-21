@@ -1,6 +1,14 @@
 *.FileListAbsolute.txt
+*.ncb
+*.suo
 *.user
 
 /debug/*
+/NppSharp/Debug/*
+/NppSharp/Release/*
+/NppSharpCS/bin/*
 /NppSharpCS/obj/*
 /release/*
+/Setup/Bin/*
+/Setup/Output/*
+/Setup/Redist/*

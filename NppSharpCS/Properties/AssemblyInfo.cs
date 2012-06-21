@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NppSharpCS")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("NppSharpInterface")]
+[assembly: AssemblyDescription("C#/.NET Scripting Plugin for Notepad++")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NppSharpCS")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCompany("Chris Mrazek")]
+[assembly: AssemblyProduct("NppSharpInterface")]
+[assembly: AssemblyCopyright("Copyright © 2012 Chris Mrazek")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
