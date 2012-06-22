@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="f89a8866-e24a-4a19-9d27-f70d7da44b34" revisionNumber="1">
+  <developerSampleDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!--
+    <summary>
+      <para>Optional summary abstract</para>
+    </summary>
+    -->
+    <introduction>
+      <!-- Uncomment this to generate an outline of the section and sub-section
+           titles.  Specify a numeric value as the inner text to limit it to
+           a specific number of sub-topics when creating the outline.  Specify
+           zero (0) to limit it to top-level sections only.  -->
+      <!-- <autoOutline /> -->
+      <para>Required introduction</para>
+    </introduction>
+    <!-- <procedure>Optional procedures.  See How To document for procedure layout example.</procedure> -->
+    <!-- <requirements>Optional requirements section</requirements> -->
+    <!-- <demonstrates>Optional info about what is demonstrated</demonstrates> -->
+    <!-- <codeExample>Optional code example</codeExample> -->
+    <!-- Add one or more top-level section elements.  These are collapsible.
+         If using <autoOutline />, add an address attribute to identify it
+         and specify a title so that it can be jumped to with a hyperlink. -->
+    <section address="Section1">
+      <title>Adding Command Attributes</title>
+      <content>
+        <!-- Uncomment this to create a sub-section outline
+        <autoOutline /> -->
+        <para>
+        	The appearance of commands can be modified by applying .NET attributes to the command functions.
+        	For example, the following code makes use of the
+        	<codeEntityReference qualifyHint="false">T:NppSharp.NppDisplayNameAttribute</codeEntityReference>,
+        	<codeEntityReference qualifyHint="false">T:NppSharp.NppShortcutAttribute</codeEntityReference>
+        	and
+        	<codeEntityReference qualifyHint="false">T:NppSharp.NppToolbarIconAttribute</codeEntityReference>
+        	attributes.
+        </para>
+        <codeReference>CommandAttributes#Test</codeReference>
+        <para>
+        	<codeEntityReference qualifyHint="false">T:NppSharp.NppDisplayNameAttribute</codeEntityReference>
+        	can be used to alter the display name of the command, as it appears in the NppSharp plugin menu,
+        	and as the tooltip text for the toolbar icon.
+        </para>
+        <para>
+        	<codeEntityReference qualifyHint="false">T:NppSharp.NppShortcutAttribute</codeEntityReference>
+        	can be used to update assign a keyboard shortcut for this command.
+        	<alert class="note">
+        		If the keyboard shortcut is already taken by another Notepad++ command,
+        		the menu item will still show this keyboard shortcut, but when that shortcut
+        		is pressed, the Notepad++ command may be executed instead.
+        	</alert>
+        </para>
+        <para>
+        	<codeEntityReference qualifyHint="false">T:NppSharp.NppToolbarIconAttribute</codeEntityReference>
+        	can be used to add the command to Notepad++&apos;s main toolbar.
+        	As an argument, you may pass <codeInline language="CSharp">FileName = &quot;&lt;filename.ico&gt;&quot;</codeInline>
+        	to specify an icon file.
+        	Similarly, you may use the <codeInline language="CSharp">Property = &quot;&lt;PropertyName&gt;&quot;</codeInline>
+        	to specify the name of a property in the same class that can be used to retrieve the icon.
+        	The latter method is useful from retrieving icons from a resource file in a compiled assembly.
+        </para>
+        <para>
+        	The following image displays the toolbar icon produced from the above code sample (icon sold separately).
+        	<mediaLink><image xlink:href="ToolbarIcon"/></mediaLink>
+		</para>
+		<para>
+			This command is a very simple script that reports the number of lines present in the active file
+			in a standard Windows message box.  When the toolbar icon is clicked, it displays the following:
+			<mediaLink><image xlink:href="LineCountResults"/></mediaLink>
+		</para>
+      </content>
+    </section>
+    <section address="Section2">
+    	<title>References</title>
+    	<content>
+	    	<para>
+	    		At the top of the previous code, you will notice two commented out lines beginning with &quot;#ref:&quot;.
+	    		These are used to indicate assemblies that should be used as references when compiling the script.
+	    		The script at the top uses System.Windows.Forms.dll and System.Drawing.dll, and therefore must include
+	    		these as references.
+	    	</para>
+	    	<para>
+	    		If required, these reference lines must exist at the very top of the file.
+	    		Manually added references, such as these, are only required on raw .cs files.
+	    	</para>
+	    	<para>
+	    		On pre-compiled assemblies, the references can be added through your Visual Studio project,
+	    		and there is no need to specify them at the top of the file.
+	    	</para>
+	    </content>
+    </section>
+    <relatedTopics>
+      <!-- One or more of the following:
+           - A local link
+           - An external link
+           - A code entity reference
+
+      <link xlink:href="Other Topic's ID">Link text</link>
+      <externalLink>
+          <linkText>Link text</linkText>
+          <linkAlternateText>Optional alternate link text</linkAlternateText>
+          <linkUri>URI</linkUri>
+      </externalLink>
+      <codeEntityReference>API member ID</codeEntityReference>
+
+      Examples:
+
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+      <externalLink>
+          <linkText>SHFB on CodePlex</linkText>
+          <linkAlternateText>Go to CodePlex</linkAlternateText>
+          <linkUri>http://shfb.codeplex.com</linkUri>
+      </externalLink>
+
+      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+      -->
+    </relatedTopics>
+  </developerSampleDocument>
+</topic>

@@ -48,6 +48,7 @@
     <ContentLayout Include="Content Layout.content" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CommandAttributes.aml" />
     <None Include="Sample.aml" />
     <None Include="Welcome.aml" />
   </ItemGroup>
@@ -58,6 +59,14 @@
     <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Images\LineCountResults.png">
+      <ImageId>LineCountResults</ImageId>
+      <AlternateText>Line Count Results</AlternateText>
+    </Image>
+    <Image Include="Images\ToolbarIcon.png">
+      <ImageId>ToolbarIcon</ImageId>
+      <AlternateText>Toolbar Icon</AlternateText>
+    </Image>
     <Image Include="Images\SimpleTestOutput.png">
       <ImageId>SimpleTestOutput</ImageId>
       <AlternateText>Output from SimpleTest</AlternateText>

@@ -117,9 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="DefaultToolbarIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\dotnet.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="err_LoadToolbarIconFile" xml:space="preserve">
+    <value>Error when attempting to load the toolbar icon file '{0}':
+{1}</value>
+    <comment>{0} = icon filename, {1} = exception</comment>
+  </data>
+  <data name="err_script_CmdDataMissing" xml:space="preserve">
+    <value>Error: Script command data is missing.</value>
+    <comment>Should never be displayed (in theory)</comment>
+  </data>
+  <data name="err_script_Compile" xml:space="preserve">
+    <value>Error when compiling script '{0}':
+{1}</value>
+    <comment>{0} = filename, {1} = exception</comment>
+  </data>
+  <data name="err_script_CompileAll" xml:space="preserve">
+    <value>Error when compiling scripts:
+{0}</value>
+    <comment>{0} = exception</comment>
+  </data>
+  <data name="err_script_CreateInstance" xml:space="preserve">
+    <value>An error occurred when attempting to create an instance of a script object '{0}' in file '{1}':
+{2}</value>
+    <comment>{0} = Object name, {1} = filename, {2} = exception</comment>
+  </data>
+  <data name="err_script_DirMissing" xml:space="preserve">
+    <value>Script directory does not exist: {0}</value>
+    <comment>{0} = dir path</comment>
+  </data>
+  <data name="err_script_Execute" xml:space="preserve">
+    <value>An error occurred when executing the command '{0}':
+{1}</value>
+    <comment>{0} = Command name, {1} = exception</comment>
+  </data>
+  <data name="err_script_LoadDll" xml:space="preserve">
+    <value>An error occurred when loading the assembly '{0}':
+{1}</value>
+    <comment>{0} = DLL filename, {1} = exception</comment>
+  </data>
+  <data name="err_ToolbarIconProperty" xml:space="preserve">
+    <value>An error occurred when getting the toolbar icon:
+{0}</value>
+    <comment>{0} = exception</comment>
   </data>
   <data name="HelpFileName" xml:space="preserve">
     <value>plugins\config\NppSharp\NppSharpDoc.chm</value>
@@ -159,6 +202,36 @@
   </data>
   <data name="ScriptDir" xml:space="preserve">
     <value>plugins\config\NppSharp\Scripts</value>
+  </data>
+  <data name="script_CompileError" xml:space="preserve">
+    <value>- Line {0}: error {1}: {2}</value>
+    <comment>{0} = line number, {1} = error number, {2} = error text</comment>
+  </data>
+  <data name="script_CompileErrors" xml:space="preserve">
+    <value>Errors were encountered when compiling the script '{0}':</value>
+    <comment>Will be followed by a list of errors/warnings. {0} = filename</comment>
+  </data>
+  <data name="script_CompileWarning" xml:space="preserve">
+    <value>- Line {0}: warning {1}: {2}</value>
+    <comment>{0} = line number, {1} = error number, {2} = error text</comment>
+  </data>
+  <data name="script_CompileWarnings" xml:space="preserve">
+    <value>Warnings were encountered when compiling the script '{0}':</value>
+    <comment>Will be followed by a list of warnings. {0} = filename</comment>
+  </data>
+  <data name="script_Compiling" xml:space="preserve">
+    <value>Compiling script: {0}</value>
+    <comment>{0} = filename</comment>
+  </data>
+  <data name="script_CompilingAllScripts" xml:space="preserve">
+    <value>Compiling scripts...</value>
+  </data>
+  <data name="script_LoadingDll" xml:space="preserve">
+    <value>Loading assembly: {0}</value>
+    <comment>{0} = DLL filename</comment>
+  </data>
+  <data name="script_UnknownCommand" xml:space="preserve">
+    <value>(unknown)</value>
   </data>
   <data name="Settings_OutputSizeInvalid" xml:space="preserve">
     <value>Invalid output window font size.</value>

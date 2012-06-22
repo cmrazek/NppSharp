@@ -81,42 +81,10 @@ namespace NppSharp
 
 #include "CmdList.h"
 
-	//void CreateConfigDir(TCHAR *pszNppConfigDir)
-	//{
-	//	wstring path = pszNppConfigDir;
-	//	if (path[path.length() - 1] != L'\\') path += L'\\';
-	//	path += CONFIG_DIR_NAME;
-
-	//	DWORD dwAttr = ::GetFileAttributes(path.c_str());
-	//	if (dwAttr == INVALID_FILE_ATTRIBUTES || (dwAttr & FILE_ATTRIBUTE_DIRECTORY) == 0)
-	//	{
-	//		if (!::CreateDirectory(path.c_str(), NULL))
-	//		{
-	//			// Can't create for some reason, so just use the npp config dir.
-	//			g.strConfigDir = pszNppConfigDir;
-	//		}
-	//		else
-	//		{
-	//			g.strConfigDir = path;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		g.strConfigDir = path;
-	//	}
-	//}
-
 	void SetPluginInfo(NppData nppData)
 	{
 		try
 		{
-			//// Create the config directory.
-			//TCHAR	szDir[MAX_PATH] = TEXT("");
-			//SendMessage(nppData._nppHandle, NPPM_GETPLUGINSCONFIGDIR, MAX_PATH, (LPARAM)szDir);
-			//CreateConfigDir(szDir);
-			//logOpen(g.strConfigDir.c_str());
-			//logWrite(L"NppSharp started.");
-
 			// Initialize the main plugin object.
 			g.npp = gcnew NppInterface(nppData._nppHandle, nppData._scintillaMainHandle, nppData._scintillaSecondHandle);
 			Plugin::Initialize(g.npp);

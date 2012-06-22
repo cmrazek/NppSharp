@@ -8,6 +8,7 @@
 *.obj
 *.pch
 *.pdb
+*.sdf
 *.suo
 *.user
 
@@ -16,10 +17,8 @@ Thumbs.db
 
 /debug/*
 /Help/Output/*
-/NppSharp/Debug/*.res
-/NppSharp/Debug/*.dep
-/NppSharp/Release/*.res
-/NppSharp/Release/*.dep
+/NppSharp/Debug/*
+/NppSharp/Release/*
 /NppSharpCS/bin/*
 /NppSharpCS/obj/*
 /release/*

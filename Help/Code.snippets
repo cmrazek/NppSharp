@@ -10,16 +10,43 @@ using NppSharp;
 
 namespace ScriptEdit
 {
-	public class SimpleTest : NppScript
-	{
-		public void Test()
-		{
-			Output.Show();
-			Output.WriteLine("Hello");
-		}
-	}
+    public class SimpleTest : NppScript
+    {
+        public void Test()
+        {
+            Output.Show();
+            Output.WriteLine("Hello");
+        }
+    }
 }
   	</sampleCode>
   </item>
+	<item id="CommandAttributes#Test">
+		<sampleCode language="CSharp">
+// #ref: System.Windows.Forms.dll
+// #ref: System.Drawing.dll
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Forms;
+using System.Drawing;
+using System.IO;
+using NppSharp;
+
+namespace NppScripts
+{
+    public class Test : NppScript
+    {
+        [NppDisplayName("My Test Command")]
+        [NppShortcut(true, false, true, Keys.T)]
+        [NppToolbarIcon(FileName = "Test.ico")]
+        public void TestCommand()
+        {
+            MessageBox.Show(NppWindow, string.Format("There are {0} lines in this document.", LineCount), "Line Count");
+        }
+    }
+}
+		</sampleCode>
+	</item>
 </examples>
 

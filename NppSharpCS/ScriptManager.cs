@@ -29,7 +29,7 @@ namespace NppSharp
 		{
 			try
 			{
-				Plugin.Output.WriteLine(OutputStyle.NotImportant, "Compiling scripts...");
+				Plugin.Output.WriteLine(OutputStyle.NotImportant, Res.script_CompilingAllScripts);
 
 				_scripts.Clear();
 
@@ -37,7 +37,7 @@ namespace NppSharp
 				{
 					if (!Directory.Exists(dir))
 					{
-						Plugin.Output.WriteLine(OutputStyle.Warning, "Script directory does not exist: {0}", dir);
+						Plugin.Output.WriteLine(OutputStyle.Warning, Res.err_script_DirMissing, dir);
 					}
 					else
 					{
@@ -48,7 +48,7 @@ namespace NppSharp
 			catch (Exception ex)
 			{
 				Plugin.Output.Show();
-				Plugin.Output.WriteLine("Exception when compiling scripts: " + ex.ToString());
+				Plugin.Output.WriteLine(OutputStyle.Error, Res.err_script_CompileAll, ex);
 			}
 		}
 

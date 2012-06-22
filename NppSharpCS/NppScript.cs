@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.IO;
 
 namespace NppSharp
 {
@@ -115,12 +116,29 @@ namespace NppSharp
 
 		/// <summary>
 		/// Gets the filename of this script or assembly.
-		/// This property is not available in the constructor.
 		/// </summary>
+		/// <remarks>This property is not available in the constructor as it must be set after the object has been instantiated.</remarks>
 		public string ScriptFileName
 		{
 			get { return _fileName; }
 			internal set { _fileName = value; }
+		}
+
+		/// <summary>
+		/// Gets the directory in which this script resides.
+		/// </summary>
+		/// <remarks>This property is not available in the constructor as it must be set after the object has been instantiated.</remarks>
+		public string ScriptDirectory
+		{
+			get { return Path.GetDirectoryName(_fileName); }
+		}
+
+		/// <summary>
+		/// Gets the Notepad++ main window.
+		/// </summary>
+		public System.Windows.Forms.NativeWindow NppWindow
+		{
+			get { return Plugin.NppIntf.Window; }
 		}
 		#endregion
 

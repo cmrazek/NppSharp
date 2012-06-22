@@ -108,7 +108,8 @@ namespace NppSharp
 			}
 			catch (Exception ex)
 			{
-				Plugin.Output.WriteLine(OutputStyle.Error, "Exception when processing script '{0}':\n{1}", fileName, ex.ToString());
+				Plugin.Output.Show();
+				Plugin.Output.WriteLine(OutputStyle.Error, Res.err_script_Compile, fileName, ex.ToString());
 				return null;
 			}
 		}
@@ -120,7 +121,7 @@ namespace NppSharp
 		/// Otherwise false.</returns>
 		private bool Compile()
 		{
-			Plugin.Output.WriteLine(OutputStyle.NotImportant, "Compiling script: {0}", _fileName);
+			Plugin.Output.WriteLine(OutputStyle.NotImportant, Res.script_Compiling, _fileName);
 
 			string source = File.ReadAllText(_fileName);
 			CodeParser parser = new CodeParser(source);
@@ -148,11 +149,11 @@ namespace NppSharp
 					if (sbErr.Length != 0) sbErr.AppendLine();
 					if (err.IsWarning)
 					{
-						sbErr.AppendFormat("- Line {0}: warning {1}: {2}", err.Line, err.ErrorNumber, err.ErrorText);
+						sbErr.AppendFormat(Res.script_CompileWarning, err.Line, err.ErrorNumber, err.ErrorText);
 					}
 					else
 					{
-						sbErr.AppendFormat("- Line {0}: error {1}: {2}", err.Line, err.ErrorNumber, err.ErrorText);
+						sbErr.AppendFormat(Res.script_CompileError, err.Line, err.ErrorNumber, err.ErrorText);
 						failed = true;
 					}
 				}
@@ -160,14 +161,16 @@ namespace NppSharp
 				OutputStyle outStyle;
 				if (failed)
 				{
-					sbErr.Insert(0, string.Format("Errors were found when compiling script '{0}':\r\n", _fileName));
+					sbErr.Insert(0, string.Format(Res.script_CompileErrors + "\r\n", _fileName));
 					outStyle = OutputStyle.Error;
 				}
 				else
 				{
-					sbErr.Insert(0, string.Format("Warnings were found when compiling script '{0}':\r\n", _fileName));
+					sbErr.Insert(0, string.Format(Res.script_CompileWarnings + "\r\n", _fileName));
 					outStyle = OutputStyle.Warning;
 				}
+
+				if (failed) Plugin.Output.Show();
 				Plugin.Output.WriteLine(outStyle, sbErr.ToString());
 
 				if (failed) return false;
@@ -227,7 +230,8 @@ namespace NppSharp
 			}
 			catch (Exception ex)
 			{
-				Plugin.Output.WriteLine(OutputStyle.Error, "Exception when loading script assembly '{0}':\n{1}", fileName, ex.ToString());
+				Plugin.Output.Show();
+				Plugin.Output.WriteLine(OutputStyle.Error, Res.err_script_LoadDll, fileName, ex.ToString());
 				return null;
 			}
 		}
@@ -239,7 +243,7 @@ namespace NppSharp
 		/// Otherwise false.</returns>
 		private bool LoadDll()
 		{
-			Plugin.Output.WriteLine(OutputStyle.NotImportant, "Loading assembly: {0}", _fileName);
+			Plugin.Output.WriteLine(OutputStyle.NotImportant, Res.script_LoadingDll, _fileName);
 			_assembly = Assembly.LoadFile(_fileName);
 			if (!ProcessAssembly()) return false;
 			return true;
@@ -304,7 +308,8 @@ namespace NppSharp
 					}
 					catch (Exception ex)
 					{
-						Plugin.Output.WriteLine(OutputStyle.Error, "Error when creating instance of script '{0}':\r\n{1}", _fileName, ex.ToString());
+						Plugin.Output.WriteLine(OutputStyle.Error, Res.err_script_CreateInstance,
+							cmdClass.classType.Name, _fileName, ex.ToString());
 						cmdClass.instance = null;
 					}
 					
@@ -358,11 +363,7 @@ namespace NppSharp
 					foreach (NppToolbarIconAttribute t in cmdMethod.method.GetCustomAttributes(typeof(NppToolbarIconAttribute), false))
 					{
 						cmd.ShowInToolbar = true;
-						if (!string.IsNullOrEmpty(t.Property))
-						{
-							cmd.ToolbarIcon = GetIconProperty(cmdClass, t.Property);
-						}
-
+						cmd.ToolbarIcon = t.LoadIcon(cmdClass.instance, _fileName);
 						if (cmd.ToolbarIcon == null) cmd.ToolbarIcon = Res.DefaultToolbarIcon;
 					}
 
@@ -380,7 +381,7 @@ namespace NppSharp
 		{
 			try
 			{
-				if (data == null || data.GetType() != typeof(CommandMethod)) throw new ScriptException("Script command data is missing.");
+				if (data == null || data.GetType() != typeof(CommandMethod)) throw new ArgumentException(Res.err_script_CmdDataMissing);
 				CommandMethod cmdMethod = (CommandMethod)data;
 
 				Plugin.NppIntf.OnCommandStart();
@@ -392,35 +393,24 @@ namespace NppSharp
 					args.Add(GetSupportedParameter(paramInfo));
 				}
 
-				cmdMethod.method.Invoke(cmdMethod.Instance, args.ToArray());
+				try
+				{
+					cmdMethod.method.Invoke(cmdMethod.Instance, args.ToArray());
+				}
+				catch (Exception ex)
+				{
+					Plugin.Output.Show();
+					Plugin.Output.WriteLine(OutputStyle.Error, Res.err_script_Execute, cmdMethod.name, ex);
+				}
+				
 
 				Plugin.NppIntf.OnCommandEnd();
 			}
 			catch (Exception ex)
 			{
-				Plugin.Output.WriteLine(OutputStyle.Error,
-					string.Concat("An error occurred when executing the command:\n", ex.ToString()));
+				Plugin.Output.Show();
+				Plugin.Output.WriteLine(OutputStyle.Error, Res.err_script_Execute, Res.script_UnknownCommand, ex);
 			}
-		}
-
-		/// <summary>
-		/// Gets the toolbar icon from a property in the class.
-		/// </summary>
-		/// <param name="cmdClass">The class that declares the command method.</param>
-		/// <param name="propertyName">The name of the property, as defined in the NppToolbarIcon attribute.</param>
-		/// <returns>If found, the Bitmap object returned by the property; otherwise false.</returns>
-		private Bitmap GetIconProperty(CommandClass cmdClass, string propertyName)
-		{
-			foreach (PropertyInfo pi in cmdClass.classType.GetProperties())
-			{
-				if (pi.Name == propertyName &&
-					pi.PropertyType == typeof(Bitmap) || pi.PropertyType.IsSubclassOf(typeof(Bitmap)))
-				{
-					return (Bitmap)pi.GetValue(cmdClass.instance, null);
-				}
-			}
-
-			return null;
 		}
 
 		/// <summary>
