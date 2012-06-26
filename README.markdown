@@ -3,13 +3,13 @@ Notepad++ plugin to run scripts written in C#/.NET
 
 [https://github.com/cmrazek/NppSharp](https://github.com/cmrazek/NppSharp)
 
-Current Version: 1.0.1
+Current Version: 1.0.2
 
 ## License
 - This is licensed under [GNU General Public License v3](http://www.gnu.org/licenses/gpl.txt).
 
 ## Download
-- Setup: ([Download](https://github.com/cmrazek/NppSharp/blob/master/Download/NppSharp_Setup_1.0.1.exe))
+- Setup: ([Download](https://github.com/downloads/cmrazek/NppSharp/NppSharp_Setup_1.0.2.exe))
 - Source: ([Download](https://github.com/cmrazek/NppSharp/zipball/master))
 
 ## Requirements
@@ -22,7 +22,7 @@ Current Version: 1.0.1
 
 ## ChangeLog
 
-Version 1.0.2 - (pending)
+Version 1.0.2 - 2012-06-26:
 - Fixed serious error occurring when the toolbar icon property throws an exception.
 - Added built-in ability to load toolbar icons from .ico files through the 'FileName' property.
 - Added NppScript.ScriptDirectory property.
