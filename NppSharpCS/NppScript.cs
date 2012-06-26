@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 
 namespace NppSharp
 {
@@ -903,6 +904,50 @@ namespace NppSharp
 		{
 			FileEventHandler ev = FileOrderChanged;
 			if (ev != null) ev(this, e);
+		}
+		#endregion
+
+		#region Dock Window
+		/// <summary>
+		/// Creates a docked window.
+		/// </summary>
+		/// <param name="window">The form window that is to be docked.</param>
+		/// <param name="title">The window title.</param>
+		/// <param name="alignment">Window alignment, or floating.</param>
+		/// <param name="id">An identifier for this docked window.
+		/// The ID must be greater than zero.</param>
+		/// <remarks>
+		/// <para>
+		///	This window will not be restored the next time Notepad++ starts.
+		///	The plugin must recreate the window during the 'Ready' event, if it wishes to have the window visible again.
+		/// </para>
+		/// <para>
+		///	Notepad++ will use the ID to remember the state for this docked window between sessions.
+		///	If another docked window with the same ID had been opened previously with a different alignment,
+		///	or the user had dragged the window to another side of the screen, then the docked window
+		///	will appear in the previous location rather than the one specified here.
+		/// </para>
+		/// </remarks>
+		public void DockWindow(IWin32Window window, string title, DockWindowAlignment alignment, int id)
+		{
+			// Notepad++ doesn't seem to support icons for docked windows, so it's excluded here.
+
+			if (window == null) throw new ArgumentException(Res.err_InvalidWindowObj);
+			if (id <= 0) throw new ArgumentException(Res.err_InvalidDockWindowId);
+
+			Plugin.NppIntf.CreateDockWindow(window, title, alignment, null, id);
+		}
+
+		/// <summary>
+		/// Gets the dock window object for the specified ID.
+		/// </summary>
+		/// <param name="id">The ID number for the dock window object.</param>
+		/// <returns>If the dock window object could be found, the object is returned; otherwise null.</returns>
+		public IDockWindow GetDockWindow(int id)
+		{
+			if (id <= 0) throw new ArgumentException(Res.err_InvalidDockWindowId);
+
+			return Plugin.NppIntf.GetDockWindow(id);
 		}
 		#endregion
 	}

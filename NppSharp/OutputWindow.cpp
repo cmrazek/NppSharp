@@ -71,7 +71,7 @@ namespace NppSharp
 
 			if (!::RegisterClassEx(&wc))
 			{
-				throw gcnew NppException(String::Format("Failed to register output window class (GetLastError = {0})", ::GetLastError()));
+				throw gcnew NppException(String::Format("Failed to register output window class: {0}", GetLastErrorClrString()));
 				return NULL;
 			}
 
@@ -80,7 +80,7 @@ namespace NppSharp
 				_hNpp, NULL, hInst, NULL);
 			if (!_hWindow)
 			{
-				throw gcnew NppException(String::Format("Failed to create output window (GetLastError = {0})", ::GetLastError()));
+				throw gcnew NppException(String::Format("Failed to create output window: {0}", GetLastErrorClrString()));
 				return NULL;
 			}
 

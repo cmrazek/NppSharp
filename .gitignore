@@ -9,6 +9,7 @@
 *.pch
 *.pdb
 *.sdf
+*.shfbproj_*
 *.suo
 *.user
 

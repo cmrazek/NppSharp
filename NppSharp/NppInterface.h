@@ -22,6 +22,8 @@ using namespace System::Drawing;
 namespace NppSharp
 {
 	class OutputWindow;
+	class DockWnd;
+	ref class DockWindow;
 
 	public ref class NppInterface : public INpp
 	{
@@ -158,9 +160,14 @@ namespace NppSharp
 		void SetFuncItems(FuncItem* funcItems, int numFuncItems) { _funcItems = funcItems; _numFuncItems = numFuncItems; }
 		int GetPluginCommandId(PluginCommand^ cmd);
 
+		virtual IDockWindow^ CreateDockWindow(IWin32Window^ window, String^ title, DockWindowAlignment alignment, Icon^ tabIcon, int id);
+		virtual IDockWindow^ GetDockWindow(int id);
+		
+
 	private:
 		bool	ClampTextRange(int *pStartPos, int *pLength);
 		String^	GetFileNameByBufferId(unsigned int bufferId);
+		void	DockWindow_Shutdown();
 
 		HWND								_nppHandle;
 		HWND								_scHandle1;
@@ -175,5 +182,6 @@ namespace NppSharp
 		Dictionary<unsigned int, String^>^	_bufferIds;
 		FuncItem*							_funcItems;
 		int									_numFuncItems;
+		List<DockWindow^>^					_dockWindows;
 	};
 }

@@ -68,4 +68,24 @@ namespace NppSharp
 		buf.Init(len);
 		::WideCharToMultiByte(CP_UTF8, 0, wide, -1, buf.Ptr(), buf.BufSize(), NULL, NULL);
 	}
+
+	String^ GetLastErrorClrString()
+	{
+		String^	ret;
+		DWORD	err = GetLastError();
+		LPTSTR	buf = NULL;
+
+		if (!::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+			NULL, err, 0, (LPTSTR)&buf, 0, NULL))
+		{
+			ret = String::Format("0x{0:X8}", err);
+		}
+		else
+		{
+			ret = gcnew String(buf);
+			::LocalFree(buf);
+		}
+
+		return ret;
+	}
 }

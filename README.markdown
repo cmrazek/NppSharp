@@ -23,11 +23,11 @@ Current Version: 1.0.1
 ## ChangeLog
 
 Version 1.0.2 - (pending)
-- Upgraded project to VS2010.
 - Fixed serious error occurring when the toolbar icon property throws an exception.
 - Added built-in ability to load toolbar icons from .ico files through the 'FileName' property.
 - Added NppScript.ScriptDirectory property.
 - Added NppScript.NppWindow property.
+- Added support for docking windows.
 - Added more documentation.
 
 Version 1.0.1 - 2012-06-21:

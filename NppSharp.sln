@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NppSharp", "NppSharp\NppSharp.vcxproj", "{D3EE14CE-4384-42C2-BCBA-F9C446D061BE}"
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NppSharp", "NppSharp\NppSharp.vcproj", "{D3EE14CE-4384-42C2-BCBA-F9C446D061BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NppSharpCS", "NppSharpCS\NppSharpCS.csproj", "{5FBB35AA-E35E-4374-BD6C-0C777F7F791F}"
 EndProject

@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="NppIncludes"
-				PreprocessorDefinitions="WIN32;_DEBUG"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="NppIncludes"
-				PreprocessorDefinitions="WIN32;NDEBUG"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -307,6 +307,14 @@
 				RelativePath=".\StringBuf.h"
 				>
 			</File>
+			<File
+				RelativePath=".\StringStore.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\StringStore.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="OutputWindow"
@@ -321,6 +329,22 @@
 			</File>
 			<File
 				RelativePath=".\OutputWindow.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="DockWindow"
+			>
+			<File
+				RelativePath=".\DockWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DockWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Npp_DockWindow.cpp"
 				>
 			</File>
 		</Filter>

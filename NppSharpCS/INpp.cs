@@ -632,7 +632,27 @@ namespace NppSharp
 		/// If null, hardcoded values will be used.</param>
 		void SetOutputStyleDef(OutputStyleDef osd, OutputStyleDef defaultOsd);
 		#endregion
-	}
+
+        #region Dock Window
+		/// <summary>
+		/// Creates a docked window.
+		/// </summary>
+		/// <param name="window">The form/control handle.</param>
+		/// <param name="title">The window title.</param>
+		/// <param name="alignment">The alignment of the window.</param>
+		/// <param name="tabIcon">The icon to appear when the window is tabbed because multiple docked windows exist on the same side.</param>
+		/// <param name="id">An identifier for this docked window.
+		/// Notepad++ tracks states for each window separately between sessions based on this ID.</param>
+		IDockWindow CreateDockWindow(IWin32Window window, string title, DockWindowAlignment alignment, Icon tabIcon, int id);
+
+		/// <summary>
+		/// Gets the dock window object for the specified ID.
+		/// </summary>
+		/// <param name="id">The ID number for the dock window object.</param>
+		/// <returns>If the dock window object could be found, the object is returned; otherwise null.</returns>
+		IDockWindow GetDockWindow(int id);
+        #endregion
+    }
 
 	#region Event Handlers
 	/// <summary>
@@ -773,4 +793,35 @@ namespace NppSharp
 		}
 	}
 	#endregion
+
+    /// <summary>
+    /// Specifies the default docking window alignment.
+    /// </summary>
+    public enum DockWindowAlignment : uint
+    {
+        /// <summary>
+        /// Default docking on left
+        /// </summary>
+        Left,
+
+        /// <summary>
+        /// Default docking on right
+        /// </summary>
+        Right,
+
+        /// <summary>
+        /// Default docking on top
+        /// </summary>
+        Top,
+
+        /// <summary>
+        /// Default docking on bottom
+        /// </summary>
+        Bottom,
+
+        /// <summary>
+        /// Default state is floating
+        /// </summary>
+        Floating
+    }
 }

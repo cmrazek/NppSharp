@@ -16,6 +16,12 @@ UninstPage instfiles
 ;---------------------------------------------------------------------------------------------------
 Section ""
 	
+	; Check for running Notepad++
+	FindWindow $0 "Notepad++"
+	IntCmp $0 0 NotepadNotRunning
+		MessageBox MB_OK|MB_ICONEXCLAMATION "Please ensure Notepad++ is closed before installation."
+	NotepadNotRunning:
+	
 	; Write program files
 	SetOutPath "$INSTDIR\plugins"
 	File "bin\NppSharp.dll"
@@ -39,6 +45,12 @@ SectionEnd
 
 ;---------------------------------------------------------------------------------------------------
 Section "Uninstall"
+	; Check for running Notepad++
+	FindWindow $0 "Notepad++"
+	IntCmp $0 0 NotepadNotRunning
+		MessageBox MB_OK|MB_ICONEXCLAMATION "Please ensure Notepad++ is closed before uninstalling."
+	NotepadNotRunning:
+	
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\NppSharp"
 	
 	Delete /REBOOTOK "$INSTDIR\NppSharpInterface.dll"
@@ -53,5 +65,5 @@ Section "Uninstall"
 	IfRebootFlag 0 NoUninstReboot
 		MessageBox MB_YESNO "A reboot is required to finish the uninstall.  Do you wish to reboot now?" IDNO NoUninstReboot
 		Reboot
-NoUninstReboot:
+	NoUninstReboot:
 SectionEnd

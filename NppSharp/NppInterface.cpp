@@ -32,7 +32,11 @@ namespace NppSharp
 		, _commands(gcnew List<PluginCommand^>())
 		, _funcItems(NULL)
 		, _numFuncItems(0)
+		, _dockWindows(gcnew List<DockWindow^>())
 	{
+		Application::EnableVisualStyles();
+		Application::SetCompatibleTextRenderingDefault(false);
+
 		_nppWindow = gcnew NativeWindow();
 		_nppWindow->AssignHandle((IntPtr)_nppHandle);
 		_outputWindow = new OutputWindow(_nppHandle);
@@ -67,17 +71,6 @@ namespace NppSharp
 		_commands->Add(cmd);
 	}
 
-	//void NppInterface::Log(String^ message)
-	//{
-	//	pin_ptr<const wchar_t> str = PtrToStringChars(message);
-	//	logWrite(str);
-	//}
-
-	//void NppInterface::Log(String^ format, array<Object^>^ args)
-	//{
-	//	Log(String::Format(format, args));
-	//}
-
 	void NppInterface::OnReady()
 	{
 		Ready(this, gcnew EventArgs());
@@ -86,6 +79,7 @@ namespace NppSharp
 	void NppInterface::OnShutdown()
 	{
 		Shutdown(this, gcnew EventArgs());
+		DockWindow_Shutdown();
 	}
 
 	void NppInterface::OnFileClosing(unsigned int bufferId)
