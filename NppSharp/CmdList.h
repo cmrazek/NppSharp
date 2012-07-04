@@ -122,7 +122,7 @@ DEFCMD(99)
 DEFCMD(100)
 DEFCMD(101)
 
-PFUNCPLUGINCMD GetCommand(int num)
+npp::PFUNCPLUGINCMD GetCommand(int num)
 {
 	switch (num)
 	{

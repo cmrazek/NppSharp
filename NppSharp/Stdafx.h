@@ -38,7 +38,11 @@
 #include <map>
 using namespace std;
 
-#include "PluginInterface.h"
+namespace npp
+{
+	#include "PluginInterface.h"
+	#include "ILexer.h"
+}
 #pragma managed
 
 using namespace System;

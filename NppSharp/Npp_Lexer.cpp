@@ -14,19 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#pragma once
+#include "StdAfx.h"
+#include "NppInterface.h"
+#include "LexerWrapper.h"
 
 namespace NppSharp
 {
-	typedef npp::ILexer* (*LexerFactoryFunction)();
+	int NppInterface::AddLexer(ILexer^ lexer)
+	{
+		LexerWrapper* wrapper = new LexerWrapper(lexer);
+		_lexers.Add((IntPtr)wrapper);
+		return _lexers.Count - 1;
+	}
 
-	void			SetPluginInfo(npp::NppData nppData);
-	npp::FuncItem*	GetFuncList(int *pNumFuncsOut);
-	void			OnNotify(npp::SCNotification *pNotify);
-	void			OnCommand(int cmdId);
+	int NppInterface::GetLexerCount()
+	{
+		return _lexers.Count;
+	}
 
-	int						OnGetLexerCount();
-	void					OnGetLexerName(int num, char *buf, int bufLen);
-	void					OnGetLexerStatusText(int num, wchar_t *buf, int bufLen);
-	LexerFactoryFunction	OnGetLexerFactory(int index);
+	String^ NppInterface::GetLexerName(int index)
+	{
+		return ((LexerWrapper*)_lexers[index].ToInt32())->GetName();
+	}
+
+	String^ NppInterface::GetLexerDescription(int index)
+	{
+		return ((LexerWrapper*)_lexers[index].ToInt32())->GetDescription();
+	}
+
+	npp::ILexer* NppInterface::GetLexer(int index)
+	{
+		return (LexerWrapper*)_lexers[index].ToInt32();
+	}
 }

@@ -216,7 +216,7 @@ namespace NppSharp
 
 	void NppInterface::AddToolbarIcon(PluginCommand^ cmd)
 	{
-		toolbarIcons tbi;
+		npp::toolbarIcons tbi;
 		tbi.hToolbarIcon = NULL;
 
 		Bitmap^ bm = cmd->ToolbarIcon;

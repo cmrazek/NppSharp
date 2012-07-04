@@ -19,6 +19,8 @@
 #include "NppInterface.h"
 #include "ClrUtil.h"
 
+#define EXT_LEXER_DECL __declspec( dllexport ) __stdcall
+
 namespace NppSharp
 {
 	struct Globals
@@ -26,9 +28,9 @@ namespace NppSharp
 	public:
 		bool					initialized;
 		gcroot<NppInterface^>	npp;
-		FuncItem*				funcList;
+		npp::FuncItem*			funcList;
 		wstring					strConfigDir;
-		list<ShortcutKey>		shortcuts;
+		list<npp::ShortcutKey>	shortcuts;
 
 		Globals()
 			: initialized(false)
@@ -37,11 +39,9 @@ namespace NppSharp
 	};
 	Globals g;
 
-	
-
 	#pragma unmanaged
 
-	extern "C" __declspec(dllexport) void setInfo(NppData nppData)
+	extern "C" __declspec(dllexport) void setInfo(npp::NppData nppData)
 	{
 		SetPluginInfo(nppData);
 	}
@@ -51,12 +51,12 @@ namespace NppSharp
 		return PLUGIN_NAME;
 	}
 
-	extern "C" __declspec(dllexport) FuncItem* getFuncsArray(int *pNumFuncsOut)
+	extern "C" __declspec(dllexport) npp::FuncItem* getFuncsArray(int *pNumFuncsOut)
 	{
 		return GetFuncList(pNumFuncsOut);
 	}
 
-	extern "C" __declspec(dllexport) void beNotified(SCNotification *pNotify)
+	extern "C" __declspec(dllexport) void beNotified(npp::SCNotification *pNotify)
 	{
 		OnNotify(pNotify);
 	}
@@ -77,11 +77,32 @@ namespace NppSharp
 		return TRUE;
 	}
 
+	int EXT_LEXER_DECL GetLexerCount()
+	{
+		return OnGetLexerCount();
+	}
+
+	void EXT_LEXER_DECL GetLexerName(int iNum, char *pszName, int iNameLen)
+	{
+		OnGetLexerName(iNum, pszName, iNameLen);
+	}
+
+	void EXT_LEXER_DECL GetLexerStatusText(int iNum, TCHAR *pszDesc, int iDescLen)
+	{
+		OnGetLexerStatusText(iNum, pszDesc, iDescLen);
+	}
+
+	LexerFactoryFunction EXT_LEXER_DECL GetLexerFactory(int iIndex)
+	{
+		return OnGetLexerFactory(iIndex);
+	}
+
+
 	#pragma managed
 
 #include "CmdList.h"
 
-	void SetPluginInfo(NppData nppData)
+	void SetPluginInfo(npp::NppData nppData)
 	{
 		try
 		{
@@ -106,22 +127,22 @@ namespace NppSharp
 		}
 	}
 
-	FuncItem* GetFuncList(int *pNumFuncsOut)
+	npp::FuncItem* GetFuncList(int *pNumFuncsOut)
 	{
 		try
 		{
 			List<PluginCommand^>^ funcList = g.npp->GetCommandList();
 
-			g.funcList = new FuncItem[funcList->Count];
-			memset(g.funcList, 0, sizeof(FuncItem) * funcList->Count);
+			g.funcList = new npp::FuncItem[funcList->Count];
+			memset(g.funcList, 0, sizeof(npp::FuncItem) * funcList->Count);
 
 			int i = 0;
 			for each (PluginCommand ^f in funcList)
 			{
-				FuncItem *pItem = g.funcList + i;
+				npp::FuncItem *pItem = g.funcList + i;
 
-				String ^funcName = f->Name;
-				if (funcName->Length >= nbChar) funcName = funcName->Substring(0, nbChar - 1);
+				String^ funcName = f->Name;
+				if (funcName->Length >= npp::nbChar) funcName = funcName->Substring(0, npp::nbChar - 1);
 				pin_ptr<const wchar_t> cstr = PtrToStringChars(funcName);
 
 				lstrcpy(pItem->_itemName, cstr);
@@ -131,7 +152,7 @@ namespace NppSharp
 				NppShortcut^ nppShortcut = f->Shortcut;
 				if (nppShortcut != nullptr)
 				{
-					ShortcutKey sc;
+					npp::ShortcutKey sc;
 					sc._isCtrl = nppShortcut->Control;
 					sc._isAlt = nppShortcut->Alt;
 					sc._isShift = nppShortcut->Shift;
@@ -167,7 +188,7 @@ namespace NppSharp
 		return NULL;
 	}
 
-	void OnNotify(SCNotification *pNotify)
+	void OnNotify(npp::SCNotification *pNotify)
 	{
 		try
 		{
@@ -277,4 +298,117 @@ namespace NppSharp
 		}
 	}
 
+	int OnGetLexerCount()
+	{
+		try
+		{
+			return g.npp->GetLexerCount();
+		}
+		catch (Exception^ ex)
+		{
+			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerCount:\n", ex));
+			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
+			return 0;
+		}
+		catch (std::exception ex)
+		{
+			wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerCount:\n", gcnew String(ex.what())));
+			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
+			return 0;
+		}
+		catch (...)
+		{
+			::MessageBox(g.npp->NppHandle, L"Unknown exception in OnGetLexerCount.", L"Error", MB_OK | MB_ICONERROR);
+			return 0;
+		}
+	}
+
+	void OnGetLexerName(int num, char *buf, int bufLen)
+	{
+		try
+		{
+			string str = ClrStringToAString(g.npp->GetLexerName(num));
+			if ((int)str.length() < bufLen)
+			{
+				strcpy(buf, str.c_str());
+			}
+			else
+			{
+				strncpy(buf, str.c_str(), bufLen - 1);
+				buf[bufLen - 1] = 0;
+			}
+		}
+		catch (Exception^ ex)
+		{
+			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerName:\n", ex));
+			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
+		}
+		catch (std::exception ex)
+		{
+			wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerName:\n", gcnew String(ex.what())));
+			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
+		}
+		catch (...)
+		{
+			::MessageBox(g.npp->NppHandle, L"Unknown exception in OnGetLexerName.", L"Error", MB_OK | MB_ICONERROR);
+		}
+	}
+
+	void OnGetLexerStatusText(int num, wchar_t *buf, int bufLen)
+	{
+		try
+		{
+			wstring str = ClrStringToWString(g.npp->GetLexerDescription(num));
+			if ((int)str.length() < bufLen)
+			{
+				wcscpy(buf, str.c_str());
+			}
+			else
+			{
+				wcsncpy(buf, str.c_str(), bufLen - 1);
+				buf[bufLen - 1] = 0;
+			}
+		}
+		catch (Exception^ ex)
+		{
+			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerStatusText:\n", ex));
+			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
+		}
+		catch (std::exception ex)
+		{
+			wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerStatusText:\n", gcnew String(ex.what())));
+			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
+		}
+		catch (...)
+		{
+			::MessageBox(g.npp->NppHandle, L"Unknown exception in OnGetLexerStatusText.", L"Error", MB_OK | MB_ICONERROR);
+		}
+	}
+
+#include "LexerFactories.h"
+
+	LexerFactoryFunction OnGetLexerFactory(int index)
+	{
+		try
+		{
+			return GetLexerFactoryByIndex(index);
+		}
+		catch (Exception^ ex)
+		{
+			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerFactory:\n", ex));
+			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
+			return NULL;
+		}
+		catch (std::exception ex)
+		{
+			wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerFactory:\n", gcnew String(ex.what())));
+			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
+			return NULL;
+		}
+		catch (...)
+		{
+			::MessageBox(g.npp->NppHandle, L"Unknown exception in OnGetLexerFactory.", L"Error", MB_OK | MB_ICONERROR);
+			return NULL;
+		}
+	}
 }

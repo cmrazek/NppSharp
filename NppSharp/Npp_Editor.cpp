@@ -247,7 +247,7 @@ namespace NppSharp
 
 			StringBufA buf(lineEndPos - lineStartPos);
 
-			Sci_TextRange tr;
+			npp::Sci_TextRange tr;
 			tr.chrg.cpMin = lineStartPos;
 			tr.chrg.cpMax = lineEndPos;
 			tr.lpstrText  = buf.Ptr();
@@ -307,7 +307,7 @@ namespace NppSharp
 	{
 		if (!ClampTextRange(&startPos, &length)) return "";
 
-		Sci_TextRange tr;
+		npp::Sci_TextRange tr;
 		tr.chrg.cpMin = startPos;
 		tr.chrg.cpMax = startPos + length;
 

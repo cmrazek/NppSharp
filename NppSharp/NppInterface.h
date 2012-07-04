@@ -157,11 +157,17 @@ namespace NppSharp
 
 		virtual void AddToolbarIcon(PluginCommand^ cmd);
 		void OnTbModification();
-		void SetFuncItems(FuncItem* funcItems, int numFuncItems) { _funcItems = funcItems; _numFuncItems = numFuncItems; }
+		void SetFuncItems(npp::FuncItem* funcItems, int numFuncItems) { _funcItems = funcItems; _numFuncItems = numFuncItems; }
 		int GetPluginCommandId(PluginCommand^ cmd);
 
 		virtual IDockWindow^ CreateDockWindow(IWin32Window^ window, String^ title, DockWindowAlignment alignment, Icon^ tabIcon, int id);
 		virtual IDockWindow^ GetDockWindow(int id);
+
+		virtual int AddLexer(ILexer^ lexer);
+		int GetLexerCount();
+		String^ GetLexerName(int index);
+		String^ GetLexerDescription(int index);
+		npp::ILexer* GetLexer(int index);
 		
 
 	private:
@@ -180,8 +186,9 @@ namespace NppSharp
 		List<PluginCommand^>^				_commands;
 		String^								_curFileName;
 		Dictionary<unsigned int, String^>^	_bufferIds;
-		FuncItem*							_funcItems;
+		npp::FuncItem*						_funcItems;
 		int									_numFuncItems;
 		List<DockWindow^>^					_dockWindows;
+		List<IntPtr>						_lexers;	// Points to LexerWrapper object.
 	};
 }

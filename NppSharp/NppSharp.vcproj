@@ -317,22 +317,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="OutputWindow"
-			>
-			<File
-				RelativePath=".\Npp_OutputWindow.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\OutputWindow.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\OutputWindow.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="DockWindow"
 			>
 			<File
@@ -345,6 +329,42 @@
 			</File>
 			<File
 				RelativePath=".\Npp_DockWindow.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Lexer"
+			>
+			<File
+				RelativePath=".\LexerFactories.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LexerWrapper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LexerWrapper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Npp_Lexer.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="OutputWindow"
+			>
+			<File
+				RelativePath=".\Npp_OutputWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputWindow.h"
 				>
 			</File>
 		</Filter>

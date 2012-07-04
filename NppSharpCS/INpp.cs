@@ -652,7 +652,16 @@ namespace NppSharp
 		/// <returns>If the dock window object could be found, the object is returned; otherwise null.</returns>
 		IDockWindow GetDockWindow(int id);
         #endregion
-    }
+
+		#region Lexers
+		/// <summary>
+		/// Adds a NppSharp lexer object.
+		/// </summary>
+		/// <param name="lexer">The lexer object to be added.</param>
+		/// <returns>The zero-based index of the lexer object.</returns>
+		int AddLexer(ILexer lexer);
+		#endregion
+	}
 
 	#region Event Handlers
 	/// <summary>
