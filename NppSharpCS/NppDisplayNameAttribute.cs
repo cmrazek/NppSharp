@@ -21,12 +21,12 @@ using System.Text;
 namespace NppSharp
 {
 	/// <summary>
-	/// Controls the display name for the Notepad++ command.
+	/// Controls the display name for the Notepad++ command or lexer class.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 	public class NppDisplayNameAttribute : Attribute
 	{
-		private string _displayName = "";
+		private string _displayName = string.Empty;
 
 		/// <summary>
 		/// Constructs the display name attribute.

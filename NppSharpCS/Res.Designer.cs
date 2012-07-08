@@ -86,6 +86,17 @@ namespace NppSharp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred when attempting to create an instance of a lexer object &apos;{0}&apos; in file &apos;{1}&apos;:
+        ///
+        ///{2}.
+        /// </summary>
+        internal static string err_lexer_CreateInstance {
+            get {
+                return ResourceManager.GetString("err_lexer_CreateInstance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error when attempting to load the toolbar icon file &apos;{0}&apos;:
         ///{1}.
         /// </summary>

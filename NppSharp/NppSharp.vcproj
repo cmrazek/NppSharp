@@ -60,6 +60,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
+				ModuleDefinitionFile="NppSharp.def"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				TargetMachine="1"
@@ -134,6 +135,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				ModuleDefinitionFile="NppSharp.def"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -340,6 +342,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LexerLine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LexerLine.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LexerWrapper.cpp"
 				>
 			</File>
@@ -368,6 +378,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\NppSharp.def"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

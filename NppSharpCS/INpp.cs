@@ -657,9 +657,11 @@ namespace NppSharp
 		/// <summary>
 		/// Adds a NppSharp lexer object.
 		/// </summary>
-		/// <param name="lexer">The lexer object to be added.</param>
+		/// <param name="lexerType">The class type for the lexer.</param>
+		/// <param name="name">The name of the lexer.</param>
+		/// <param name="description">The description of the lexer to appear in the Notepad++ status bar.</param>
 		/// <returns>The zero-based index of the lexer object.</returns>
-		int AddLexer(ILexer lexer);
+		int AddLexer(Type lexerType, string name, string description);
 		#endregion
 	}
 

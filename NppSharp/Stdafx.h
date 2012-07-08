@@ -36,6 +36,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <vector>
 using namespace std;
 
 namespace npp

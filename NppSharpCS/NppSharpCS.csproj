@@ -52,9 +52,11 @@
     <Compile Include="IDockWindow.cs" />
     <Compile Include="ILexer.cs" />
     <Compile Include="ILexerLine.cs" />
+    <Compile Include="LexerException.cs" />
     <Compile Include="LexerStyle.cs" />
     <Compile Include="MenuCommand.cs" />
     <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="NppDescriptionAttribute.cs" />
     <Compile Include="NppDisplayNameAttribute.cs" />
     <Compile Include="NppException.cs" />
     <Compile Include="INpp.cs" />

@@ -31,25 +31,65 @@ namespace NppSharp
 		string Text { get; }
 
 		/// <summary>
+		/// Sets the style for the next character.
+		/// </summary>
+		/// <param name="style">The style to be assigned.</param>
+		void Style(LexerStyle style);
+
+		/// <summary>
+		/// Sets the style for the next several characters.
+		/// </summary>
+		/// <param name="style">The style to be assigned.</param>
+		/// <param name="length">The number of characters to style.</param>
+		void Style(LexerStyle style, int length);
+
+		/// <summary>
+		/// Sets the style for the remaining characters on the line.
+		/// </summary>
+		/// <param name="style">The style to be assigned.</param>
+		void StyleRemainder(LexerStyle style);
+
+		/// <summary>
 		/// Sets the style for a range of characters.
 		/// </summary>
-		/// <param name="style">The lexer style index.</param>
-		/// <param name="start">The zero based starting position of the first character to be styled.</param>
+		/// <param name="style">The style to be assigned.</param>
+		/// <param name="startPos">The starting character position.</param>
 		/// <param name="length">The number of characters to be styled.</param>
-		void SetStyle(int style, int start, int length);
+		/// <remarks>The current position is placed after the last character in this range.</remarks>
+		void StyleRange(LexerStyle style, int startPos, int length);
 
 		/// <summary>
-		/// Sets the style for a single character.
+		/// Gets the length of the text.
 		/// </summary>
-		/// <param name="style">The lexer style index.</param>
-		/// <param name="pos">The zero based character index to be styled.</param>
-		void SetStyle(int style, int pos);
+		int Length { get; }
 
 		/// <summary>
-		/// Gets the style for a single character.
+		/// Gets the current position.
 		/// </summary>
-		/// <param name="pos">The zero based character index to retrieve the style number.</param>
-		/// <returns>If the character position is valid, the style number for that character; otherwise -1.</returns>
-		int GetStyle(int pos);
+		int Position { get; set; }
+
+		/// <summary>
+		/// Gets a value indicating if the end of line has been reached.
+		/// </summary>
+		bool EOL { get; }
+
+		/// <summary>
+		/// Retrieves the next characters from the line without affecting the current position.
+		/// </summary>
+		/// <param name="length">The number of characters to be retrieved.</param>
+		/// <returns>The next characters on the line.</returns>
+		/// <remarks>If the end of the line has been reached, this function will return an empty string.</remarks>
+		string Peek(int length);
+
+		/// <summary>
+		/// Retrieves the next character from the line without affecting the current position.
+		/// </summary>
+		/// <remarks>If the end of the line has been reached, will return a NUL '\0' character.</remarks>
+		char NextChar { get; }
+
+		/// <summary>
+		/// Gets the output window writer object.
+		/// </summary>
+		OutputView Output { get; }
 	}
 }

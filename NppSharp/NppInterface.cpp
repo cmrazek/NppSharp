@@ -33,6 +33,8 @@ namespace NppSharp
 		, _funcItems(NULL)
 		, _numFuncItems(0)
 		, _dockWindows(gcnew List<DockWindow^>())
+		, _lexers(gcnew List<LexerInfo^>())
+		, _lexerFileCreated(false)
 	{
 		Application::EnableVisualStyles();
 		Application::SetCompatibleTextRenderingDefault(false);

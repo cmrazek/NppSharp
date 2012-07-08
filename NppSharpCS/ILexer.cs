@@ -26,17 +26,6 @@ namespace NppSharp
 	public interface ILexer
 	{
 		/// <summary>
-		/// The name of the language.
-		/// </summary>
-		string Name { get; }
-
-		/// <summary>
-		/// Gets the description of the language.
-		/// </summary>
-		/// <remarks>This will appear in the status bar when the mouse is hovering over the language menu item.</remarks>
-		string Description { get; }
-
-		/// <summary>
 		/// The file extensions to be automatically styled by this lexer.
 		/// </summary>
 		IEnumerable<string> Extensions { get; }

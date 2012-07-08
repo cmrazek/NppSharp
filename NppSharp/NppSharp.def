@@ -1,0 +1,6 @@
+LIBRARY	"NppSharp"
+EXPORTS
+	GetLexerCount = GetLexerCount
+	GetLexerName = GetLexerName
+	GetLexerStatusText = GetLexerStatusText
+	GetLexerFactory = GetLexerFactory

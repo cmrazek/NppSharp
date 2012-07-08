@@ -242,4 +242,10 @@
   <data name="err_InvalidWindowObj" xml:space="preserve">
     <value>Dock window object is null.</value>
   </data>
+  <data name="err_lexer_CreateInstance" xml:space="preserve">
+    <value>An error occurred when attempting to create an instance of a lexer object '{0}' in file '{1}':
+
+{2}</value>
+    <comment>{0} = Object name, {1} = filename, {2} = exception</comment>
+  </data>
 </root>

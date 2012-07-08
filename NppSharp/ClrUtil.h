@@ -23,7 +23,7 @@ namespace NppSharp
 {
 	wstring	ClrStringToWString(String^ str);
 	string	ClrStringToAString(String^ str);
-	String^	NativeUtf8ToClrString(void *buf, int len);
+	String^	NativeUtf8ToClrString(const void *buf, int len);
 	void	NativeWToBufA(const wchar_t *wide, StringBufA &buf);
 	void	NativeWToUtf8BufA(const wchar_t* wide, StringBufA &buf);
 	String^	GetLastErrorClrString();

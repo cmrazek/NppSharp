@@ -18,18 +18,30 @@
 
 namespace NppSharp
 {
-	typedef npp::ILexer* (*LexerFactoryFunction)();
+	ref class LexerLine : public ILexerLine
+	{
+	public:
+		LexerLine();
 
-	void			SetPluginInfo(npp::NppData nppData);
-	npp::FuncItem*	GetFuncList(int *pNumFuncsOut);
-	void			OnNotify(npp::SCNotification *pNotify);
-	void			OnCommand(int cmdId);
+		property bool		EOL { virtual bool get(); }
+		property int		Length { virtual int get(); }
+		property wchar_t	NextChar { virtual wchar_t get(); }
+		property int		Position { virtual int get(); virtual void set(int); }
+		property String^	Text { virtual String^ get(); }
 
-	int						OnGetLexerCount();
-	void					OnGetLexerName(int num, char *buf, int bufLen);
-	void					OnGetLexerStatusText(int num, wchar_t *buf, int bufLen);
-	LexerFactoryFunction	OnGetLexerFactory(int index);
+		virtual String^	Peek(int length);
+		virtual void	Style(LexerStyle^ style);
+		virtual void	Style(LexerStyle^ style, int length);
+		virtual void	StyleRemainder(LexerStyle^ style);
+		virtual void	StyleRange(LexerStyle^ style, int startPos, int length);
 
-	void	WriteOutputLine(String^ message);
-	void	WriteOutputLine(OutputStyle style, String^ message);
+		void Start(String^ text);
+		property array<byte>^ StylesBuf { array<byte>^ get(); }
+
+	private:
+		String^			_text;
+		array<byte>^	_styles;
+		int				_len;
+		int				_pos;
+	};
 }

@@ -36,7 +36,7 @@ namespace NppSharp
 		return ret;
 	}
 
-	String^ NativeUtf8ToClrString(void* buf, int len)
+	String^ NativeUtf8ToClrString(const void* buf, int len)
 	{
 		array<unsigned char>^ arr = gcnew array<unsigned char>(len);
 		for (int i = 0; i < len; i++) arr[i] = *(((unsigned char*)buf) + i);

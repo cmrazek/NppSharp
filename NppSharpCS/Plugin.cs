@@ -266,9 +266,9 @@ namespace NppSharp
 		#endregion
 
 		#region Lexers
-		internal static int AddLexer(ILexer lexer)
+		internal static int AddLexer(Type lexerType, string name, string description)
 		{
-			return _npp.AddLexer(lexer);
+			return _npp.AddLexer(lexerType, name, description);
 		}
 		#endregion
 	}

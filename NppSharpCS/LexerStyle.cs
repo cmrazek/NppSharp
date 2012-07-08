@@ -24,8 +24,138 @@ namespace NppSharp
 	/// <summary>
 	/// Defines a style for the lexer.
 	/// </summary>
+	/// <remarks>Notepad++ only allows a maximum of 32 styles per language to be defined.</remarks>
 	public class LexerStyle
 	{
+		/// <summary>
+		/// Creates a new lexer style object.
+		/// </summary>
+		/// <param name="name">The name of the word style.</param>
+		public LexerStyle(string name)
+		{
+			_name = name;
+		}
+
+		/// <summary>
+		/// Creates a new lexer style object.
+		/// </summary>
+		/// <param name="name">The name of the word style.</param>
+		/// <param name="foreColor">The foreground text color.</param>
+		public LexerStyle(string name, Color foreColor)
+		{
+			_name = name;
+			_foreColor = foreColor;
+		}
+
+		/// <summary>
+		/// Creates a new lexer style object.
+		/// </summary>
+		/// <param name="name">The name of the word style.</param>
+		/// <param name="foreColor">The foreground text color.</param>
+		/// <param name="backColor">The background text color.</param>
+		public LexerStyle(string name, Color foreColor, Color backColor)
+		{
+			_name = name;
+			_foreColor = foreColor;
+			_backColor = backColor;
+		}
+
+		/// <summary>
+		/// Creates a new lexer style object.
+		/// </summary>
+		/// <param name="name">The name of the word style.</param>
+		/// <param name="foreColor">The foreground text color.</param>
+		/// <param name="fontStyle">The font style.</param>
+		public LexerStyle(string name, Color foreColor, FontStyle fontStyle)
+		{
+			_name = name;
+			_foreColor = foreColor;
+			_fontStyle = fontStyle;
+		}
+
+		/// <summary>
+		/// Creates a new lexer style object.
+		/// </summary>
+		/// <param name="name">The name of the word style.</param>
+		/// <param name="foreColor">The foreground text color.</param>
+		/// <param name="backColor">The background text color.</param>
+		/// <param name="fontStyle">The font style.</param>
+		public LexerStyle(string name, Color foreColor, Color backColor, FontStyle fontStyle)
+		{
+			_name = name;
+			_foreColor = foreColor;
+			_backColor = backColor;
+			_fontStyle = fontStyle;
+		}
+
+		/// <summary>
+		/// Creates a new lexer style object.
+		/// </summary>
+		/// <param name="name">The name of the word style.</param>
+		/// <param name="foreColor">The foreground text color.</param>
+		/// <param name="fontName">The name of the font family.</param>
+		/// <param name="fontStyle">The font style.</param>
+		public LexerStyle(string name, Color foreColor, string fontName, FontStyle fontStyle)
+		{
+			_name = name;
+			_foreColor = foreColor;
+			_fontName = fontName;
+			_fontStyle = fontStyle;
+		}
+
+		/// <summary>
+		/// Creates a new lexer style object.
+		/// </summary>
+		/// <param name="name">The name of the word style.</param>
+		/// <param name="foreColor">The foreground text color.</param>
+		/// <param name="backColor">The background text color.</param>
+		/// <param name="fontName">The name of the font family.</param>
+		/// <param name="fontStyle">The font style.</param>
+		public LexerStyle(string name, Color foreColor, Color backColor, string fontName, FontStyle fontStyle)
+		{
+			_name = name;
+			_foreColor = foreColor;
+			_backColor = backColor;
+			_fontName = fontName;
+			_fontStyle = fontStyle;
+		}
+
+		/// <summary>
+		/// Creates a new lexer style object.
+		/// </summary>
+		/// <param name="name">The name of the word style.</param>
+		/// <param name="foreColor">The foreground text color.</param>
+		/// <param name="fontName">The name of the font family.</param>
+		/// <param name="fontStyle">The font style.</param>
+		/// <param name="fontSize">The size of the font.</param>
+		public LexerStyle(string name, Color foreColor, string fontName, FontStyle fontStyle, int fontSize)
+		{
+			_name = name;
+			_foreColor = foreColor;
+			_fontName = fontName;
+			_fontStyle = fontStyle;
+			_fontSize = fontSize;
+		}
+
+		/// <summary>
+		/// Creates a new lexer style object.
+		/// </summary>
+		/// <param name="name">The name of the word style.</param>
+		/// <param name="foreColor">The foreground text color.</param>
+		/// <param name="backColor">The background text color.</param>
+		/// <param name="fontName">The name of the font family.</param>
+		/// <param name="fontStyle">The font style.</param>
+		/// <param name="fontSize">The size of the font.</param>
+		public LexerStyle(string name, Color foreColor, Color backColor, string fontName, FontStyle fontStyle, int fontSize)
+		{
+			_name = name;
+			_foreColor = foreColor;
+			_backColor = backColor;
+			_fontName = fontName;
+			_fontStyle = fontStyle;
+			_fontSize = fontSize;
+		}
+
 		/// <summary>
 		/// Gets or sets the name of the style (e.g. "Comments" or "Operators")
 		/// </summary>
@@ -35,6 +165,18 @@ namespace NppSharp
 			set { _name = value; }
 		}
 		private string _name;
+
+		/// <summary>
+		/// Gets or sets the index number for this style.
+		/// </summary>
+		/// <remarks>You do not need to set this value manually.
+		/// The NppSharp plug-in will automatically assign this value as styles are added.</remarks>
+		public int Index
+		{
+			get { return _index; }
+			set { _index = value; }
+		}
+		private int _index = 0;
 
 		/// <summary>
 		/// Gets or sets the foreground color.

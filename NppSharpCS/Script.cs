@@ -36,6 +36,7 @@ namespace NppSharp
 		private Assembly _assembly;
 		private string _fileName;
 		private List<CommandClass> _classes = new List<CommandClass>();
+		private int _numLexersFound = 0;
 		private List<string> _references = new List<string>();
 		#endregion
 
@@ -262,64 +263,101 @@ namespace NppSharp
 			foreach (Type type in _assembly.GetTypes())
 			{
 				if (!type.IsPublic) continue;
-				if (!type.IsSubclassOf(typeof(NppScript))) continue;
 
-				CommandClass cmdClass = new CommandClass();
-				cmdClass.classType = type;
-
-				foreach (MethodInfo methodInfo in type.GetMethods(BindingFlags.Instance | BindingFlags.Static |
-					BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.DeclaredOnly))
+				if (typeof(NppScript).IsAssignableFrom(type))
 				{
-					if (methodInfo.Name.StartsWith("get_") || methodInfo.Name.StartsWith("set_")) continue;
-
-					CommandMethod cmdMethod = new CommandMethod(cmdClass);
-					cmdMethod.method = methodInfo;
-
-					bool supported = true;
-					foreach (ParameterInfo pi in methodInfo.GetParameters())
-					{
-						if (!IsParameterSupported(pi))
-						{
-							supported = false;
-							break;
-						}
-					}
-
-					if (supported)
-					{
-						foreach (NppDisplayNameAttribute n in methodInfo.GetCustomAttributes(typeof(NppDisplayNameAttribute), false))
-						{
-							cmdMethod.name = n.DisplayName;
-						}
-						if (string.IsNullOrEmpty(cmdMethod.name)) cmdMethod.name = methodInfo.Name;
-
-						cmdClass.methods.Add(cmdMethod);
-					}
+					ProcessScriptClass(type);
 				}
 
-				if (cmdClass.methods.Count > 0)
+				if (typeof(ILexer).IsAssignableFrom(type))
 				{
-					// Create an instance of this object.
-					try
-					{
-						cmdClass.instance = (NppScript)Activator.CreateInstance(cmdClass.classType, null);
-						cmdClass.instance.ScriptFileName = _fileName;
-						cmdClass.instance.InitEvents();
-					}
-					catch (Exception ex)
-					{
-						Plugin.Output.WriteLine(OutputStyle.Error, Res.err_script_CreateInstance,
-							cmdClass.classType.Name, _fileName, ex.ToString());
-						cmdClass.instance = null;
-					}
-					
-					_classes.Add(cmdClass);
+					ProcessLexerClass(type);
 				}
 			}
 
-			if (_classes.Count == 0) return false;
+			if (_classes.Count == 0 && _numLexersFound == 0) return false;
 
 			return true;
+		}
+
+		private void ProcessScriptClass(Type type)
+		{
+			CommandClass cmdClass = new CommandClass();
+			cmdClass.classType = type;
+
+			foreach (MethodInfo methodInfo in type.GetMethods(BindingFlags.Instance | BindingFlags.Static |
+				BindingFlags.Public | BindingFlags.InvokeMethod | BindingFlags.DeclaredOnly))
+			{
+				if (methodInfo.Name.StartsWith("get_") || methodInfo.Name.StartsWith("set_")) continue;
+
+				CommandMethod cmdMethod = new CommandMethod(cmdClass);
+				cmdMethod.method = methodInfo;
+
+				bool supported = true;
+				foreach (ParameterInfo pi in methodInfo.GetParameters())
+				{
+					if (!IsParameterSupported(pi))
+					{
+						supported = false;
+						break;
+					}
+				}
+
+				if (supported)
+				{
+					foreach (NppDisplayNameAttribute n in methodInfo.GetCustomAttributes(typeof(NppDisplayNameAttribute), false))
+					{
+						cmdMethod.name = n.DisplayName;
+					}
+					if (string.IsNullOrEmpty(cmdMethod.name)) cmdMethod.name = methodInfo.Name;
+
+					cmdClass.methods.Add(cmdMethod);
+				}
+			}
+
+			if (cmdClass.methods.Count > 0)
+			{
+				// Create an instance of this object.
+				try
+				{
+					cmdClass.instance = (NppScript)Activator.CreateInstance(cmdClass.classType, null);
+					cmdClass.instance.ScriptFileName = _fileName;
+					cmdClass.instance.InitEvents();
+					_classes.Add(cmdClass);
+				}
+				catch (Exception ex)
+				{
+					Plugin.Output.WriteLine(OutputStyle.Error, Res.err_script_CreateInstance,
+						cmdClass.classType.Name, _fileName, ex.ToString());
+					cmdClass.instance = null;
+				}
+			}
+		}
+
+		private void ProcessLexerClass(Type type)
+		{
+			try
+			{
+				string displayName = type.Name;
+				foreach (NppDisplayNameAttribute attr in type.GetCustomAttributes(typeof(NppDisplayNameAttribute), false))
+				{
+					if (!string.IsNullOrEmpty(attr.DisplayName)) displayName = attr.DisplayName;
+				}
+
+				string desc = displayName;
+				foreach (NppDescriptionAttribute attr in type.GetCustomAttributes(typeof(NppDescriptionAttribute), false))
+				{
+					if (!string.IsNullOrEmpty(attr.Description)) desc = attr.Description;
+				}
+
+				Plugin.AddLexer(type, displayName, desc);
+				_numLexersFound++;
+			}
+			catch (Exception ex)
+			{
+				Plugin.Output.WriteLine(OutputStyle.Error, Res.err_lexer_CreateInstance,
+					type.Name, _fileName, ex.ToString());
+			}
 		}
 		#endregion
 

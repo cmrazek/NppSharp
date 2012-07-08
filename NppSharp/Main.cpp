@@ -302,6 +302,7 @@ namespace NppSharp
 	{
 		try
 		{
+			g.npp->GenerateLexerConfigFile();
 			return g.npp->GetLexerCount();
 		}
 		catch (Exception^ ex)
@@ -410,5 +411,18 @@ namespace NppSharp
 			::MessageBox(g.npp->NppHandle, L"Unknown exception in OnGetLexerFactory.", L"Error", MB_OK | MB_ICONERROR);
 			return NULL;
 		}
+	}
+
+	void WriteOutputLine(String^ message)
+	{
+		g.npp->WriteOutputLine(message);
+	}
+
+	void WriteOutputLine(OutputStyle style, String^ message)
+	{
+		OutputStyle oldStyle = style;
+		g.npp->OutputStyle = style;
+		g.npp->WriteOutputLine(message);
+		g.npp->OutputStyle = oldStyle;
 	}
 }

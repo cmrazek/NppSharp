@@ -24,6 +24,7 @@ namespace NppSharp
 	class OutputWindow;
 	class DockWnd;
 	ref class DockWindow;
+	ref class LexerInfo;
 
 	public ref class NppInterface : public INpp
 	{
@@ -163,11 +164,18 @@ namespace NppSharp
 		virtual IDockWindow^ CreateDockWindow(IWin32Window^ window, String^ title, DockWindowAlignment alignment, Icon^ tabIcon, int id);
 		virtual IDockWindow^ GetDockWindow(int id);
 
-		virtual int AddLexer(ILexer^ lexer);
-		int GetLexerCount();
-		String^ GetLexerName(int index);
-		String^ GetLexerDescription(int index);
-		npp::ILexer* GetLexer(int index);
+		// Lexer functions
+		virtual int		AddLexer(Type^ lexerType, String^ name, String^ description);
+		int				GetLexerCount();
+		String^			GetLexerName(int index);
+		String^			GetLexerDescription(int index);
+		npp::ILexer*	GetLexer(int index);
+		void			GenerateLexerConfigFile();
+		void			LoadOldLexerConfigFile();
+		String^			CleanLexerExtension(String^ ext);
+		String^			BuildExtensionList(IEnumerable<String^>^ extList);
+		String^			ColorToWebHex(Color color);
+		Color			WebHexToColor(String^ str);
 		
 
 	private:
@@ -189,6 +197,7 @@ namespace NppSharp
 		npp::FuncItem*						_funcItems;
 		int									_numFuncItems;
 		List<DockWindow^>^					_dockWindows;
-		List<IntPtr>						_lexers;	// Points to LexerWrapper object.
+		List<LexerInfo^>^					_lexers;
+		bool								_lexerFileCreated;
 	};
 }
