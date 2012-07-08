@@ -38,6 +38,7 @@ namespace NppSharp
 
 	void LexerWrapper::Release()
 	{
+		delete this;
 	}
 
 	const char* LexerWrapper::PropertyNames()
@@ -86,6 +87,8 @@ namespace NppSharp
 			int			state = line > 0 ? _doc->GetLineState(line - 1) : 0;
 			int			codePage = _doc->CodePage();
 			LexerLine^	lineObj = gcnew LexerLine();
+			int			foldLevel = line > 0 ? (_doc->GetLevel(line - 1) & SC_FOLDLEVELNUMBERMASK) : SC_FOLDLEVELBASE;
+			bool		foldBlank;
 
 			while (pszPos < pszEnd)
 			{
@@ -103,11 +106,12 @@ namespace NppSharp
 				{
 					lineStr = gcnew String(pszPos, 0, lineLen);
 				}
+				foldBlank = String::IsNullOrWhiteSpace(lineStr);
 
 				// Tell script to style the line.
-				lineObj->Start(lineStr);
 				try
 				{
+					lineObj->Start(lineStr);
 					state = _clrLexer->StyleLine(lineObj, state);
 				}
 				catch (Exception^ ex)
@@ -157,8 +161,32 @@ namespace NppSharp
 					}
 				}
 
+				// Apply line state
+				_doc->SetLineState(line, state);
+
+				// Apply fold level state
+				int lineFoldLevel = lineObj->GetFoldLevel();
+				if (lineFoldLevel > 0)
+				{
+					_doc->SetLevel(line, foldLevel | SC_FOLDLEVELHEADERFLAG);
+					foldLevel += lineFoldLevel;
+				}
+				else if (lineFoldLevel < 0)
+				{
+					_doc->SetLevel(line, foldLevel);
+					foldLevel += lineFoldLevel;
+					if (foldLevel < SC_FOLDLEVELBASE) foldLevel = SC_FOLDLEVELBASE;
+				}
+				else
+				{
+					if (foldBlank) foldLevel |= SC_FOLDLEVELWHITEFLAG;
+					_doc->SetLevel(line, foldLevel);
+				}
+
+				foldLevel &= SC_FOLDLEVELNUMBERMASK;
+
 				// Advance to next line.
-				_doc->SetLineState(line++, state);
+				line++;
 				pszPos = pszLineEnd;
 			}
 		}

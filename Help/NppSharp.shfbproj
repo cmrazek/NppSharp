@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CommandAttributes.aml" />
+    <None Include="Lexer Sample.aml" />
     <None Include="Sample.aml" />
     <None Include="Welcome.aml" />
   </ItemGroup>

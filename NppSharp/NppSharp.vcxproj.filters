@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Notepad++">
+      <UniqueIdentifier>{25ab4619-fd3a-48f5-8096-9b67c0335e7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{44e1a19a-5351-46ed-a038-66220ae6635e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockWindow">
+      <UniqueIdentifier>{9a9b76db-612d-4ff3-9c6c-ed240ccb05f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lexer">
+      <UniqueIdentifier>{5437bb1d-707a-4196-bea4-494ab827abb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OutputWindow">
+      <UniqueIdentifier>{92131f8b-fdf9-478c-a11c-c013ea5e3f1f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icon1.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="NppSharp.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NppIncludes\Docking.h">
+      <Filter>Notepad++</Filter>
+    </ClInclude>
+    <ClInclude Include="NppIncludes\ILexer.h">
+      <Filter>Notepad++</Filter>
+    </ClInclude>
+    <ClInclude Include="NppIncludes\menuCmdID.h">
+      <Filter>Notepad++</Filter>
+    </ClInclude>
+    <ClInclude Include="NppIncludes\Notepad_plus_msgs.h">
+      <Filter>Notepad++</Filter>
+    </ClInclude>
+    <ClInclude Include="NppIncludes\PluginInterface.h">
+      <Filter>Notepad++</Filter>
+    </ClInclude>
+    <ClInclude Include="NppIncludes\Scintilla.h">
+      <Filter>Notepad++</Filter>
+    </ClInclude>
+    <ClInclude Include="ClrUtil.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdList.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Main.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="NppInterface.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Stdafx.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="StringBuf.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="StringStore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="DockWindow.h">
+      <Filter>DockWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="LexerFactories.h">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="LexerLine.h">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="LexerWrapper.h">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputWindow.h">
+      <Filter>OutputWindow</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ClrUtil.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Npp_Editor.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="NppInterface.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Stdafx.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="StringStore.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DockWindow.cpp">
+      <Filter>DockWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Npp_DockWindow.cpp">
+      <Filter>DockWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="LexerLine.cpp">
+      <Filter>Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="LexerWrapper.cpp">
+      <Filter>Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="Npp_Lexer.cpp">
+      <Filter>Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="Npp_OutputWindow.cpp">
+      <Filter>OutputWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputWindow.cpp">
+      <Filter>OutputWindow</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

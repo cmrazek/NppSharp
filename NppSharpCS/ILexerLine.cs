@@ -25,38 +25,11 @@ namespace NppSharp
 	/// </summary>
 	public interface ILexerLine
 	{
+		#region Text Processing
 		/// <summary>
 		/// The line of text.
 		/// </summary>
 		string Text { get; }
-
-		/// <summary>
-		/// Sets the style for the next character.
-		/// </summary>
-		/// <param name="style">The style to be assigned.</param>
-		void Style(LexerStyle style);
-
-		/// <summary>
-		/// Sets the style for the next several characters.
-		/// </summary>
-		/// <param name="style">The style to be assigned.</param>
-		/// <param name="length">The number of characters to style.</param>
-		void Style(LexerStyle style, int length);
-
-		/// <summary>
-		/// Sets the style for the remaining characters on the line.
-		/// </summary>
-		/// <param name="style">The style to be assigned.</param>
-		void StyleRemainder(LexerStyle style);
-
-		/// <summary>
-		/// Sets the style for a range of characters.
-		/// </summary>
-		/// <param name="style">The style to be assigned.</param>
-		/// <param name="startPos">The starting character position.</param>
-		/// <param name="length">The number of characters to be styled.</param>
-		/// <remarks>The current position is placed after the last character in this range.</remarks>
-		void StyleRange(LexerStyle style, int startPos, int length);
 
 		/// <summary>
 		/// Gets the length of the text.
@@ -88,8 +61,67 @@ namespace NppSharp
 		char NextChar { get; }
 
 		/// <summary>
-		/// Gets the output window writer object.
+		/// Reads characters from the line until the callback function returns false.
 		/// </summary>
-		OutputView Output { get; }
+		/// <param name="readFunc">The callback function to control when reading stops.</param>
+		/// <returns>A string containing the characters read from the line.</returns>
+		string Peek(LexerReadDelegate readFunc);
+		#endregion
+
+		#region Styling
+		/// <summary>
+		/// Sets the style for the next character.
+		/// </summary>
+		/// <param name="style">The style to be assigned.</param>
+		void Style(LexerStyle style);
+
+		/// <summary>
+		/// Sets the style for the next several characters.
+		/// </summary>
+		/// <param name="style">The style to be assigned.</param>
+		/// <param name="length">The number of characters to style.</param>
+		void Style(LexerStyle style, int length);
+
+		/// <summary>
+		/// Sets the style for the remaining characters on the line.
+		/// </summary>
+		/// <param name="style">The style to be assigned.</param>
+		void StyleRemainder(LexerStyle style);
+
+		/// <summary>
+		/// Sets the style for a range of characters.
+		/// </summary>
+		/// <param name="style">The style to be assigned.</param>
+		/// <param name="startPos">The starting character position.</param>
+		/// <param name="length">The number of characters to be styled.</param>
+		/// <remarks>The current position is placed after the last character in this range.</remarks>
+		void StyleRange(LexerStyle style, int startPos, int length);
+
+		/// <summary>
+		/// Styles characters on the line until the callback function returns false.
+		/// </summary>
+		/// <param name="style">The style to be assigned.</param>
+		/// <param name="readFunc">The callback function to control when styling stops.</param>
+		void Style(LexerStyle style, LexerReadDelegate readFunc);
+		#endregion
+
+		#region Folding
+		/// <summary>
+		/// Indicates that a fold section should start on this line.
+		/// </summary>
+		void FoldStart();
+
+		/// <summary>
+		/// Indicates the end of a fold section.
+		/// </summary>
+		void FoldEnd();
+		#endregion
 	}
+
+	/// <summary>
+	/// Used to control the ILexerLine.Peek() function.
+	/// </summary>
+	/// <param name="ch">The next character to be read.</param>
+	/// <returns>This function should return true if the character is to be included in the string returned by Read(), or false to stop reading.</returns>
+	public delegate bool LexerReadDelegate(char ch);
 }

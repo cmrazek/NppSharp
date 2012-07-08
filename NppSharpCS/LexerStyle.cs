@@ -66,6 +66,7 @@ namespace NppSharp
 		/// <param name="name">The name of the word style.</param>
 		/// <param name="foreColor">The foreground text color.</param>
 		/// <param name="fontStyle">The font style.</param>
+		/// <remarks>FontStyle.Strikeout is not functional within Notepad++</remarks>
 		public LexerStyle(string name, Color foreColor, FontStyle fontStyle)
 		{
 			_name = name;
@@ -80,6 +81,7 @@ namespace NppSharp
 		/// <param name="foreColor">The foreground text color.</param>
 		/// <param name="backColor">The background text color.</param>
 		/// <param name="fontStyle">The font style.</param>
+		/// <remarks>FontStyle.Strikeout is not functional within Notepad++</remarks>
 		public LexerStyle(string name, Color foreColor, Color backColor, FontStyle fontStyle)
 		{
 			_name = name;
@@ -95,6 +97,7 @@ namespace NppSharp
 		/// <param name="foreColor">The foreground text color.</param>
 		/// <param name="fontName">The name of the font family.</param>
 		/// <param name="fontStyle">The font style.</param>
+		/// <remarks>FontStyle.Strikeout is not functional within Notepad++</remarks>
 		public LexerStyle(string name, Color foreColor, string fontName, FontStyle fontStyle)
 		{
 			_name = name;
@@ -111,6 +114,7 @@ namespace NppSharp
 		/// <param name="backColor">The background text color.</param>
 		/// <param name="fontName">The name of the font family.</param>
 		/// <param name="fontStyle">The font style.</param>
+		/// <remarks>FontStyle.Strikeout is not functional within Notepad++</remarks>
 		public LexerStyle(string name, Color foreColor, Color backColor, string fontName, FontStyle fontStyle)
 		{
 			_name = name;
@@ -128,6 +132,7 @@ namespace NppSharp
 		/// <param name="fontName">The name of the font family.</param>
 		/// <param name="fontStyle">The font style.</param>
 		/// <param name="fontSize">The size of the font.</param>
+		/// <remarks>FontStyle.Strikeout is not functional within Notepad++</remarks>
 		public LexerStyle(string name, Color foreColor, string fontName, FontStyle fontStyle, int fontSize)
 		{
 			_name = name;
@@ -146,6 +151,7 @@ namespace NppSharp
 		/// <param name="fontName">The name of the font family.</param>
 		/// <param name="fontStyle">The font style.</param>
 		/// <param name="fontSize">The size of the font.</param>
+		/// <remarks>FontStyle.Strikeout is not functional within Notepad++</remarks>
 		public LexerStyle(string name, Color foreColor, Color backColor, string fontName, FontStyle fontStyle, int fontSize)
 		{
 			_name = name;

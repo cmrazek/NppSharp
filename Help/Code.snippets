@@ -48,5 +48,151 @@ namespace NppScripts
 }
 		</sampleCode>
 	</item>
+	<item id="SampleLexer#C">
+		<sampleCode language="CSharp">
+<![CDATA[using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using NppSharp;
+
+namespace Test
+{
+    [NppDisplayName("C (NppSharp)")]
+    [NppDescription("C Source File")]
+    public class TestLexer : ILexer
+    {
+        // Default file extensions.
+        // The user may modify this list through Settings -> Style Configurator.
+        public IEnumerable<string> Extensions
+        {
+            get { return new string[] { "ct", "ct&", "f", "f&", "st", "st&" }; }
+        }
+
+        // Styles used by this lexer.
+        LexerStyle _defaultStyle = new LexerStyle("Default");
+        LexerStyle _keywordStyle = new LexerStyle("Keywords", Color.Blue);
+        LexerStyle _commentStyle = new LexerStyle("Comments", Color.Green, FontStyle.Italic);
+        LexerStyle _numberStyle = new LexerStyle("Numbers", Color.DarkRed);
+        LexerStyle _stringStyle = new LexerStyle("Strings", Color.DarkRed);
+        LexerStyle _dataTypeStyle = new LexerStyle("Data Types", Color.Teal);
+        LexerStyle _operatorStyle = new LexerStyle("Operators", Color.Black, FontStyle.Bold);
+
+        // Default styles.
+        // The user may modify the style appearance through Settings -> Style Configurator.
+        public IEnumerable<LexerStyle> Styles
+        {
+            get
+            {
+                return new LexerStyle[] { _defaultStyle, _keywordStyle, _commentStyle, _numberStyle,
+                    _stringStyle, _dataTypeStyle, _operatorStyle };
+            }
+        }
+
+        // Keywords that will be shaded blue.
+        private string[] _keywords = new string[] { "auto", "struct", "break", "else", "switch",
+            "case", "enum", "register", "typedef", "extern", "return", "union", "continue", "for",
+            "default", "goto", "sizeof", "volatile", "do", "if", "static", "while" };
+
+        // Data types that will be shaded teal.
+        private string[] _dataTypes = new string[] { "double", "int", "long", "char", "float",
+            "short", "const", "unsigned", "signed", "void" };
+
+        // Operators that will be bolded.
+        private char[] _operators = new char[] { '=', '!', '>', '<', '&', '|', '~', '^', '?', ':',
+            '+', '-', '*', '/', '%', '&', '{', '}', '[', ']', ',', '.', '#' };
+
+        // The state will only make use of 1 bit, a flag to indicate if we're inside a block comment.
+        private const int State_InsideComment = 1;
+
+        public int StyleLine(ILexerLine line, int state)
+        {
+            // This function is called by NppSharp to get the lexer to perform styling and code
+            // folding on a line of text.
+
+            char nextCh;
+            while (!line.EOL)
+            {
+                nextCh = line.NextChar;
+
+                if ((state & State_InsideComment) != 0)
+                {
+                    // Currently inside block comment.
+                    if (line.Peek(2) == "*/")
+                    {
+                        line.Style(_commentStyle, 2);
+                        state &= ~State_InsideComment;
+                    }
+                    else
+                    {
+                        line.Style(_commentStyle);
+                    }
+                }
+                else if (line.Peek(2) == "//")
+                {
+                    // Start of line comment; rest of line is forfeit.
+                    line.StyleRemainder(_commentStyle);
+                }
+                else if (line.Peek(2) == "/*")
+                {
+                    // Start of block comment. Switch the state on so it passes down to other lines.
+                    state |= State_InsideComment;
+                }
+                else if (Char.IsLetter(nextCh) || nextCh == '_')
+                {
+                    // Token beginning with letter or underscore.  Standard identifier.
+                    string token = line.Peek((ch) => Char.IsLetterOrDigit(ch) || ch == '_');
+                    if (_keywords.Contains(token)) line.Style(_keywordStyle, token.Length);
+                    else if (_dataTypes.Contains(token)) line.Style(_dataTypeStyle, token.Length);
+                    else line.Style(_defaultStyle, token.Length);
+                }
+                else if (Char.IsDigit(nextCh))
+                {
+                    // Token beginning with number.
+                    line.Style(_numberStyle, (ch) => Char.IsDigit(ch) || ch == '.');
+                }
+                else if (nextCh == '\"' || nextCh == '\'')
+                {
+                    // String literal.
+                    char lastCh = '\\';
+                    bool done = false;
+                    line.Style(_stringStyle, (ch) =>
+                        {
+                            if (done) return false;
+                            if (ch == nextCh && lastCh != '\\') done = true;
+                            lastCh = ch;
+                            return true;
+                        });
+                }
+                else if (nextCh == '{')
+                {
+                    // Opening braces are the start of a code folding section.
+                    line.FoldStart();
+                    line.Style(_operatorStyle);
+                }
+                else if (nextCh == '}')
+                {
+                    // Closing braces are the end of a code folding section.
+                    line.FoldEnd();
+                    line.Style(_operatorStyle);
+                }
+                else if (_operators.Contains(nextCh))
+                {
+                    // Operators
+                    line.Style(_operatorStyle);
+                }
+                else
+                {
+                    // All other characters.
+                    line.Style(_defaultStyle);
+                }
+            }
+
+            return state;
+        }
+    }
+}]]>
+		</sampleCode>
+	</item>
 </examples>
 

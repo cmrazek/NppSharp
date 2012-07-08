@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Topics>
   <Topic id="3ab31a3a-226e-45b7-b1eb-c68d3755dc77" visible="True" isDefault="true" title="Welcome" />
-  <Topic id="bd9bc6cd-319e-40c2-8f4e-352cbfdb8345" visible="True" title="Sample" />
-  <Topic id="f89a8866-e24a-4a19-9d27-f70d7da44b34" visible="True" isSelected="true" title="Adding Attributes" />
+  <Topic id="bd9bc6cd-319e-40c2-8f4e-352cbfdb8345" visible="True" isSelected="true" title="Sample" />
+  <Topic id="f89a8866-e24a-4a19-9d27-f70d7da44b34" visible="True" title="Adding Attributes" />
+  <Topic id="2a67db05-d02e-4972-9c0d-857f437846bb" visible="True" />
 </Topics>

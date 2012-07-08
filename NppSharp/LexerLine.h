@@ -16,6 +16,8 @@
 
 #pragma once
 
+using namespace System::Text;
+
 namespace NppSharp
 {
 	ref class LexerLine : public ILexerLine
@@ -30,10 +32,16 @@ namespace NppSharp
 		property String^	Text { virtual String^ get(); }
 
 		virtual String^	Peek(int length);
+		virtual String^	Peek(LexerReadDelegate^ readFunc);
 		virtual void	Style(LexerStyle^ style);
 		virtual void	Style(LexerStyle^ style, int length);
+		virtual void	Style(LexerStyle^ style, LexerReadDelegate^ readFunc);
 		virtual void	StyleRemainder(LexerStyle^ style);
 		virtual void	StyleRange(LexerStyle^ style, int startPos, int length);
+
+		virtual void	FoldStart();
+		virtual void	FoldEnd();
+		int				GetFoldLevel() { return _foldLevel; }
 
 		void Start(String^ text);
 		property array<byte>^ StylesBuf { array<byte>^ get(); }
@@ -43,5 +51,7 @@ namespace NppSharp
 		array<byte>^	_styles;
 		int				_len;
 		int				_pos;
+		StringBuilder^	_sb;
+		int				_foldLevel;
 	};
 }

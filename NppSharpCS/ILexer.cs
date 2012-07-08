@@ -28,26 +28,45 @@ namespace NppSharp
 		/// <summary>
 		/// The file extensions to be automatically styled by this lexer.
 		/// </summary>
+		/// <remarks>
+		/// These are default extensions suggested by the lexer.  Users may alter this list by
+		/// using the Settings -> Style Configurator dialog.
+		/// </remarks>
 		IEnumerable<string> Extensions { get; }
 
 		/// <summary>
 		/// A list of word styles to be applied to text when styling.
 		/// </summary>
-		/// <remarks>Notepad++ limits a language to a maximum of 32 styles.</remarks>
+		/// <remarks>
+		/// <para>
+		/// When Notepad++ starts up, NppSharp will use this property to get a list of styles used by the lexer.
+		/// It will use this information to create the XML configuration file at
+		/// appdata\roaming\Notepad++\plugins\config\NppSharp.xml.
+		/// On consecutive Notepad++ start-ups, this file will be re-loaded, and any user-customized
+		/// information will be kept intact.
+		/// </para>
+		/// <para>
+		/// Users may alter the appear of the styles by using the Settings -> Style Configurator dialog.
+		/// </para>
+		/// <para>
+		/// Notepad++ imposes a restriction of 32 styles per language.
+		/// </para>
+		/// </remarks>
 		IEnumerable<LexerStyle> Styles { get; }
 
 		/// <summary>
 		/// Called when Notepad++ requires the lexer to apply styles to a line.
 		/// </summary>
-		/// <param name="line">The object that contains the line information.</param>
+		/// <param name="line">The object that contains the line information and provides styling/folding functionality.</param>
 		/// <param name="previousLineState">The state value of the previous line.</param>
 		/// <returns>The state value of this line.</returns>
 		/// <remarks>
 		/// <para>
 		/// Styling is performed a line at a time, and uses a single integer to keep track of the
 		/// state between lines.  For example, if a multi-line comment begins on line 1, and
-		/// continues for several lines, lines 2 through and after will somehow need to know that
-		/// they are in the middle of a comment section.
+		/// continues for several lines, lines 2 and after will somehow need to know that
+		/// they are in the middle of a comment section.  The state variable is used to accomplish
+		/// this.
 		/// </para>
 		/// <para>
 		/// The return value indicates what the state of the current line should be.

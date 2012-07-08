@@ -256,7 +256,7 @@ namespace NppSharp
 			try
 			{
 				string helpFileName = string.Concat("file://", Path.Combine(_npp.NppDir, Res.HelpFileName));
-				Help.ShowHelp(Control.FromHandle(_npp.Window.Handle), helpFileName);
+				Help.ShowHelp(Control.FromHandle(_npp.Window.Handle), helpFileName);	// TODO: remove
 			}
 			catch (Exception ex)
 			{

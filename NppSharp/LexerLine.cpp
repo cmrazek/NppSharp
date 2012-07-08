@@ -24,6 +24,8 @@ namespace NppSharp
 		, _styles(nullptr)
 		, _len(0)
 		, _pos(0)
+		, _sb(gcnew StringBuilder())
+		, _foldLevel(0)
 	{
 	}
 
@@ -37,6 +39,8 @@ namespace NppSharp
 		_text = str;
 		_len = str->Length;
 		_pos = 0;
+
+		_foldLevel = 0;
 
 		if (_styles == nullptr || _styles->Length < _len) _styles = gcnew array<byte>(_len);
 		for (int i = 0; i < _len; ++i) _styles[i] = 0;
@@ -126,5 +130,44 @@ namespace NppSharp
 	{
 		if (_pos >= _len) return L'\0';
 		return _text[_pos];
+	}
+
+	String^ LexerLine::Peek(LexerReadDelegate^ readFunc)
+	{
+		if (readFunc == nullptr) throw gcnew ArgumentNullException("readFunc");
+
+		_sb->Clear();
+
+		int pos = _pos;
+		wchar_t ch;
+		while (pos < _len)
+		{
+			ch = _text[pos++];
+			if (readFunc(ch)) _sb->Append(ch);
+			else break;
+		}
+
+		return _sb->ToString();
+	}
+
+	void LexerLine::Style(LexerStyle^ style, LexerReadDelegate^ readFunc)
+	{
+		if (readFunc == nullptr) throw gcnew ArgumentNullException("readFunc");
+
+		while (_pos < _len)
+		{
+			if (readFunc(_text[_pos])) Style(style);
+			else break;
+		}
+	}
+
+	void LexerLine::FoldStart()
+	{
+		_foldLevel++;
+	}
+
+	void LexerLine::FoldEnd()
+	{
+		_foldLevel--;
 	}
 }
