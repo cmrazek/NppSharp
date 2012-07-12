@@ -20,6 +20,8 @@
 #include "ClrUtil.h"
 #include "LexerLine.h"
 
+//#define BENCHMARK
+
 namespace NppSharp
 {
 	LexerWrapper::LexerWrapper(NppSharp::ILexer^ clrLexer)
@@ -75,6 +77,20 @@ namespace NppSharp
 	{
 		try
 		{
+#ifdef BENCHMARK
+			unsigned __int64 benchFreq, benchStart, benchEnd;
+			unsigned int benchLines = 0;
+			if (!::QueryPerformanceFrequency((LARGE_INTEGER*)&benchFreq))
+			{
+				benchFreq = 0;
+				WriteOutputLine("Failed to get timer frequency.");
+			}
+			else if (!::QueryPerformanceCounter((LARGE_INTEGER*)&benchStart))
+			{
+				benchFreq = 0;
+				WriteOutputLine("Failed to get timer counter (start).");
+			}
+#endif
 			_doc = pAccess;
 
 			const char* pszBuf = _doc->BufferPointer();
@@ -188,7 +204,26 @@ namespace NppSharp
 				// Advance to next line.
 				line++;
 				pszPos = pszLineEnd;
+#ifdef BENCHMARK
+				benchLines++;
+#endif
 			}
+
+#ifdef BENCHMARK
+			if (benchFreq != 0)
+			{
+				if (!::QueryPerformanceCounter((LARGE_INTEGER*)&benchEnd))
+				{
+					benchFreq = 0;
+					WriteOutputLine("Failed to get timer counter (end).");
+				}
+				else
+				{
+					unsigned __int64 benchTime = (benchEnd - benchStart) % benchFreq * (unsigned __int64)1000 / benchFreq;
+					WriteOutputLine(String::Format("Lexer processed {0} line(s) in {1} msec.", benchLines, benchTime));
+				}
+			}
+#endif
 		}
 		catch (Exception^ ex)
 		{

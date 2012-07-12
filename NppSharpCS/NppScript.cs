@@ -88,6 +88,14 @@ namespace NppSharp
 		}
 
 		/// <summary>
+		/// Gets the Notepad++ configuration directory in 'appdata'.
+		/// </summary>
+		public string ConfigDirectory
+		{
+			get { return Plugin.NppIntf.ConfigDir; }
+		}
+
+		/// <summary>
 		/// Launches the 'Find in Files' dialog.
 		/// </summary>
 		/// <param name="dir">The directory to be searched.</param>
@@ -137,9 +145,41 @@ namespace NppSharp
 		/// <summary>
 		/// Gets the Notepad++ main window.
 		/// </summary>
-		public System.Windows.Forms.NativeWindow NppWindow
+		public NativeWindow NppWindow
 		{
 			get { return Plugin.NppIntf.Window; }
+		}
+
+		/// <summary>
+		/// Gets the first editor window.
+		/// </summary>
+		public NativeWindow EditorWindow1
+		{
+			get { return Plugin.NppIntf.EditorWindow1; }
+		}
+
+		/// <summary>
+		/// Gets the second editor window.
+		/// </summary>
+		public NativeWindow EditorWindow2
+		{
+			get { return Plugin.NppIntf.EditorWindow2; }
+		}
+
+		/// <summary>
+		/// Gets the current editor window.
+		/// </summary>
+		public NativeWindow EditorWindow
+		{
+			get { return Plugin.NppIntf.EditorWindow; }
+		}
+
+		/// <summary>
+		/// Sets the focus to the current editor window.
+		/// </summary>
+		public void FocusEditor()
+		{
+			Plugin.NppIntf.FocusEditor();
 		}
 		#endregion
 
@@ -916,6 +956,7 @@ namespace NppSharp
 		/// <param name="alignment">Window alignment, or floating.</param>
 		/// <param name="id">An identifier for this docked window.
 		/// The ID must be greater than zero.</param>
+		/// <returns>An IDockWindow interface that can be used to hide or show the window.</returns>
 		/// <remarks>
 		/// <para>
 		///	This window will not be restored the next time Notepad++ starts.
@@ -928,14 +969,14 @@ namespace NppSharp
 		///	will appear in the previous location rather than the one specified here.
 		/// </para>
 		/// </remarks>
-		public void DockWindow(IWin32Window window, string title, DockWindowAlignment alignment, int id)
+		public IDockWindow DockWindow(IWin32Window window, string title, DockWindowAlignment alignment, int id)
 		{
 			// Notepad++ doesn't seem to support icons for docked windows, so it's excluded here.
 
 			if (window == null) throw new ArgumentException(Res.err_InvalidWindowObj);
 			if (id <= 0) throw new ArgumentException(Res.err_InvalidDockWindowId);
 
-			Plugin.NppIntf.CreateDockWindow(window, title, alignment, null, id);
+			return Plugin.NppIntf.CreateDockWindow(window, title, alignment, null, id);
 		}
 
 		/// <summary>

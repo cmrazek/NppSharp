@@ -32,10 +32,12 @@ namespace NppSharp
 		case 1:
 			_currentScView = 1;
 			_scHandle = _scHandle2;
+			_scWindow = _scWindow2;
 			break;
 		default:
 			_currentScView = 0;
 			_scHandle = _scHandle1;
+			_scWindow = _scWindow1;
 		}
 	}
 

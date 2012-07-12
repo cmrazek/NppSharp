@@ -36,6 +36,26 @@ namespace NppSharp
 		NativeWindow Window { get; }
 
 		/// <summary>
+		/// Gets the first editor window.
+		/// </summary>
+		NativeWindow EditorWindow1 { get; }
+
+		/// <summary>
+		/// Gets the second editor window.
+		/// </summary>
+		NativeWindow EditorWindow2 { get; }
+
+		/// <summary>
+		/// Gets the current editor window.
+		/// </summary>
+		NativeWindow EditorWindow { get; }
+
+		/// <summary>
+		/// Sets the focus to the current editor window.
+		/// </summary>
+		void FocusEditor();
+
+		/// <summary>
 		/// Gets the directory in which Notepad++.exe resides.
 		/// </summary>
 		string NppDir { get; }
@@ -633,7 +653,7 @@ namespace NppSharp
 		void SetOutputStyleDef(OutputStyleDef osd, OutputStyleDef defaultOsd);
 		#endregion
 
-        #region Dock Window
+		#region Dock Window
 		/// <summary>
 		/// Creates a docked window.
 		/// </summary>
@@ -651,7 +671,7 @@ namespace NppSharp
 		/// <param name="id">The ID number for the dock window object.</param>
 		/// <returns>If the dock window object could be found, the object is returned; otherwise null.</returns>
 		IDockWindow GetDockWindow(int id);
-        #endregion
+		#endregion
 
 		#region Lexers
 		/// <summary>
@@ -805,34 +825,34 @@ namespace NppSharp
 	}
 	#endregion
 
-    /// <summary>
-    /// Specifies the default docking window alignment.
-    /// </summary>
-    public enum DockWindowAlignment : uint
-    {
-        /// <summary>
-        /// Default docking on left
-        /// </summary>
-        Left,
+	/// <summary>
+	/// Specifies the default docking window alignment.
+	/// </summary>
+	public enum DockWindowAlignment : uint
+	{
+		/// <summary>
+		/// Default docking on left
+		/// </summary>
+		Left,
 
-        /// <summary>
-        /// Default docking on right
-        /// </summary>
-        Right,
+		/// <summary>
+		/// Default docking on right
+		/// </summary>
+		Right,
 
-        /// <summary>
-        /// Default docking on top
-        /// </summary>
-        Top,
+		/// <summary>
+		/// Default docking on top
+		/// </summary>
+		Top,
 
-        /// <summary>
-        /// Default docking on bottom
-        /// </summary>
-        Bottom,
+		/// <summary>
+		/// Default docking on bottom
+		/// </summary>
+		Bottom,
 
-        /// <summary>
-        /// Default state is floating
-        /// </summary>
-        Floating
-    }
+		/// <summary>
+		/// Default state is floating
+		/// </summary>
+		Floating
+	}
 }

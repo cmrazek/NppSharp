@@ -26,6 +26,7 @@ namespace NppSharp
 		, _scHandle1(scHandle1)
 		, _scHandle2(scHandle2)
 		, _scHandle(scHandle1)
+		, _scWindow(nullptr)
 		, _currentScView(0)
 		, _outputWindow(NULL)
 		, _outputWindowCmdIndex(0)
@@ -41,6 +42,13 @@ namespace NppSharp
 
 		_nppWindow = gcnew NativeWindow();
 		_nppWindow->AssignHandle((IntPtr)_nppHandle);
+
+		_scWindow1 = gcnew NativeWindow();
+		_scWindow1->AssignHandle((IntPtr)_scHandle1);
+
+		_scWindow2 = gcnew NativeWindow();
+		_scWindow2->AssignHandle((IntPtr)_scHandle2);
+
 		_outputWindow = new OutputWindow(_nppHandle);
 		_bufferIds = gcnew Dictionary<unsigned int, String^>();
 	}
@@ -53,6 +61,26 @@ namespace NppSharp
 	NativeWindow^ NppInterface::Window::get()
 	{
 		return _nppWindow;
+	}
+
+	NativeWindow^ NppInterface::EditorWindow1::get()
+	{
+		return _scWindow1;
+	}
+
+	NativeWindow^ NppInterface::EditorWindow2::get()
+	{
+		return _scWindow2;
+	}
+
+	NativeWindow^ NppInterface::EditorWindow::get()
+	{
+		return _scWindow;
+	}
+
+	void NppInterface::FocusEditor()
+	{
+		if (_scHandle != NULL) ::SetFocus(_scHandle);
 	}
 
 	String^ NppInterface::ConfigDir::get()

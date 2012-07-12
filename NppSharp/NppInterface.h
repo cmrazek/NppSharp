@@ -33,6 +33,10 @@ namespace NppSharp
 		virtual ~NppInterface();
 
 		virtual property NativeWindow^ Window { NativeWindow^ get(); }
+		virtual property NativeWindow^ EditorWindow1 { NativeWindow^ get(); }
+		virtual property NativeWindow^ EditorWindow2 { NativeWindow^ get(); }
+		virtual property NativeWindow^ EditorWindow { NativeWindow^ get(); }
+		virtual void FocusEditor();
 		virtual property String^ NppDir { String^ get(); }
 		virtual property String^ ConfigDir { String^ get(); }
 
@@ -189,6 +193,9 @@ namespace NppSharp
 		HWND								_scHandle;
 		int									_currentScView;
 		NativeWindow^						_nppWindow;
+		NativeWindow^						_scWindow1;
+		NativeWindow^						_scWindow2;
+		NativeWindow^						_scWindow;
 		OutputWindow*						_outputWindow;
 		int									_outputWindowCmdIndex;
 		List<PluginCommand^>^				_commands;
