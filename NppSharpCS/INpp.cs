@@ -226,9 +226,18 @@ namespace NppSharp
 		int FileCount { get; }
 
 		/// <summary>
-		/// Gets a complete list of file names for open files.
+		/// Gets a complete list of file names for open files in both views.
 		/// </summary>
+		/// <remarks>To get a list of files open in a single view, you can use the GetFileNames method.</remarks>
 		IEnumerable<string> FileNames { get; }
+
+		/// <summary>
+		/// Gets a list of open file names in the specified view.
+		/// </summary>
+		/// <param name="view">The editor view to retrieve the list of open file names.</param>
+		/// <returns>A list of file names for the open files.</returns>
+		/// <remarks>To get a list of all open file names in both views, you can use the 'FileNames' property.</remarks>
+		IEnumerable<string> GetFileNames(EditorView view);
 
 		/// <summary>
 		/// Opens a new file.  If the file is already open, it will be made active.
@@ -682,6 +691,11 @@ namespace NppSharp
 		/// <param name="description">The description of the lexer to appear in the Notepad++ status bar.</param>
 		/// <returns>The zero-based index of the lexer object.</returns>
 		int AddLexer(Type lexerType, string name, string description);
+
+		/// <summary>
+		/// Refreshes the word-styles and folding on documents that use a custom lexer provided via NppSharp.
+		/// </summary>
+		void RefreshCustomLexers();
 		#endregion
 	}
 

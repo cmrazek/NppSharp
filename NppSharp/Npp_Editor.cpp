@@ -132,6 +132,41 @@ namespace NppSharp
 		return list;
 	}
 
+	IEnumerable<String^>^ NppInterface::GetFileNames(EditorView view)
+	{
+		int				numFiles;
+		unsigned int	getOpenFileNamesMsg;
+
+		if (view == EditorView::Main)
+		{
+			numFiles = ::SendMessageW(_nppHandle, NPPM_GETNBOPENFILES, 0, PRIMARY_VIEW);
+			getOpenFileNamesMsg = NPPM_GETOPENFILENAMESPRIMARY;
+		}
+		else
+		{
+			numFiles = ::SendMessageW(_nppHandle, NPPM_GETNBOPENFILES, 0, SECOND_VIEW);
+			getOpenFileNamesMsg = NPPM_GETOPENFILENAMESSECOND;
+		}
+
+		wchar_t	*pBuf = new wchar_t[numFiles * MAX_PATH];
+		wchar_t	**ppFileNames = new wchar_t*[numFiles];
+
+		for (int i = 0; i < numFiles; i++)
+		{
+			ppFileNames[i] = pBuf + i * MAX_PATH;
+		}
+
+		numFiles = ::SendMessageW(_nppHandle, getOpenFileNamesMsg, (WPARAM)ppFileNames, numFiles);
+
+		List<String^>^ list = gcnew List<String^>(numFiles);
+		for (int i = 0; i < numFiles; i++) list->Add(gcnew String(ppFileNames[i]));
+
+		delete pBuf;
+		delete [] ppFileNames;
+
+		return list;
+	}
+
 	bool NppInterface::OpenFile(String^ fileName)
 	{
 		pin_ptr<const wchar_t> str = PtrToStringChars(fileName);

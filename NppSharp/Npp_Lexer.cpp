@@ -57,6 +57,11 @@ namespace NppSharp
 		}
 	}
 
+	void NppInterface::RefreshCustomLexers()
+	{
+		LexerWrapper::RefreshAllLexers();
+	}
+
 	int NppInterface::GetLexerCount()
 	{
 		return _lexers->Count;

@@ -38,11 +38,16 @@ namespace NppSharp
 		virtual void SCI_METHOD Fold(unsigned int startPos, int lengthDoc, int initStyle, npp::IDocument *pAccess);
 		virtual void * SCI_METHOD PrivateCall(int operation, void *pointer);
 
-		NppSharp::ILexer^ GetLexer() { return _clrLexer; }
+		NppSharp::ILexer^	GetLexer() { return _clrLexer; }
+		void				Refresh();
+
+		static void	RefreshAllLexers();
 
 	private:
 		gcroot<NppSharp::ILexer^>	_clrLexer;
 		npp::IDocument*				_doc;
+
+		static std::list<LexerWrapper*>	_activeLexers;
 	};
 
 	ref class LexerInfo

@@ -24,9 +24,12 @@
 
 namespace NppSharp
 {
+	std::list<LexerWrapper*> LexerWrapper::_activeLexers;
+
 	LexerWrapper::LexerWrapper(NppSharp::ILexer^ clrLexer)
 		: _clrLexer(clrLexer)
 	{
+		_activeLexers.push_back(this);
 	}
 
 	LexerWrapper::~LexerWrapper()
@@ -40,6 +43,7 @@ namespace NppSharp
 
 	void LexerWrapper::Release()
 	{
+		_activeLexers.remove(this);
 		delete this;
 	}
 
@@ -246,5 +250,37 @@ namespace NppSharp
 	void* LexerWrapper::PrivateCall(int operation, void *pointer)
 	{
 		return NULL;
+	}
+
+	void LexerWrapper::Refresh()
+	{
+		if (_doc)
+		{
+			_doc->StartStyling(0, 31);
+			_doc->ChangeLexerState(0, _doc->Length());
+		}
+	}
+
+	void LexerWrapper::RefreshAllLexers()
+	{
+		for (std::list<LexerWrapper*>::iterator i = _activeLexers.begin(), ii = _activeLexers.end(); i != ii; ++i)
+		{
+			try
+			{
+				(*i)->Refresh();
+			}
+#ifdef _DEBUG
+			catch (std::exception ex)
+			{
+				WriteOutputLine(OutputStyle::Error, String::Format("STD exception when refreshing lexer: {0}", gcnew String(ex.what())));
+			}
+#endif
+			catch (...)
+			{
+#ifdef _DEBUG
+				WriteOutputLine(OutputStyle::Error, "Exception when refreshing lexer.");
+#endif
+			}
+		}
 	}
 }

@@ -52,6 +52,7 @@ namespace NppSharp
 		virtual property String^ FileName { String^ get(); }
 		virtual property int FileCount { int get(); }
 		virtual property IEnumerable<String^>^ FileNames { IEnumerable<String^>^ get(); }
+		virtual IEnumerable<String^>^ GetFileNames(EditorView view);
 		virtual bool OpenFile(String^ fileName);
 		virtual property int ActiveFileIndex { int get(); void set(int); }
 		virtual int GetActiveFileIndex(EditorView view);
@@ -170,6 +171,7 @@ namespace NppSharp
 
 		// Lexer functions
 		virtual int		AddLexer(Type^ lexerType, String^ name, String^ description);
+		virtual void	RefreshCustomLexers();
 		int				GetLexerCount();
 		String^			GetLexerName(int index);
 		String^			GetLexerDescription(int index);

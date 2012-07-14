@@ -193,11 +193,23 @@ namespace NppSharp
 		}
 
 		/// <summary>
-		/// Gets a complete list of file names for open files.
+		/// Gets a complete list of file names for open files in both views.
 		/// </summary>
+		/// <remarks>To get a list of files open in a single view, you can use the GetFileNames method.</remarks>
 		public IEnumerable<string> FileNames
 		{
 			get { return Plugin.NppIntf.FileNames; }
+		}
+
+		/// <summary>
+		/// Gets a list of open file names in the specified view.
+		/// </summary>
+		/// <param name="view">The editor view to retrieve the list of open file names.</param>
+		/// <returns>A list of file names for the open files.</returns>
+		/// <remarks>To get a list of all open file names in both views, you can use the 'FileNames' property.</remarks>
+		public IEnumerable<string> GetFileNames(EditorView view)
+		{
+			return Plugin.NppIntf.GetFileNames(view);
 		}
 
 		/// <summary>
@@ -989,6 +1001,20 @@ namespace NppSharp
 			if (id <= 0) throw new ArgumentException(Res.err_InvalidDockWindowId);
 
 			return Plugin.NppIntf.GetDockWindow(id);
+		}
+		#endregion
+
+		#region Lexers
+		/// <summary>
+		/// Refreshes the word-styles and folding on documents that use a custom lexer provided via NppSharp.
+		/// </summary>
+		/// <remarks>
+		/// This function is useful if your lexers providing highlighting that can change,
+		/// and need to be refreshed at certain events.
+		/// </remarks>
+		public void RefreshCustomLexers()
+		{
+			Plugin.NppIntf.RefreshCustomLexers();
 		}
 		#endregion
 	}
