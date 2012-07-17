@@ -384,6 +384,23 @@ namespace NppSharp
 		}
 
 		/// <summary>
+		/// Gets the starting location of the document.
+		/// </summary>
+		/// <remarks>This will always be line 1, character position 1.</remarks>
+		public TextLocation Start
+		{
+			get { return new TextLocation(); }
+		}
+
+		/// <summary>
+		/// Gets the end location of the document.
+		/// </summary>
+		public TextLocation End
+		{
+			get { return TextLocation.FromByteOffset(Plugin.NppIntf.Length); }
+		}
+
+		/// <summary>
 		/// Inserts text over the current selection.
 		/// The caret is placed after the inserted text and scrolled into view.
 		/// </summary>
@@ -396,12 +413,23 @@ namespace NppSharp
 		/// <summary>
 		/// Gets the text for the specified range.
 		/// </summary>
-		/// <param name="startPos">The 0-based starting position.</param>
-		/// <param name="length">The length of text to retrieve.</param>
+		/// <param name="start">The starting position.</param>
+		/// <param name="numChars">The number of characters to retrieve.</param>
 		/// <returns>The text for the given range.</returns>
-		public string GetText(int startPos, int length)
+		public string GetText(TextLocation start, int numChars)
 		{
-			return Plugin.NppIntf.GetText(startPos, length);
+			return Plugin.NppIntf.GetText(start, numChars);
+		}
+
+		/// <summary>
+		/// Gets the text for the specified range.
+		/// </summary>
+		/// <param name="start">The starting position.</param>
+		/// <param name="end">The ending position (exclusive).</param>
+		/// <returns>The text for the given range.</returns>
+		public string GetText(TextLocation start, TextLocation end)
+		{
+			return Plugin.NppIntf.GetText(start, end);
 		}
 
 		/// <summary>
@@ -440,11 +468,21 @@ namespace NppSharp
 		/// <summary>
 		/// Copies the specified text range into the clipboard.
 		/// </summary>
-		/// <param name="startPos">The 0-based starting position.</param>
-		/// <param name="length">The number of characters to be copied.</param>
-		public void Copy(int startPos, int length)
+		/// <param name="start">The starting position.</param>
+		/// <param name="numChars">The number of characters to be copied.</param>
+		public void Copy(TextLocation start, int numChars)
 		{
-			Plugin.NppIntf.Copy(startPos, length);
+			Plugin.NppIntf.Copy(start, numChars);
+		}
+
+		/// <summary>
+		/// Copies the specified text range into the clipboard.
+		/// </summary>
+		/// <param name="start">The starting position.</param>
+		/// <param name="end">The ending position (exclusive).</param>
+		public void Copy(TextLocation start, TextLocation end)
+		{
+			Plugin.NppIntf.Copy(start, end);
 		}
 
 		/// <summary>
@@ -518,11 +556,9 @@ namespace NppSharp
 		/// Sets the selection range.
 		/// (The caret is scrolled into view)
 		/// </summary>
-		/// <param name="anchorPos">The selection anchor position.  If negative, the selection will
-		/// be removed and start/end will be set to currentPos.</param>
-		/// <param name="currentPos">The selection current position.  If negative, the selection
-		/// will extend to the end of the document.</param>
-		public void SetSelection(int anchorPos, int currentPos)
+		/// <param name="anchorPos">The selection anchor position.</param>
+		/// <param name="currentPos">The selection current position.</param>
+		public void SetSelection(TextLocation anchorPos, TextLocation currentPos)
 		{
 			Plugin.NppIntf.SetSelection(anchorPos, currentPos);
 		}
@@ -531,7 +567,7 @@ namespace NppSharp
 		/// Goes to the specified position and ensures it is visible.
 		/// </summary>
 		/// <param name="pos">The position to go to.</param>
-		public void GoToPos(int pos)
+		public void GoTo(TextLocation pos)
 		{
 			Plugin.NppIntf.GoToPos(pos);
 		}
@@ -549,7 +585,7 @@ namespace NppSharp
 		/// Gets or sets the current position.
 		/// (The caret is not scrolled into view)
 		/// </summary>
-		public int CurrentPos
+		public TextLocation CurrentLocation
 		{
 			get { return Plugin.NppIntf.CurrentPos; }
 			set { Plugin.NppIntf.CurrentPos = value; }
@@ -569,7 +605,7 @@ namespace NppSharp
 		/// Gets or sets the selection anchor position.
 		/// (The caret is not scrolled into view)
 		/// </summary>
-		public int AnchorPos
+		public TextLocation AnchorLocation
 		{
 			get { return Plugin.NppIntf.AnchorPos; }
 			set { Plugin.NppIntf.AnchorPos = value; }
@@ -579,7 +615,7 @@ namespace NppSharp
 		/// Gets or sets the selection start position.
 		/// (The caret is not scrolled into view)
 		/// </summary>
-		public int SelectionStart
+		public TextLocation SelectionStart
 		{
 			get { return Plugin.NppIntf.SelectionStart; }
 			set { Plugin.NppIntf.SelectionStart = value; }
@@ -589,7 +625,7 @@ namespace NppSharp
 		/// Gets or sets the selection end position.
 		/// (The caret is not scrolled into view)
 		/// </summary>
-		public int SelectionEnd
+		public TextLocation SelectionEnd
 		{
 			get { return Plugin.NppIntf.SelectionEnd; }
 			set { Plugin.NppIntf.SelectionEnd = value; }
@@ -600,7 +636,7 @@ namespace NppSharp
 		/// (The caret is not scrolled into view)
 		/// </summary>
 		/// <param name="pos">The new start/end position for the selection.</param>
-		public void SetEmptySelection(int pos)
+		public void SetEmptySelection(TextLocation pos)
 		{
 			Plugin.NppIntf.SetEmptySelection(pos);
 		}
@@ -615,40 +651,32 @@ namespace NppSharp
 		}
 
 		/// <summary>
-		/// Gets the line that contains the specified position.
-		/// </summary>
-		/// <param name="pos">The zero-based position.</param>
-		/// <returns>The one-based line number that contains the position.</returns>
-		public int GetLineFromPos(int pos)
-		{
-			return Plugin.NppIntf.GetLineFromPos(pos);
-		}
-
-		/// <summary>
 		/// Gets the starting position of the specified line.
 		/// </summary>
 		/// <param name="line">The one-based line number.</param>
-		/// <returns>The zero-based starting position of the line.</returns>
-		public int GetLineStartPos(int line)
+		/// <returns>The starting position of the line.</returns>
+		public TextLocation GetLineStartPos(int line)
 		{
-			return Plugin.NppIntf.GetLineStartPos(line);
+			if (line < 1) return Start;
+			if (line > LineCount) return End;
+			return new TextLocation(line, 1);
 		}
 
 		/// <summary>
-		/// Gets the ending position of the specified line, before any line end characters.
+		/// Gets the ending position of the specified line, before any line-end characters.
 		/// </summary>
 		/// <param name="line">The one-based line number.</param>
-		/// <returns>The zero-based end position of the line.</returns>
-		public int GetLineEndPos(int line)
+		/// <returns>The end position of the line.</returns>
+		public TextLocation GetLineEndPos(int line)
 		{
-			return Plugin.NppIntf.GetLineEndPos(line);
+			return TextLocation.FromByteOffset(Plugin.NppIntf.GetLineEndPos(line));
 		}
 
 		/// <summary>
-		/// Gets the length of the specified line.
+		/// Gets the length of the specified line (excluding line-end characters).
 		/// </summary>
 		/// <param name="line">The one-based line number.</param>
-		/// <returns>The length of the line including any line end characters.</returns>
+		/// <returns>The length of the line (excluding line-end characters)</returns>
 		public int GetLineLength(int line)
 		{
 			return Plugin.NppIntf.GetLineLength(line);
@@ -688,7 +716,7 @@ namespace NppSharp
 		/// <param name="onlyWordChars">If true, only word characters will be jumped.
 		/// If false, all characters will be jumped.</param>
 		/// <returns>The position at the end of the word.</returns>
-		public int GetWordEndPos(int pos, bool onlyWordChars)
+		public TextLocation GetWordEndPos(TextLocation pos, bool onlyWordChars)
 		{
 			return Plugin.NppIntf.GetWordEndPos(pos, onlyWordChars);
 		}
@@ -700,19 +728,9 @@ namespace NppSharp
 		/// <param name="onlyWordChars">If true, only word characters will be jumped.
 		/// If false, all characters will be jumped.</param>
 		/// <returns>The position at the start of the word.</returns>
-		public int GetWordStartPos(int pos, bool onlyWordChars)
+		public TextLocation GetWordStartPos(TextLocation pos, bool onlyWordChars)
 		{
 			return Plugin.NppIntf.GetWordStartPos(pos, onlyWordChars);
-		}
-
-		/// <summary>
-		/// Gets the column number for the specified position.
-		/// </summary>
-		/// <param name="pos">The zero-based position.</param>
-		/// <returns>The one-based column number.</returns>
-		public int GetColumn(int pos)
-		{
-			return Plugin.NppIntf.GetColumn(pos);
 		}
 
 		/// <summary>
@@ -721,9 +739,9 @@ namespace NppSharp
 		/// <param name="line">The one-based line number.</param>
 		/// <param name="column">The one-based column number.</param>
 		/// <returns>The zero-based position.</returns>
-		public int FindColumn(int line, int column)
+		public TextLocation FindColumn(int line, int column)
 		{
-			return Plugin.NppIntf.FindColumn(line, column);
+			return TextLocation.FromByteOffset(Plugin.NppIntf.FindColumn(line, column));
 		}
 
 		/// <summary>
@@ -731,21 +749,32 @@ namespace NppSharp
 		/// </summary>
 		/// <param name="pt">The client coordinates of the point to test.</param>
 		/// <returns>The zero-based position of the closest character.</returns>
-		public int PointToPos(Point pt)
+		public TextLocation PointToPos(Point pt)
 		{
-			return Plugin.NppIntf.PointToPos(pt);
+			return TextLocation.FromByteOffset(Plugin.NppIntf.PointToPos(pt));
 		}
 
 		/// <summary>
 		/// Finds the position closest to a point on the screen.
-		/// If no character is close, or the point it outside the window, it returns -1.
 		/// </summary>
 		/// <param name="pt">The client coordinates of the point to test.</param>
-		/// <returns>-1 if not close to any character, otherwise the zero-based position of the
-		/// closest character.</returns>
-		public int PointToPosClose(Point pt)
+		/// <param name="location">An out parameter to receive the found location.</param>
+		/// <returns>
+		/// If no character is close, or the point is outside the window, this function returns
+		/// false, and the location parameter is set to the start of the document.
+		/// If a location was found, this function returns true, and the location parameter is set
+		/// to the close position.
+		/// </returns>
+		public bool PointToPosClose(Point pt, out TextLocation location)
 		{
-			return Plugin.NppIntf.PointToPosClose(pt);
+			int offset = Plugin.NppIntf.PointToPosClose(pt);
+			if (offset < 0)
+			{
+				location = TextLocation.Start;
+				return false;
+			}
+			location = TextLocation.FromByteOffset(offset);
+			return true;
 		}
 
 		/// <summary>
@@ -753,9 +782,9 @@ namespace NppSharp
 		/// </summary>
 		/// <param name="pos">The position to find.</param>
 		/// <returns>The client coordinates of the text position.</returns>
-		public Point PosToPoint(int pos)
+		public Point PosToPoint(TextLocation pos)
 		{
-			return Plugin.NppIntf.PosToPoint(pos);
+			return Plugin.NppIntf.PosToPoint(pos.ByteOffset);
 		}
 
 		/// <summary>
@@ -846,6 +875,16 @@ namespace NppSharp
 		/// </summary>
 		public event FileEventHandler FileOrderChanged;
 
+		/// <summary>
+		/// Triggered when a character is added to a document.
+		/// </summary>
+		public event CharAddedEventHandler CharAdded;
+
+		/// <summary>
+		/// Triggered when the user double-clicks inside a document.
+		/// </summary>
+		public event DoubleClickEventHandler DoubleClick;
+
 		internal void InitEvents()
 		{
 			INpp npp = Plugin.NppIntf;
@@ -864,6 +903,8 @@ namespace NppSharp
 			npp.FileLoading += OnFileLoading;
 			npp.FileLoadFailed += OnFileLoadFailed;
 			npp.FileOrderChanged += OnFileOrderChanged;
+			npp.CharAdded += OnCharAdded;
+			npp.DoubleClick += OnDoubleClick;
 		}
 
 		/// <summary>
@@ -955,6 +996,18 @@ namespace NppSharp
 		internal void OnFileOrderChanged(object sender, FileEventArgs e)
 		{
 			FileEventHandler ev = FileOrderChanged;
+			if (ev != null) ev(this, e);
+		}
+
+		internal void OnCharAdded(object sender, CharAddedEventArgs e)
+		{
+			CharAddedEventHandler ev = CharAdded;
+			if (ev != null) ev(this, e);
+		}
+
+		internal void OnDoubleClick(object sender, DoubleClickEventArgs e)
+		{
+			DoubleClickEventHandler ev = DoubleClick;
 			if (ev != null) ev(this, e);
 		}
 		#endregion

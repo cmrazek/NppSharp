@@ -266,9 +266,10 @@ namespace NppSharp
 		#endregion
 
 		#region Lexers
-		internal static int AddLexer(Type lexerType, string name, string description)
+		internal static int AddLexer(Type lexerType, string name, string description,
+			string blockCommentStart, string blockCommentEnd, string lineComment)
 		{
-			return _npp.AddLexer(lexerType, name, description);
+			return _npp.AddLexer(lexerType, name, description, blockCommentStart, blockCommentEnd, lineComment);
 		}
 		#endregion
 	}

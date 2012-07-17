@@ -57,6 +57,9 @@ namespace NppSharp
 		String^				name;
 		String^				description;
 		NppSharp::ILexer^	instance;
+		String^				blockCommentStart;
+		String^				blockCommentEnd;
+		String^				lineComment;
 
 		// Config file customizations
 		String^				addExt;

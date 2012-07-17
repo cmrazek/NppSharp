@@ -205,6 +205,16 @@ namespace NppSharp
 		FileOrderChanged(this, gcnew FileEventArgs(bufferId, _curFileName));
 	}
 
+	void NppInterface::OnCharAdded(int ch)
+	{
+		CharAdded(this, gcnew CharAddedEventArgs((char)ch));
+	}
+
+	void NppInterface::OnDoubleClick(int pos, bool ctrl, bool alt, bool shift)
+	{
+		DoubleClick(this, gcnew DoubleClickEventArgs(pos, ctrl, alt, shift));
+	}
+
 	void NppInterface::ExecuteCommandByIndex(int cmdIndex)
 	{
 		if (cmdIndex < 0 || cmdIndex >= _commands->Count) return;

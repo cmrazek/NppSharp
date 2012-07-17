@@ -175,6 +175,24 @@ namespace NppSharp {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The line number must be greater than zero..
+        /// </summary>
+        internal static string err_TextLocation_LineNegative {
+            get {
+                return ResourceManager.GetString("err_TextLocation_LineNegative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The character position must be greater than zero..
+        /// </summary>
+        internal static string err_TextLocation_PosNegative {
+            get {
+                return ResourceManager.GetString("err_TextLocation_PosNegative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred when getting the toolbar icon:
         ///{0}.
         /// </summary>

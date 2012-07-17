@@ -26,7 +26,8 @@ using namespace System::Globalization;
 
 namespace NppSharp
 {
-	int NppInterface::AddLexer(Type^ lexerType, String^ name, String^ description)
+	int NppInterface::AddLexer(Type^ lexerType, String^ name, String^ description,
+		String^ blockCommentStart, String^ blockCommentEnd, String^ lineComment)
 	{
 		try
 		{
@@ -35,6 +36,9 @@ namespace NppSharp
 			info->type = lexerType;
 			info->name = name;
 			info->description = description;
+			info->blockCommentStart = blockCommentStart;
+			info->blockCommentEnd = blockCommentEnd;
+			info->lineComment = lineComment;
 
 			info->instance = (ILexer^)Activator::CreateInstance(info->type);
 
@@ -122,6 +126,10 @@ namespace NppSharp
 				String^ lexerName = info->name;
 				xml->WriteAttributeString("name", lexerName);
 				xml->WriteAttributeString("ext", BuildExtensionList(lexer->Extensions));
+
+				if (!String::IsNullOrEmpty(info->blockCommentStart)) xml->WriteAttributeString("commentStart", info->blockCommentStart);
+				if (!String::IsNullOrEmpty(info->blockCommentEnd)) xml->WriteAttributeString("commentEnd", info->blockCommentEnd);
+				if (!String::IsNullOrEmpty(info->lineComment)) xml->WriteAttributeString("commentLine", info->lineComment);
 
 				xml->WriteEndElement();	// Language
 				lexerIndex++;

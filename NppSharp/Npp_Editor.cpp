@@ -315,40 +315,15 @@ namespace NppSharp
 		Marshal::FreeHGlobal((IntPtr)pszText);
 	}
 
-	bool NppInterface::ClampTextRange(int *pStartPos, int *pLength)
+	String^ NppInterface::GetText(int startOffset, int lengthBytes)
 	{
-		// Returns false if the range does not encompass any characters, or true if the range
-		// is valid.
-		// pStartPos and pLength are only assigned to if this function returns true;
-
-		int startPos = *pStartPos;
-		int length = *pLength;
-
-		if (startPos < 0)
-		{
-			length += startPos;
-			startPos = 0;
-		}
-		if (length <= 0) return false;
-
-		int docLength = ::SendMessageA(_scHandle, SCI_GETTEXTLENGTH, 0, 0);
-		if (startPos >= docLength) return false;
-		if (startPos + length > docLength) length = docLength - startPos;
-
-		*pStartPos = startPos;
-		*pLength = length;
-		return true;
-	}
-
-	String^ NppInterface::GetText(int startPos, int length)
-	{
-		if (!ClampTextRange(&startPos, &length)) return "";
+		if (lengthBytes <= 0) return String::Empty;
 
 		npp::Sci_TextRange tr;
-		tr.chrg.cpMin = startPos;
-		tr.chrg.cpMax = startPos + length;
+		tr.chrg.cpMin = startOffset;
+		tr.chrg.cpMax = startOffset + lengthBytes;
 
-		StringBufA buf(length);
+		StringBufA buf(lengthBytes);
 		tr.lpstrText = buf.Ptr();
 
 		int retLen = ::SendMessageA(_scHandle, SCI_GETTEXTRANGE, 0, (LPARAM)&tr);
@@ -356,12 +331,37 @@ namespace NppSharp
 
 		if (::SendMessage(_scHandle, SCI_GETCODEPAGE, 0, 0) == SC_CP_UTF8)
 		{
-			return NativeUtf8ToClrString(buf.Ptr(), length);
+			return NativeUtf8ToClrString(buf.Ptr(), lengthBytes);
 		}
 		else
 		{
 			return gcnew String(buf.Ptr());
 		}
+	}
+
+	String^ NppInterface::GetText(TextLocation start, int numChars)
+	{
+		if (numChars <= 0) return String::Empty;
+
+		int startOffset = start.ByteOffset;
+		int endOffset = startOffset;
+		int docLength = ::SendMessageA(_scHandle, SCI_GETLENGTH, 0, 0);
+
+		while (numChars-- && endOffset < docLength)
+		{
+			endOffset = ::SendMessageA(_scHandle, SCI_POSITIONAFTER, endOffset, 0);
+		}
+
+		return GetText(startOffset, endOffset - startOffset);
+	}
+
+	String^ NppInterface::GetText(TextLocation start, TextLocation end)
+	{
+		int startOffset = start.ByteOffset;
+		int endOffset = end.ByteOffset;
+		if (endOffset <= startOffset) return String::Empty;
+
+		return GetText(startOffset, endOffset - startOffset);
 	}
 
 	void NppInterface::Append(String^ text)
@@ -387,12 +387,29 @@ namespace NppSharp
 		::SendMessageA(_scHandle, SCI_COPY, 0, 0);
 	}
 
-	void NppInterface::Copy(int startPos, int length)
+	void NppInterface::Copy(TextLocation start, int numChars)
 	{
-		if (ClampTextRange(&startPos, &length))
+		if (numChars <= 0) return;
+
+		int startOffset = start.ByteOffset;
+		int endOffset = startOffset;
+		int docLength = ::SendMessageA(_scHandle, SCI_GETLENGTH, 0, 0);
+
+		while (numChars-- && endOffset < docLength)
 		{
-			::SendMessageA(_scHandle, SCI_COPYRANGE, startPos, startPos + length);
+			endOffset = ::SendMessageA(_scHandle, SCI_POSITIONAFTER, endOffset, 0);
 		}
+
+		::SendMessageA(_scHandle, SCI_COPYRANGE, startOffset, endOffset);
+	}
+
+	void NppInterface::Copy(TextLocation start, TextLocation end)
+	{
+		int startOffset = start.ByteOffset;
+		int endOffset = end.ByteOffset;
+		if (endOffset <= startOffset) return;
+
+		::SendMessageA(_scHandle, SCI_COPYRANGE, startOffset, endOffset);
 	}
 
 	void NppInterface::Copy(String^ text)
@@ -444,14 +461,14 @@ namespace NppSharp
 		return ::SendMessageA(_scHandle, SCI_GETMODIFY, 0, 0) != 0;
 	}
 
-	void NppInterface::SetSelection(int anchorPos, int currentPos)
+	void NppInterface::SetSelection(TextLocation anchorPos, TextLocation currentPos)
 	{
-		::SendMessageA(_scHandle, SCI_SETSEL, anchorPos, currentPos);
+		::SendMessageA(_scHandle, SCI_SETSEL, anchorPos.ByteOffset, currentPos.ByteOffset);
 	}
 
-	void NppInterface::GoToPos(int pos)
+	void NppInterface::GoToPos(TextLocation pos)
 	{
-		::SendMessageA(_scHandle, SCI_GOTOPOS, pos, 0);
+		::SendMessageA(_scHandle, SCI_GOTOPOS, pos.ByteOffset, 0);
 	}
 
 	void NppInterface::GoToLine(int line)
@@ -460,14 +477,14 @@ namespace NppSharp
 		::SendMessageA(_scHandle, SCI_GOTOLINE, line - 1, 0);
 	}
 
-	int NppInterface::CurrentPos::get()
+	TextLocation NppInterface::CurrentPos::get()
 	{
-		return ::SendMessageA(_scHandle, SCI_GETCURRENTPOS, 0, 0);
+		return TextLocation::FromByteOffset(::SendMessageA(_scHandle, SCI_GETCURRENTPOS, 0, 0));
 	}
 
-	void NppInterface::CurrentPos::set(int pos)
+	void NppInterface::CurrentPos::set(TextLocation pos)
 	{
-		::SendMessageA(_scHandle, SCI_SETCURRENTPOS, pos, 0);
+		::SendMessageA(_scHandle, SCI_SETCURRENTPOS, pos.ByteOffset, 0);
 	}
 
 	int NppInterface::CurrentLine::get()
@@ -482,39 +499,39 @@ namespace NppSharp
 		::SendMessageA(_scHandle, SCI_SETCURRENTPOS, lineStartPos, 0);
 	}
 
-	int NppInterface::AnchorPos::get()
+	TextLocation NppInterface::AnchorPos::get()
 	{
-		return ::SendMessageA(_scHandle, SCI_GETANCHOR, 0, 0);
+		return TextLocation::FromByteOffset(::SendMessageA(_scHandle, SCI_GETANCHOR, 0, 0));
 	}
 
-	void NppInterface::AnchorPos::set(int pos)
+	void NppInterface::AnchorPos::set(TextLocation pos)
 	{
-		::SendMessageA(_scHandle, SCI_SETANCHOR, pos, 0);
+		::SendMessageA(_scHandle, SCI_SETANCHOR, pos.ByteOffset, 0);
 	}
 
-	int NppInterface::SelectionStart::get()
+	TextLocation NppInterface::SelectionStart::get()
 	{
-		return ::SendMessageA(_scHandle, SCI_GETSELECTIONSTART, 0, 0);
+		return TextLocation::FromByteOffset(::SendMessageA(_scHandle, SCI_GETSELECTIONSTART, 0, 0));
 	}
 
-	void NppInterface::SelectionStart::set(int value)
+	void NppInterface::SelectionStart::set(TextLocation value)
 	{
-		::SendMessageA(_scHandle, SCI_SETSELECTIONSTART, value, 0);
+		::SendMessageA(_scHandle, SCI_SETSELECTIONSTART, value.ByteOffset, 0);
 	}
 
-	int NppInterface::SelectionEnd::get()
+	TextLocation NppInterface::SelectionEnd::get()
 	{
-		return ::SendMessageA(_scHandle, SCI_GETSELECTIONEND, 0, 0);
+		return TextLocation::FromByteOffset(::SendMessageA(_scHandle, SCI_GETSELECTIONEND, 0, 0));
 	}
 
-	void NppInterface::SelectionEnd::set(int value)
+	void NppInterface::SelectionEnd::set(TextLocation value)
 	{
-		::SendMessageA(_scHandle, SCI_SETSELECTIONEND, value, 0);
+		::SendMessageA(_scHandle, SCI_SETSELECTIONEND, value.ByteOffset, 0);
 	}
 
-	void NppInterface::SetEmptySelection(int pos)
+	void NppInterface::SetEmptySelection(TextLocation pos)
 	{
-		::SendMessageA(_scHandle, SCI_SETEMPTYSELECTION, pos, 0);
+		::SendMessageA(_scHandle, SCI_SETEMPTYSELECTION, pos.ByteOffset, 0);
 	}
 
 	void NppInterface::SelectAll()
@@ -539,7 +556,18 @@ namespace NppSharp
 
 	int NppInterface::GetLineLength(int line)
 	{
-		return ::SendMessageA(_scHandle, SCI_LINELENGTH, line - 1, 0);
+		int startOffset = ::SendMessageA(_scHandle, SCI_LINEFROMPOSITION, line - 1, 0);
+		int endOffset = ::SendMessageA(_scHandle, SCI_GETLINEENDPOSITION, line - 1, 0);
+
+		int offset = startOffset;
+		int numChars;
+		while (offset < endOffset)
+		{
+			offset = ::SendMessageA(_scHandle, SCI_POSITIONAFTER, offset, 0);
+			numChars++;
+		}
+
+		return numChars;
 	}
 
 	String^ NppInterface::SelectedText::get()
@@ -590,14 +618,14 @@ namespace NppSharp
 		::SendMessage(_scHandle, SCI_MOVECARETINSIDEVIEW, 0, 0);
 	}
 
-	int NppInterface::GetWordEndPos(int pos, bool onlyWordChars)
+	TextLocation NppInterface::GetWordEndPos(TextLocation pos, bool onlyWordChars)
 	{
-		return ::SendMessageA(_scHandle, SCI_WORDENDPOSITION, pos, onlyWordChars ? 1 : 0);
+		return TextLocation::FromByteOffset(::SendMessageA(_scHandle, SCI_WORDENDPOSITION, pos.ByteOffset, onlyWordChars ? 1 : 0));
 	}
 
-	int NppInterface::GetWordStartPos(int pos, bool onlyWordChars)
+	TextLocation NppInterface::GetWordStartPos(TextLocation pos, bool onlyWordChars)
 	{
-		return ::SendMessageA(_scHandle, SCI_WORDSTARTPOSITION, pos, onlyWordChars ? 1 : 0);
+		return TextLocation::FromByteOffset(::SendMessageA(_scHandle, SCI_WORDSTARTPOSITION, pos.ByteOffset, onlyWordChars ? 1 : 0));
 	}
 
 	int NppInterface::GetColumn(int pos)
@@ -636,4 +664,59 @@ namespace NppSharp
 	{
 		::SendMessageA(_scHandle, SCI_MOVESELECTEDLINESDOWN, 0, 0);
 	}
+
+	int NppInterface::TextLocationToOffset(TextLocation tl)
+	{
+		int line = tl.Line - 1;
+		int lineCount = ::SendMessageA(_scHandle, SCI_GETLINECOUNT, 0, 0);
+		if (line >= lineCount) line = lineCount - 1;
+
+		int offset = ::SendMessageA(_scHandle, SCI_POSITIONFROMLINE, line, 0);
+
+		int pos = tl.CharPosition - 1;
+		while (pos--) offset = ::SendMessageA(_scHandle, SCI_POSITIONAFTER, offset, 0);
+
+		return offset;
+	}
+
+	TextLocation NppInterface::OffsetToTextLocation(int offset)
+	{
+		if (offset <= 0) return TextLocation();
+		
+		int line = ::SendMessageA(_scHandle, SCI_LINEFROMPOSITION, offset, 0);
+		
+		int pos = 0;
+		int workOffset = ::SendMessageA(_scHandle, SCI_POSITIONFROMLINE, line, 0);
+		if (workOffset < offset)
+		{
+			int lineEnd = ::SendMessageA(_scHandle, SCI_POSITIONFROMLINE, line + 1, 0);
+			while (workOffset < offset && workOffset < lineEnd)
+			{
+				workOffset = ::SendMessageA(_scHandle, SCI_POSITIONAFTER, workOffset, 0);
+				pos++;
+			}
+		}
+
+		return TextLocation(line + 1, pos + 1);
+	}
+
+	int NppInterface::MoveOffsetByChars(int offset, int numChars)
+	{
+		if (numChars > 0)
+		{
+			while (numChars--)
+			{
+				offset = ::SendMessageA(_scHandle, SCI_POSITIONAFTER, offset, 0);
+			}
+		}
+		else if (numChars < 0)
+		{
+			while (numChars++)
+			{
+				offset = ::SendMessageA(_scHandle, SCI_POSITIONBEFORE, offset, 0);
+			}
+		}
+		return offset;
+	}
+
 }

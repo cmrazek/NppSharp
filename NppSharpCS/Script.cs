@@ -263,6 +263,7 @@ namespace NppSharp
 			foreach (Type type in _assembly.GetTypes())
 			{
 				if (!type.IsPublic) continue;
+				if (type.IsAbstract) continue;
 
 				if (typeof(NppScript).IsAssignableFrom(type))
 				{
@@ -350,7 +351,17 @@ namespace NppSharp
 					if (!string.IsNullOrEmpty(attr.Description)) desc = attr.Description;
 				}
 
-				Plugin.AddLexer(type, displayName, desc);
+				string blockCommentStart = string.Empty;
+				string blockCommentEnd = string.Empty;
+				string lineComment = string.Empty;
+				foreach (LexerCommentsAttribute attr in type.GetCustomAttributes(typeof(LexerCommentsAttribute), true))
+				{
+					if (!string.IsNullOrEmpty(attr.BlockStart)) blockCommentStart = attr.BlockStart;
+					if (!string.IsNullOrEmpty(attr.BlockEnd)) blockCommentEnd = attr.BlockEnd;
+					if (!string.IsNullOrEmpty(attr.Line)) lineComment = attr.Line;
+				}
+
+				Plugin.AddLexer(type, displayName, desc, blockCommentStart, blockCommentEnd, lineComment);
 				_numLexersFound++;
 			}
 			catch (Exception ex)

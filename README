@@ -43,3 +43,5 @@ Version 1.0.4:
   your assembly with the updated version of NppSharpInterface.dll.
 - Added new methods/properties:
   EditorWindow, FocusEditor(), ConfigDirectory, RefreshAllLexers(), GetFileNames()
+- Added CharAdded and DoubleClick events.
+- Added support for custom comments in the lexer.

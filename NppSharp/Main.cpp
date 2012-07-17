@@ -257,6 +257,18 @@ namespace NppSharp
 			case NPPN_DOCORDERCHANGED:
 				g.npp->OnFileOrderChanged(pNotify->nmhdr.idFrom);
 				break;
+
+			case SCN_CHARADDED:
+				g.npp->OnCharAdded(pNotify->ch);
+				break;
+
+			case SCN_DOUBLECLICK:
+				g.npp->OnDoubleClick(
+					pNotify->position,
+					(pNotify->modifiers & SCMOD_CTRL) != 0,
+					(pNotify->modifiers & SCMOD_ALT) != 0,
+					(pNotify->modifiers & SCMOD_SHIFT) != 0);
+				break;
 			}
 		}
 		catch (Exception^ ex)

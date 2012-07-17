@@ -69,12 +69,15 @@ namespace NppSharp
 		virtual String^ GetLineText(int line, bool includeLineEndChars);
 		virtual property int LineCount { int get(); }
 		virtual void Insert(String^ text);
-		virtual String^ GetText(int startPos, int length);
+		virtual String^ GetText(TextLocation start, int numChars);
+		virtual String^ GetText(TextLocation start, TextLocation end);
+		String^ GetText(int startOffset, int lengthBytes);
 		virtual void Append(String^ text);
 		virtual void ClearAll();
 		virtual void Cut();
 		virtual void Copy();
-		virtual void Copy(int startPos, int length);
+		virtual void Copy(TextLocation start, int numChars);
+		virtual void Copy(TextLocation start, TextLocation end);
 		virtual void Copy(String^ text);
 		virtual void CopyAllowLine();
 		virtual void Paste();
@@ -83,15 +86,15 @@ namespace NppSharp
 		virtual property int FirstVisibleLine { int get(); void set(int); }
 		virtual property int LinesOnScreen { int get(); }
 		virtual property bool FileModified { bool get(); }
-		virtual void SetSelection(int anchorPos, int currentPos);
-		virtual void GoToPos(int pos);
+		virtual void SetSelection(TextLocation anchorPos, TextLocation currentPos);
+		virtual void GoToPos(TextLocation pos);
 		virtual void GoToLine(int line);
-		virtual property int CurrentPos { int get(); void set(int); }
+		virtual property TextLocation CurrentPos { TextLocation get(); void set(TextLocation); }
 		virtual property int CurrentLine { int get(); void set(int); }
-		virtual property int AnchorPos { int get(); void set(int); }
-		virtual property int SelectionStart { int get(); void set(int); }
-		virtual property int SelectionEnd { int get(); void set(int); }
-		virtual void SetEmptySelection(int pos);
+		virtual property TextLocation AnchorPos { TextLocation get(); void set(TextLocation); }
+		virtual property TextLocation SelectionStart { TextLocation get(); void set(TextLocation); }
+		virtual property TextLocation SelectionEnd { TextLocation get(); void set(TextLocation); }
+		virtual void SetEmptySelection(TextLocation pos);
 		virtual void SelectAll();
 		virtual int GetLineFromPos(int pos);
 		virtual int GetLineStartPos(int line);
@@ -100,8 +103,8 @@ namespace NppSharp
 		virtual property String^ SelectedText { String^ get(); void set(String^); }
 		virtual property NppSharp::SelectionMode SelectionMode { NppSharp::SelectionMode get(); }	//void set(NppSharp::SelectionMode); }
 		virtual void MoveCaretInsideView();
-		virtual int GetWordEndPos(int pos, bool onlyWordChars);
-		virtual int GetWordStartPos(int pos, bool onlyWordChars);
+		virtual TextLocation GetWordEndPos(TextLocation pos, bool onlyWordChars);
+		virtual TextLocation GetWordStartPos(TextLocation pos, bool onlyWordChars);
 		virtual int GetColumn(int pos);
 		virtual int FindColumn(int line, int column);
 		virtual int PointToPos(Point pt);
@@ -109,6 +112,9 @@ namespace NppSharp
 		virtual Point PosToPoint(int pos);
 		virtual void MoveSelectedLinesUp();
 		virtual void MoveSelectedLinesDown();
+		virtual int TextLocationToOffset(TextLocation tl);
+		virtual TextLocation OffsetToTextLocation(int offset);
+		virtual int MoveOffsetByChars(int offset, int numChars);
 
 		void	OnReady();
 		void	OnShutdown();
@@ -124,6 +130,8 @@ namespace NppSharp
 		void	OnFileLoading();
 		void	OnFileLoadFailed();
 		void	OnFileOrderChanged(unsigned int bufferId);
+		void	OnCharAdded(int ch);
+		void	OnDoubleClick(int pos, bool ctrl, bool alt, bool shift);
 
 		virtual event NppEventHandler^				GetCommands;
 		virtual event NppEventHandler^				RegisterToolbarIcons;
@@ -142,6 +150,8 @@ namespace NppSharp
 		virtual event NppEventHandler^				FileLoadFailed;
 		virtual event FileEventHandler^				FileOrderChanged;
 		virtual event ExecuteCommandEventHandler^	CommandExecuted;
+		virtual event CharAddedEventHandler^		CharAdded;
+		virtual event DoubleClickEventHandler^		DoubleClick;
 
 		virtual void ShowOutputWindow();
 		virtual void HideOutputWindow();
@@ -170,7 +180,7 @@ namespace NppSharp
 		virtual IDockWindow^ GetDockWindow(int id);
 
 		// Lexer functions
-		virtual int		AddLexer(Type^ lexerType, String^ name, String^ description);
+		virtual int		AddLexer(Type^ lexerType, String^ name, String^ description, String^ blockCommentStart, String^ blockCommentEnd, String^ lineComment);
 		virtual void	RefreshCustomLexers();
 		int				GetLexerCount();
 		String^			GetLexerName(int index);
@@ -185,7 +195,6 @@ namespace NppSharp
 		
 
 	private:
-		bool	ClampTextRange(int *pStartPos, int *pLength);
 		String^	GetFileNameByBufferId(unsigned int bufferId);
 		void	DockWindow_Shutdown();
 

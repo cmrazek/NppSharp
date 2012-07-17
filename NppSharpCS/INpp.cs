@@ -177,6 +177,16 @@ namespace NppSharp
 		/// Triggered when the user reorders the file tabs.
 		/// </summary>
 		event FileEventHandler FileOrderChanged;
+
+		/// <summary>
+		/// Triggered when a character is added to a document.
+		/// </summary>
+		event CharAddedEventHandler CharAdded;
+
+		/// <summary>
+		/// Triggered when the user double-clicks inside a document.
+		/// </summary>
+		event DoubleClickEventHandler DoubleClick;
 		#endregion
 
 		#region Editor
@@ -347,10 +357,18 @@ namespace NppSharp
 		/// <summary>
 		/// Gets the text for the specified range.
 		/// </summary>
-		/// <param name="startPos">The 0-based starting position.</param>
-		/// <param name="length">The length of text to retrieve.</param>
+		/// <param name="start">The starting position.</param>
+		/// <param name="numChars">The number of characters to retrieve.</param>
 		/// <returns>The text for the given range.</returns>
-		string GetText(int startPos, int length);
+		string GetText(TextLocation start, int numChars);
+
+		/// <summary>
+		/// Gets the text for the specified range.
+		/// </summary>
+		/// <param name="start">The starting position</param>
+		/// <param name="end">The ending position (exclusive)</param>
+		/// <returns>The text for the given range.</returns>
+		string GetText(TextLocation start, TextLocation end);
 
 		/// <summary>
 		/// Appends text to the end of the document without affecting the selection.
@@ -376,9 +394,16 @@ namespace NppSharp
 		/// <summary>
 		/// Copies the specified text range into the clipboard.
 		/// </summary>
-		/// <param name="startPos">The 0-based starting position.</param>
-		/// <param name="length">The number of characters to be copied.</param>
-		void Copy(int startPos, int length);
+		/// <param name="start">The starting position.</param>
+		/// <param name="numChars">The number of characters to be copied.</param>
+		void Copy(TextLocation start, int numChars);
+
+		/// <summary>
+		/// Copies the specified text range into the clipboard.
+		/// </summary>
+		/// <param name="start">The starting position.</param>
+		/// <param name="end">The ending position (exclusive).</param>
+		void Copy(TextLocation start, TextLocation end);
 
 		/// <summary>
 		/// Copies the provided string into the clipboard.
@@ -426,17 +451,15 @@ namespace NppSharp
 		/// Sets the selection range.
 		/// (The caret is scrolled into view)
 		/// </summary>
-		/// <param name="anchorPos">The selection anchor position.  If negative, the selection will
-		/// be removed and start/end will be set to currentPos.</param>
-		/// <param name="currentPos">The selection current position.  If negative, the selection
-		/// will extend to the end of the document.</param>
-		void SetSelection(int anchorPos, int currentPos);
+		/// <param name="anchorPos">The selection anchor position.</param>
+		/// <param name="currentPos">The selection current position.</param>
+		void SetSelection(TextLocation anchorPos, TextLocation currentPos);
 
 		/// <summary>
 		/// Goes to the specified position and ensures it is visible.
 		/// </summary>
 		/// <param name="pos">The position to go to.</param>
-		void GoToPos(int pos);
+		void GoToPos(TextLocation pos);
 
 		/// <summary>
 		/// Goes to the specified line and ensures it is visible.
@@ -448,7 +471,7 @@ namespace NppSharp
 		/// Gets or sets the current position.
 		/// (The caret is not scrolled into view)
 		/// </summary>
-		int CurrentPos { get; set; }
+		TextLocation CurrentPos { get; set; }
 
 		/// <summary>
 		/// Gets or sets the current line.
@@ -460,25 +483,25 @@ namespace NppSharp
 		/// Gets or sets the selection anchor position.
 		/// (The caret is not scrolled into view)
 		/// </summary>
-		int AnchorPos { get; set; }
+		TextLocation AnchorPos { get; set; }
 
 		/// <summary>
 		/// Gets or sets the selection start position.
 		/// (The caret is not scrolled into view)
 		/// </summary>
-		int SelectionStart { get; set; }
+		TextLocation SelectionStart { get; set; }
 
 		/// <summary>
 		/// Gets or sets the selection end position.
 		/// (The caret is not scrolled into view)
 		/// </summary>
-		int SelectionEnd { get; set; }
+		TextLocation SelectionEnd { get; set; }
 
 		/// <summary>
 		/// Removes the selection and sets the caret at pos.
 		/// (The caret is not scrolled into view)
 		/// </summary>
-		void SetEmptySelection(int pos);
+		void SetEmptySelection(TextLocation pos);
 
 		/// <summary>
 		/// Selects all text in the document.
@@ -489,9 +512,9 @@ namespace NppSharp
 		/// <summary>
 		/// Gets the line that contains the specified position.
 		/// </summary>
-		/// <param name="pos">The zero-based position.</param>
+		/// <param name="byteOffset">The zero-based position.</param>
 		/// <returns>The one-based line number that contains the position.</returns>
-		int GetLineFromPos(int pos);
+		int GetLineFromPos(int byteOffset);
 
 		/// <summary>
 		/// Gets the starting position of the specified line.
@@ -538,7 +561,7 @@ namespace NppSharp
 		/// <param name="onlyWordChars">If true, only word characters will be jumped.
 		/// If false, all characters will be jumped.</param>
 		/// <returns>The position at the end of the word.</returns>
-		int GetWordEndPos(int pos, bool onlyWordChars);
+		TextLocation GetWordEndPos(TextLocation pos, bool onlyWordChars);
 
 		/// <summary>
 		/// Gets the position at the start of the current word.
@@ -547,7 +570,7 @@ namespace NppSharp
 		/// <param name="onlyWordChars">If true, only word characters will be jumped.
 		/// If false, all characters will be jumped.</param>
 		/// <returns>The position at the start of the word.</returns>
-		int GetWordStartPos(int pos, bool onlyWordChars);
+		TextLocation GetWordStartPos(TextLocation pos, bool onlyWordChars);
 
 		/// <summary>
 		/// Gets the column number for the specified position.
@@ -596,6 +619,28 @@ namespace NppSharp
 		/// Moves the selected lines down one line, shifting the line below the selection.
 		/// </summary>
 		void MoveSelectedLinesDown();
+
+		/// <summary>
+		/// Gets the offset for a text location.
+		/// </summary>
+		/// <param name="loc">The TextLocation to be converted.</param>
+		/// <returns>The zero-based bytes offset for the location.</returns>
+		int TextLocationToOffset(TextLocation loc);
+
+		/// <summary>
+		/// Gets the text location that refers to the byte offset.
+		/// </summary>
+		/// <param name="offset">The byte offset to be converted.</param>
+		/// <returns>A TextLocation object.</returns>
+		TextLocation OffsetToTextLocation(int offset);
+
+		/// <summary>
+		/// Increment/decrements an offset by a specified number of characters.
+		/// </summary>
+		/// <param name="offset">The originating byte-offset.</param>
+		/// <param name="numChars">The number of characters to move.</param>
+		/// <returns>The new byte-offset</returns>
+		int MoveOffsetByChars(int offset, int numChars);
 		#endregion
 
 		#region Output Window
@@ -689,8 +734,11 @@ namespace NppSharp
 		/// <param name="lexerType">The class type for the lexer.</param>
 		/// <param name="name">The name of the lexer.</param>
 		/// <param name="description">The description of the lexer to appear in the Notepad++ status bar.</param>
+		/// <param name="blockCommentStart">The text that starts a block comment.</param>
+		/// <param name="blockCommentEnd">The text that ends a block comment.</param>
+		/// <param name="lineComment">The text that starts a line comment.</param>
 		/// <returns>The zero-based index of the lexer object.</returns>
-		int AddLexer(Type lexerType, string name, string description);
+		int AddLexer(Type lexerType, string name, string description, string blockCommentStart, string blockCommentEnd, string lineComment);
 
 		/// <summary>
 		/// Refreshes the word-styles and folding on documents that use a custom lexer provided via NppSharp.
@@ -836,6 +884,81 @@ namespace NppSharp
 		{
 			get { return _langId; }
 		}
+	}
+
+	/// <summary>
+	/// Handler for char-added events.
+	/// </summary>
+	/// <param name="sender">Object that sends the event</param>
+	/// <param name="e">Arguments provided for this event.</param>
+	public delegate void CharAddedEventHandler(object sender, CharAddedEventArgs e);
+
+	/// <summary>
+	/// Arguments for char-added events.
+	/// </summary>
+	public class CharAddedEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Creates the event arguments object.
+		/// </summary>
+		/// <param name="ch">The character added.</param>
+		public CharAddedEventArgs(char ch)
+		{
+			Character = ch;
+		}
+
+		/// <summary>
+		/// Gets the character added.
+		/// </summary>
+		public char Character { get; private set; }
+	}
+
+	/// <summary>
+	/// Handler for double-click events.
+	/// </summary>
+	/// <param name="sender">Object that sends the event</param>
+	/// <param name="e">Arguments provided for this event.</param>
+	public delegate void DoubleClickEventHandler(object sender, DoubleClickEventArgs e);
+
+	/// <summary>
+	/// Arguments for double-click events.
+	/// </summary>
+	public class DoubleClickEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Creates the event arguments object.
+		/// </summary>
+		/// <param name="pos">The position where the double-click occurred</param>
+		/// <param name="ctrl">A flag indicating if the control key was pressed during the double-click.</param>
+		/// <param name="alt">A flag indicating if the alt key was pressed during the double-click.</param>
+		/// <param name="shift">A flag indicating if the shift key was pressed during the double-click.</param>
+		public DoubleClickEventArgs(int pos, bool ctrl, bool alt, bool shift)
+		{
+			Position = pos;
+			Control = ctrl;
+			Alt = alt;
+			Shift = shift;
+		}
+
+		/// <summary>
+		/// The document position where the double-click occurred.
+		/// </summary>
+		public int Position { get; private set; }
+
+		/// <summary>
+		/// Gets a value indicating if the control key was pressed during the double-click.
+		/// </summary>
+		public bool Control { get; private set; }
+
+		/// <summary>
+		/// Gets a value indicating if the alt key was pressed during the double-click.
+		/// </summary>
+		public bool Alt { get; private set; }
+
+		/// <summary>
+		/// Gets a value indicating if the shift key was pressed during the double-click.
+		/// </summary>
+		public bool Shift { get; private set; }
 	}
 	#endregion
 
