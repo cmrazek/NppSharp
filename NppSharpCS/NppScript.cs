@@ -1070,5 +1070,36 @@ namespace NppSharp
 			Plugin.NppIntf.RefreshCustomLexers();
 		}
 		#endregion
+
+		#region AutoCompletion
+		/// <summary>
+		/// Shows the AutoCompletion list.
+		/// </summary>
+		/// <param name="lengthEntered">The number of characters already entered by the user.</param>
+		/// <param name="list">The list of words.</param>
+		/// <param name="ignoreCase">Ignore case?</param>
+		public void ShowAutoCompletion(int lengthEntered, IEnumerable<string> list, bool ignoreCase)
+		{
+			Plugin.NppIntf.ShowAutoCompletion(lengthEntered, list, ignoreCase);
+		}
+
+		/// <summary>
+		/// Shows the AutoCompletion list.
+		/// </summary>
+		/// <param name="lengthEntered">The number of characters already entered by the user.</param>
+		/// <param name="list">The list of words.</param>
+		public void ShowAutoCompletion(int lengthEntered, IEnumerable<string> list)
+		{
+			Plugin.NppIntf.ShowAutoCompletion(lengthEntered, list, false);
+		}
+
+		/// <summary>
+		/// Cancels any active auto-completion.
+		/// </summary>
+		public void CancelAutoCompletion()
+		{
+			Plugin.NppIntf.CancelAutoCompletion();
+		}
+		#endregion
 	}
 }

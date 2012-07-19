@@ -745,6 +745,21 @@ namespace NppSharp
 		/// </summary>
 		void RefreshCustomLexers();
 		#endregion
+
+		#region AutoCompletion
+		/// <summary>
+		/// Shows the AutoCompletion list.
+		/// </summary>
+		/// <param name="lengthEntered">The number of characters already entered by the user.</param>
+		/// <param name="list">The list of words.</param>
+		/// <param name="ignoreCase">Ignore case?</param>
+		void ShowAutoCompletion(int lengthEntered, IEnumerable<string> list, bool ignoreCase);
+
+		/// <summary>
+		/// Cancels any action auto-completion.
+		/// </summary>
+		void CancelAutoCompletion();
+		#endregion
 	}
 
 	#region Event Handlers

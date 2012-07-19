@@ -20,6 +20,9 @@
     <Filter Include="OutputWindow">
       <UniqueIdentifier>{92131f8b-fdf9-478c-a11c-c013ea5e3f1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AutoCompletion">
+      <UniqueIdentifier>{fbfac5f8-97a5-4e2d-830d-6eefb299ab31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.ico">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="OutputWindow.cpp">
       <Filter>OutputWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Npp_AutoCompletion.cpp">
+      <Filter>AutoCompletion</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

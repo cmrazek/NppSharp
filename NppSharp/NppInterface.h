@@ -192,6 +192,10 @@ namespace NppSharp
 		String^			BuildExtensionList(IEnumerable<String^>^ extList);
 		String^			ColorToWebHex(Color color);
 		Color			WebHexToColor(String^ str);
+
+		// AutoCompletion
+		virtual void	ShowAutoCompletion(int lengthEntered, IEnumerable<String^>^ list, bool ignoreCase);
+		virtual void	CancelAutoCompletion();
 		
 
 	private:
