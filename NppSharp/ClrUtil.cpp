@@ -88,4 +88,16 @@ namespace NppSharp
 
 		return ret;
 	}
+
+#ifndef DOTNET4
+	bool IsStringNullOrWhiteSpace(String^ str)
+	{
+		if (str == nullptr) return true;
+		for each (char ch in str)
+		{
+			if (!Char::IsWhiteSpace(ch)) return false;
+		}
+		return true;
+	}
+#endif
 }

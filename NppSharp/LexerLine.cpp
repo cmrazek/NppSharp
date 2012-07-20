@@ -136,7 +136,11 @@ namespace NppSharp
 	{
 		if (readFunc == nullptr) throw gcnew ArgumentNullException("readFunc");
 
+#ifdef DOTNET4
 		_sb->Clear();
+#else
+		_sb->Remove(0, _sb->Length);
+#endif
 
 		int pos = _pos;
 		wchar_t ch;

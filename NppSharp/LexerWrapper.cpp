@@ -126,7 +126,11 @@ namespace NppSharp
 				{
 					lineStr = gcnew String(pszPos, 0, lineLen);
 				}
+#ifdef DOTNET4
 				foldBlank = String::IsNullOrWhiteSpace(lineStr);
+#else
+				foldBlank = IsStringNullOrWhiteSpace(lineStr);
+#endif
 
 				// Tell script to style the line.
 				try
