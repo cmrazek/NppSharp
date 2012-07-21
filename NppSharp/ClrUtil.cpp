@@ -88,4 +88,94 @@ namespace NppSharp
 
 		return ret;
 	}
+
+#ifndef DOTNET4
+	bool IsStringNullOrWhiteSpace(String^ str)
+	{
+		if (str == nullptr) return true;
+		for each (char ch in str)
+		{
+			if (!Char::IsWhiteSpace(ch)) return false;
+		}
+		return true;
+	}
+#endif
+
+	wchar_t ReadUtf8Char(const char** ptr)
+	{
+		unsigned char ch = **ptr;
+		if ((ch & 0xc0) != 0xc0)
+		{
+			(*ptr)++;
+			return (wchar_t)ch;
+		}
+
+		wchar_t			ret = 0;
+		unsigned char	firstCh = ch;
+		unsigned char	firstMask = 0x3f;
+		unsigned char	firstShift = 0;
+		const char*		pos = *ptr;
+
+		while (ch & 0x40)
+		{
+			ret = (ret << 6) | (*(++pos) & 0x3f);
+			ch <<= 1;
+			firstMask >>= 1;
+			firstShift += 6;
+		}
+
+		*ptr = pos + 1;
+		return ret | ((firstCh & firstMask) << firstShift);
+	}
+
+	int Utf8CharWidth(const char* ptr)
+	{
+		unsigned char ch = *ptr;
+		if ((ch & 0xc0) != 0xc0) return 1;
+
+		int len = 1;
+		while (ch & 0x40)
+		{
+			len++;
+			ch <<= 1;
+		}
+
+		return len;
+	}
+
+	wchar_t PreviousUtf8Char(const char** ptr)
+	{
+		const char*	pos = *ptr - 1;
+		unsigned char		ch = *pos;
+		if ((ch & 0x80) == 0)
+		{
+			*ptr = pos;
+			return (wchar_t)ch;
+		}
+
+		wchar_t			ret = ch & 0x3f;
+		unsigned char	mask = 0x3f;
+		unsigned char	shift = 6;
+		pos--;
+
+		while (mask)
+		{
+			mask >>= 1;
+			ch = *pos;
+			if (ch & 0x40)
+			{
+				ret |= (ch & mask) << shift;
+				break;
+			}
+			else
+			{
+				ret |= ch << shift;
+				shift += 6;
+				pos--;
+			}
+		}
+
+		*ptr = pos;
+		return ret;
+	}
 }

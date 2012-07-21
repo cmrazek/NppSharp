@@ -560,7 +560,7 @@ namespace NppSharp
 		int endOffset = ::SendMessageA(_scHandle, SCI_GETLINEENDPOSITION, line - 1, 0);
 
 		int offset = startOffset;
-		int numChars;
+		int numChars = 0;
 		while (offset < endOffset)
 		{
 			offset = ::SendMessageA(_scHandle, SCI_POSITIONAFTER, offset, 0);
