@@ -31,4 +31,8 @@ namespace NppSharp
 #ifndef DOTNET4
 	bool	IsStringNullOrWhiteSpace(String^ str);
 #endif
+
+	wchar_t	ReadUtf8Char(const char** ptr);
+	int		Utf8CharWidth(const char* ptr);
+	wchar_t	PreviousUtf8Char(const char** ptr);
 }

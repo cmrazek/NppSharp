@@ -100,7 +100,6 @@ namespace NppSharp
 			const char* pszBuf = _doc->BufferPointer();
 			const char* pszPos = pszBuf + startPos;
 			const char* pszEnd = pszPos + (unsigned int)lengthDoc;
-			const char* pszLineStart = pszPos;
 			const char*	pszLineEnd;
 			int			line = _doc->LineFromPosition(startPos);
 			int			lineLen;
@@ -108,7 +107,6 @@ namespace NppSharp
 			int			codePage = _doc->CodePage();
 			LexerLine^	lineObj = gcnew LexerLine();
 			int			foldLevel = line > 0 ? (_doc->GetLevel(line - 1) & SC_FOLDLEVELNUMBERMASK) : SC_FOLDLEVELBASE;
-			bool		foldBlank;
 
 			while (pszPos < pszEnd)
 			{
@@ -116,26 +114,11 @@ namespace NppSharp
 				pszLineEnd = pszBuf + _doc->LineStart(line + 1);
 				lineLen = pszLineEnd - pszPos;
 
-				// Get the line text as a CLR string.
-				String^ lineStr;
-				if (codePage == SC_CP_UTF8)
-				{
-					lineStr = NativeUtf8ToClrString(pszPos, lineLen);
-				}
-				else
-				{
-					lineStr = gcnew String(pszPos, 0, lineLen);
-				}
-#ifdef DOTNET4
-				foldBlank = String::IsNullOrWhiteSpace(lineStr);
-#else
-				foldBlank = IsStringNullOrWhiteSpace(lineStr);
-#endif
+				lineObj->Start(pszPos, pszLineEnd, codePage);
 
 				// Tell script to style the line.
 				try
 				{
-					lineObj->Start(lineStr);
 					state = _clrLexer->StyleLine(lineObj, state);
 				}
 				catch (Exception^ ex)
@@ -143,70 +126,21 @@ namespace NppSharp
 					NppSharp::WriteOutputLine(NppSharp::OutputStyle::Error, String::Concat("Exception in lexer:\r\n", ex));
 				}
 
-				// Apply the styles
-				// CLR styler uses unicode chars, but Scintilla uses ANSI or UTF-8.
-				// Need to adjust for multi-byte chars.
-				array<byte>^ styles = lineObj->StylesBuf;
-				if (codePage == SC_CP_UTF8)
-				{
-					byte ch;
-					int charIndex = 0;
-					for (int bufIndex = 0; bufIndex < lineLen; ++bufIndex)
-					{
-						ch = (byte)pszPos[bufIndex];
-						if (ch & 0x80)
-						{
-							// Char is spread across multiple bytes.
-							// All lead bytes will be given same style as the final byte.
-
-							// Lead-bytes
-							while (ch & 0x40)
-							{
-								_doc->SetStyleFor(1, styles[charIndex]);
-								ch <<= 1;
-								bufIndex++;
-							}
-
-							// Final-byte
-							_doc->SetStyleFor(1, styles[charIndex++]);
-						}
-						else
-						{
-							// Single-byte char
-							_doc->SetStyleFor(1, styles[charIndex++]);
-						}
-					}
-				}
-				else
-				{
-					for (int i = 0; i < lineLen; ++i)
-					{
-						_doc->SetStyleFor(1, styles[i]);
-					}
-				}
+				_doc->SetStyles(pszLineEnd - pszPos, (const char*)lineObj->StyleBuf);
 
 				// Apply line state
 				_doc->SetLineState(line, state);
 
 				// Apply fold level state
-				int lineFoldLevel = lineObj->GetFoldLevel();
-				if (lineFoldLevel > 0)
-				{
-					_doc->SetLevel(line, foldLevel | SC_FOLDLEVELHEADERFLAG);
-					foldLevel += lineFoldLevel;
-				}
-				else if (lineFoldLevel < 0)
-				{
-					_doc->SetLevel(line, foldLevel);
-					foldLevel += lineFoldLevel;
-					if (foldLevel < SC_FOLDLEVELBASE) foldLevel = SC_FOLDLEVELBASE;
-				}
-				else
-				{
-					if (foldBlank) foldLevel |= SC_FOLDLEVELWHITEFLAG;
-					_doc->SetLevel(line, foldLevel);
-				}
+				int foldStarts = lineObj->FoldStarts;
+				int foldEnds = lineObj->FoldEnds;
 
+				foldLevel -= foldEnds;
+				if (foldStarts) foldLevel |= SC_FOLDLEVELHEADERFLAG;
+				if (lineObj->IsBlank) foldLevel |= SC_FOLDLEVELWHITEFLAG;
+				_doc->SetLevel(line, foldLevel);
+
+				foldLevel += foldStarts;
 				foldLevel &= SC_FOLDLEVELNUMBERMASK;
 
 				// Advance to next line.

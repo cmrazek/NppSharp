@@ -255,8 +255,11 @@ namespace NppSharp
 		{
 			try
 			{
+				// Help window parent that will never be visible, to avoid help file being 'always on top'.
+				var helpParent = new Form();
+
 				string helpFileName = string.Concat("file://", Path.Combine(_npp.NppDir, Res.HelpFileName));
-				Help.ShowHelp(Control.FromHandle(_npp.Window.Handle), helpFileName);	// TODO: remove
+				Help.ShowHelp(helpParent, helpFileName);
 			}
 			catch (Exception ex)
 			{

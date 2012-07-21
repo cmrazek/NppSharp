@@ -3,13 +3,13 @@ Notepad++ plugin to run scripts written in C#/.NET
 
 [https://github.com/cmrazek/NppSharp](https://github.com/cmrazek/NppSharp)
 
-Current Version: 1.0.3
+Current Version: 1.1
 
 ## License
 - This is licensed under [GNU General Public License v3](http://www.gnu.org/licenses/gpl.txt).
 
 ## Download
-- Setup: ([Download](https://github.com/downloads/cmrazek/NppSharp/NppSharp_Setup_1.0.3.exe))
+- Setup: ([Download](https://github.com/downloads/cmrazek/NppSharp/NppSharp_Setup_1.1.exe))
 - Source: ([Download](https://github.com/cmrazek/NppSharp/zipball/master))
 
 ## Requirements
@@ -21,6 +21,16 @@ Current Version: 1.0.3
 - Email: chrismrazek@gmail.com
 
 ## ChangeLog
+
+Version 1.1 - 2012-07-21:
+- Document text positions have changed from a basic byte-offset to a TextLocation class.
+  This allows easier manipulation when dealing with multi-byte characters.
+  Unfortunately, this will break some existing scripts.
+- Scripts can now trigger auto-completion with their own word lists.
+- DockWindow function now returns an object which can be used to show/hide the window.
+- Improved lexer performance (less memory allocations)
+- Added new events for char-added and double-click.
+- Misc fixes/improvements.
 
 Version 1.0.3 - 2012-07-08:
 - Upgraded to .NET Framework 4 / Visual Studio 2010.
@@ -36,14 +46,3 @@ Version 1.0.2 - 2012-06-26:
 
 Version 1.0.1 - 2012-06-21:
 - Added API documentation.
-
-Pending:
-
-Version 1.0.4:
-- DockWindow function now returns an IDockWindow object which can be used to show/hide the window.
-  Note: If you have existing .NET asemblies that call DockWindow(), you will need to recompile
-  your assembly with the updated version of NppSharpInterface.dll.
-- Added new methods/properties:
-  EditorWindow, FocusEditor(), ConfigDirectory, RefreshAllLexers(), GetFileNames()
-- Added CharAdded and DoubleClick events.
-- Added support for custom comments in the lexer.

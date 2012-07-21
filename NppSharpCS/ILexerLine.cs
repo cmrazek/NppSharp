@@ -66,6 +66,28 @@ namespace NppSharp
 		/// <param name="readFunc">The callback function to control when reading stops.</param>
 		/// <returns>A string containing the characters read from the line.</returns>
 		string Peek(LexerReadDelegate readFunc);
+
+		/// <summary>
+		/// Retrieves a character from an offset relative to the current position.
+		/// </summary>
+		/// <param name="offset">The offset relative to the current position.</param>
+		/// <returns>The character found.</returns>
+		char PeekChar(int offset);
+
+		/// <summary>
+		/// Checks if the next characters on the line match the string provided.
+		/// </summary>
+		/// <param name="match">The string that the next characters will be compared to.</param>
+		/// <returns>True if the characters match (case sensitive), otherwise false.</returns>
+		bool Match(string match);
+
+		/// <summary>
+		/// Checks if the next characters on the line match the string provided.
+		/// </summary>
+		/// <param name="match">The string that the next characters will be compared to.</param>
+		/// <param name="ignoreCase">Set to true to ignore case.</param>
+		/// <returns>True if the characters match, otherwise false.</returns>
+		bool Match(string match, bool ignoreCase);
 		#endregion
 
 		#region Styling

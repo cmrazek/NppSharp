@@ -24,6 +24,7 @@ namespace NppSharp
 	{
 	public:
 		LexerLine();
+		virtual ~LexerLine();
 
 		property bool		EOL { virtual bool get(); }
 		property int		Length { virtual int get(); }
@@ -31,8 +32,11 @@ namespace NppSharp
 		property int		Position { virtual int get(); virtual void set(int); }
 		property String^	Text { virtual String^ get(); }
 
+		virtual bool	Match(String^ match);
+		virtual bool	Match(String^ match, bool ignoreCase);
 		virtual String^	Peek(int length);
 		virtual String^	Peek(LexerReadDelegate^ readFunc);
+		virtual wchar_t	PeekChar(int offset);
 		virtual void	Style(LexerStyle^ style);
 		virtual void	Style(LexerStyle^ style, int length);
 		virtual void	Style(LexerStyle^ style, LexerReadDelegate^ readFunc);
@@ -41,17 +45,24 @@ namespace NppSharp
 
 		virtual void	FoldStart();
 		virtual void	FoldEnd();
-		int				GetFoldLevel() { return _foldLevel; }
+		property int	FoldStarts { int get() { return _foldStarts; } }
+		property int	FoldEnds { int get() { return _foldEnds; } }
 
-		void Start(String^ text);
-		property array<byte>^ StylesBuf { array<byte>^ get(); }
+		void					Start(const char* lineStart, const char* lineEnd, int codePage);
+		property const byte*	StyleBuf { const byte* get() { return _styles; } }
+		property bool			IsBlank { bool get(); }
 
 	private:
-		String^			_text;
-		array<byte>^	_styles;
-		int				_len;
-		int				_pos;
+		const char*		_lineStart;
+		const char*		_lineEnd;
+		const char*		_rawPos;
+		int				_codePage;
 		StringBuilder^	_sb;
-		int				_foldLevel;
+		int				_foldStarts;
+		int				_foldEnds;
+		String^			_lineText;
+		byte*			_styles;
+		int				_stylesLen;
+		int				_charLen;
 	};
 }
