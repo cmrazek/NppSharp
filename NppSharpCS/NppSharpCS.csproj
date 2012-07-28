@@ -76,6 +76,7 @@
     <Compile Include="IDockWindow.cs" />
     <Compile Include="ILexer.cs" />
     <Compile Include="ILexerLine.cs" />
+    <Compile Include="TextPtr.cs" />
     <Compile Include="LexerCommentsAttribute.cs" />
     <Compile Include="LexerException.cs" />
     <Compile Include="LexerStyle.cs" />

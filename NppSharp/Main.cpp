@@ -269,6 +269,10 @@ namespace NppSharp
 					(pNotify->modifiers & SCMOD_ALT) != 0,
 					(pNotify->modifiers & SCMOD_SHIFT) != 0);
 				break;
+
+			case SCN_MODIFIED:
+				g.npp->OnModified(pNotify);
+				break;
 			}
 		}
 		catch (Exception^ ex)
