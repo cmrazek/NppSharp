@@ -106,7 +106,8 @@ namespace NppSharp
 			int			state = line > 0 ? _doc->GetLineState(line - 1) : 0;
 			int			codePage = _doc->CodePage();
 			LexerLine^	lineObj = gcnew LexerLine();
-			int			foldLevel = line > 0 ? (_doc->GetLevel(line - 1) & SC_FOLDLEVELNUMBERMASK) : SC_FOLDLEVELBASE;
+			int			foldLevel = line > 0 ? (_doc->GetLevel(line - 1) >> 16) : SC_FOLDLEVELBASE;
+			int			nextFoldLevel = foldLevel;
 
 			while (pszPos < pszEnd)
 			{
@@ -132,16 +133,17 @@ namespace NppSharp
 				_doc->SetLineState(line, state);
 
 				// Apply fold level state
+				// High 16-bits contains the fold level for the next line, so when the user starts typing on a line,
+				// it knows what the fold level should be without having to go back and look.
 				int foldStarts = lineObj->FoldStarts;
 				int foldEnds = lineObj->FoldEnds;
+				nextFoldLevel = foldLevel + foldStarts - foldEnds;
+				if (nextFoldLevel < SC_FOLDLEVELBASE) nextFoldLevel = SC_FOLDLEVELBASE;
 
-				foldLevel -= foldEnds;
+				foldLevel = (nextFoldLevel << 16) | foldLevel;
 				if (foldStarts) foldLevel |= SC_FOLDLEVELHEADERFLAG;
-				if (lineObj->IsBlank) foldLevel |= SC_FOLDLEVELWHITEFLAG;
 				_doc->SetLevel(line, foldLevel);
-
-				foldLevel += foldStarts;
-				foldLevel &= SC_FOLDLEVELNUMBERMASK;
+				foldLevel = nextFoldLevel;
 
 				// Advance to next line.
 				line++;
