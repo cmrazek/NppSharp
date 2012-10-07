@@ -142,6 +142,7 @@
     <ClInclude Include="LexerLine.h" />
     <ClInclude Include="LexerWrapper.h" />
     <ClInclude Include="OutputWindow.h" />
+    <ClInclude Include="TextPtrA.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Npp_Lexer.cpp" />
     <ClCompile Include="Npp_OutputWindow.cpp" />
     <ClCompile Include="OutputWindow.cpp" />
+    <ClCompile Include="TextPtrA.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

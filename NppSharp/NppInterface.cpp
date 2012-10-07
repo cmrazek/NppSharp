@@ -18,6 +18,7 @@
 #include "NppInterface.h"
 #include <vcclr.h>
 #include "OutputWindow.h"
+#include "TextPtrA.h"
 
 namespace NppSharp
 {
@@ -213,6 +214,30 @@ namespace NppSharp
 	void NppInterface::OnDoubleClick(int pos, bool ctrl, bool alt, bool shift)
 	{
 		DoubleClick(this, gcnew DoubleClickEventArgs(pos, ctrl, alt, shift));
+	}
+
+	void NppInterface::OnModified(npp::SCNotification *pNotify)
+	{
+		if (pNotify->modificationType & (SC_MOD_INSERTTEXT | SC_MOD_DELETETEXT))
+		{
+			int codePage;
+			if (pNotify->nmhdr.hwndFrom == NULL) codePage = 0;
+			else codePage = ::SendMessageA((HWND)pNotify->nmhdr.hwndFrom, SCI_GETCODEPAGE, 0, 0);
+
+			TextPtrA^ textPtr = gcnew TextPtrA(pNotify->text, pNotify->length, codePage);
+
+			// ModifiedEventArgs(ModificationType type, string text, TextLocation location, bool userAction, bool undo, bool redo, int linesAdded)
+			ModifiedEventArgs^ e = gcnew ModifiedEventArgs(
+				(pNotify->modificationType & SC_MOD_INSERTTEXT) ? ModificationType::Insert : ModificationType::Delete,
+				textPtr,
+				TextLocation::FromByteOffset(pNotify->position),
+				(pNotify->modificationType & SC_PERFORMED_USER) != 0,
+				(pNotify->modificationType & SC_PERFORMED_UNDO) != 0,
+				(pNotify->modificationType & SC_PERFORMED_REDO) != 0,
+				pNotify->linesAdded);
+
+			Modification(this, e);
+		}
 	}
 
 	void NppInterface::ExecuteCommandByIndex(int cmdIndex)

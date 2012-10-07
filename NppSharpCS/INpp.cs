@@ -187,6 +187,11 @@ namespace NppSharp
 		/// Triggered when the user double-clicks inside a document.
 		/// </summary>
 		event DoubleClickEventHandler DoubleClick;
+
+		/// <summary>
+		/// Triggered when the active document is modified.
+		/// </summary>
+		event ModifiedEventHandler Modification;
 		#endregion
 
 		#region Editor
@@ -974,6 +979,91 @@ namespace NppSharp
 		/// Gets a value indicating if the shift key was pressed during the double-click.
 		/// </summary>
 		public bool Shift { get; private set; }
+	}
+
+	/// <summary>
+	/// A type of document modification performed.
+	/// </summary>
+	public enum ModificationType
+	{
+		/// <summary>
+		/// Text was inserted into the document.
+		/// </summary>
+		Insert,
+
+		/// <summary>
+		/// Text was deleted from the document.
+		/// </summary>
+		Delete
+	}
+
+	/// <summary>
+	/// Handler for modified events.
+	/// </summary>
+	/// <param name="sender">Object that sends the event.</param>
+	/// <param name="e">Arguments provided for this event.</param>
+	public delegate void ModifiedEventHandler(object sender, ModifiedEventArgs e);
+
+	/// <summary>
+	/// Arguments for modified events.
+	/// </summary>
+	public class ModifiedEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Gets the type of modification that occurred.
+		/// </summary>
+		public ModificationType ModificationType { get; private set; }
+
+		/// <summary>
+		/// Gets the text inserted or deleted.
+		/// </summary>
+		public TextPtr Text { get; private set; }
+
+		/// <summary>
+		/// Gets the location of the modification.
+		/// </summary>
+		public TextLocation Location { get; private set; }
+
+		/// <summary>
+		/// Gets a value indicating if this action was caused by the user.
+		/// </summary>
+		public bool UserAction { get; private set; }
+
+		/// <summary>
+		/// Gets a value indicating if this action is part of an undo process.
+		/// </summary>
+		public bool Undo { get; private set; }
+
+		/// <summary>
+		/// Gets a value indicating if this action is part of a redo process.
+		/// </summary>
+		public bool Redo { get; private set; }
+
+		/// <summary>
+		/// Gets the number of lines added by this modification.
+		/// </summary>
+		public int LinesAdded { get; private set; }
+
+		/// <summary>
+		/// Creates the event arguments object.
+		/// </summary>
+		/// <param name="type">The type of modification that occurred.</param>
+		/// <param name="text">The text inserted or deleted.</param>
+		/// <param name="location">The location of the modification.</param>
+		/// <param name="userAction">A flag indicating if this action was caused by the user.</param>
+		/// <param name="undo">A flag indicating if this action is part of an undo process.</param>
+		/// <param name="redo">A flag indicating if this action is part of a redo process.</param>
+		/// <param name="linesAdded">The number of lines added by this modification.</param>
+		public ModifiedEventArgs(ModificationType type, TextPtr text, TextLocation location, bool userAction, bool undo, bool redo, int linesAdded)
+		{
+			ModificationType = type;
+			Text = text;
+			Location = location;
+			UserAction = userAction;
+			Undo = undo;
+			Redo = redo;
+			LinesAdded = linesAdded;
+		}
 	}
 	#endregion
 

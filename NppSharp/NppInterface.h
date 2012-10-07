@@ -132,6 +132,7 @@ namespace NppSharp
 		void	OnFileOrderChanged(unsigned int bufferId);
 		void	OnCharAdded(int ch);
 		void	OnDoubleClick(int pos, bool ctrl, bool alt, bool shift);
+		void	OnModified(npp::SCNotification *pNotify);
 
 		virtual event NppEventHandler^				GetCommands;
 		virtual event NppEventHandler^				RegisterToolbarIcons;
@@ -152,6 +153,7 @@ namespace NppSharp
 		virtual event ExecuteCommandEventHandler^	CommandExecuted;
 		virtual event CharAddedEventHandler^		CharAdded;
 		virtual event DoubleClickEventHandler^		DoubleClick;
+		virtual event ModifiedEventHandler^			Modification;
 
 		virtual void ShowOutputWindow();
 		virtual void HideOutputWindow();

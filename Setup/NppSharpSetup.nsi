@@ -3,7 +3,7 @@
 ;---------------------------------------------------------------------------------------------------
 
 Name "NppSharp"
-OutFile "Output\NppSharp_Setup_1.1_DotNet2.exe"
+OutFile "Output\NppSharp_Setup_1.1.0.1_DotNet2.exe"
 InstallDir "$PROGRAMFILES32\Notepad++"
 
 ;---------------------------------------------------------------------------------------------------

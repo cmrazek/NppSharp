@@ -885,6 +885,11 @@ namespace NppSharp
 		/// </summary>
 		public event DoubleClickEventHandler DoubleClick;
 
+		/// <summary>
+		/// Triggered when the active document is modified.
+		/// </summary>
+		public event ModifiedEventHandler Modification;
+
 		internal void InitEvents()
 		{
 			INpp npp = Plugin.NppIntf;
@@ -905,6 +910,7 @@ namespace NppSharp
 			npp.FileOrderChanged += OnFileOrderChanged;
 			npp.CharAdded += OnCharAdded;
 			npp.DoubleClick += OnDoubleClick;
+			npp.Modification += OnModification;
 		}
 
 		/// <summary>
@@ -1008,6 +1014,12 @@ namespace NppSharp
 		internal void OnDoubleClick(object sender, DoubleClickEventArgs e)
 		{
 			DoubleClickEventHandler ev = DoubleClick;
+			if (ev != null) ev(this, e);
+		}
+
+		internal void OnModification(object sender, ModifiedEventArgs e)
+		{
+			ModifiedEventHandler ev = Modification;
 			if (ev != null) ev(this, e);
 		}
 		#endregion
