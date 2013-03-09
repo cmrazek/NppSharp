@@ -6,6 +6,7 @@
 *.lib
 *.ncb
 *.obj
+*.opensdf
 *.pch
 *.pdb
 *.sdf

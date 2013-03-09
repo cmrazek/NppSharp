@@ -203,6 +203,7 @@ namespace NppSharp
 	private:
 		String^	GetFileNameByBufferId(unsigned int bufferId);
 		void	DockWindow_Shutdown();
+		HBITMAP	MakeCompatibleBitmap(HBITMAP hUserBitmap);
 
 		HWND								_nppHandle;
 		HWND								_scHandle1;

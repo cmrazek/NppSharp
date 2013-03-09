@@ -287,10 +287,36 @@ namespace NppSharp
 		Bitmap^ bm = cmd->ToolbarIcon;
 		if (bm != nullptr)
 		{
-			tbi.hToolbarBmp = (HBITMAP)bm->GetHbitmap().ToInt32();
-
-			::SendMessageW(_nppHandle, NPPM_ADDTOOLBARICON, GetPluginCommandId(cmd), (LPARAM)&tbi);
+			HBITMAP hUserBitmap = (HBITMAP)bm->GetHbitmap().ToInt32();
+			HBITMAP hBitmap = MakeCompatibleBitmap(hUserBitmap);
+			if (hBitmap)
+			{
+				tbi.hToolbarBmp = hBitmap;
+				::SendMessageW(_nppHandle, NPPM_ADDTOOLBARICON, GetPluginCommandId(cmd), (LPARAM)&tbi);
+				::DeleteObject(hUserBitmap);
+			}
 		}
+	}
+
+	HBITMAP	NppInterface::MakeCompatibleBitmap(HBITMAP hUserBitmap)
+	{
+		BITMAP bmp;
+		if (!::GetObject(hUserBitmap, sizeof(bmp), &bmp)) return hUserBitmap;
+
+		HDC hSrcDC = ::CreateCompatibleDC(NULL);
+		::SelectObject(hSrcDC, hUserBitmap);
+
+		HDC hNppDC = ::GetDC(_nppHandle);
+		HDC hDstDC = ::CreateCompatibleDC(hNppDC);
+		HBITMAP hBitmap = ::CreateCompatibleBitmap(hNppDC, bmp.bmWidth, bmp.bmHeight);
+		::SelectObject(hDstDC, hBitmap);
+		
+		::BitBlt(hDstDC, 0, 0, bmp.bmWidth, bmp.bmHeight, hSrcDC, 0, 0, SRCCOPY);
+
+		::DeleteDC(hSrcDC);
+		::DeleteDC(hDstDC);
+		::ReleaseDC(_nppHandle, hNppDC);
+		return hBitmap;
 	}
 
 	void NppInterface::OnTbModification()
