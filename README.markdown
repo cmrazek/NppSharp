@@ -3,13 +3,13 @@ Notepad++ plugin to run scripts written in C#/.NET
 
 [https://github.com/cmrazek/NppSharp](https://github.com/cmrazek/NppSharp)
 
-Current Version: 1.1
+Current Version: 1.2
 
 ## License
 - This is licensed under [GNU General Public License v3](http://www.gnu.org/licenses/gpl.txt).
 
 ## Download
-- Setup: ([Download](https://github.com/downloads/cmrazek/NppSharp/NppSharp_Setup_1.1.exe))
+- Setup: ([Download](https://github.com/downloads/cmrazek/NppSharp/NppSharp_Setup_1.2.exe))
 - Source: ([Download](https://github.com/cmrazek/NppSharp/zipball/master))
 
 ## Requirements
@@ -21,6 +21,11 @@ Current Version: 1.1
 - Email: chrismrazek@gmail.com
 
 ## ChangeLog
+
+Version 1.2 - 2013-03-09:
+- Added Modification event.
+- Improved folding support.
+- Fixed problem with toolbar icons displaying as black when bitmap is incompatible with screen format.
 
 Version 1.1 - 2012-07-21:
 - Document text positions have changed from a basic byte-offset to a TextLocation class.
