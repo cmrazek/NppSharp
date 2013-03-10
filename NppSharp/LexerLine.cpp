@@ -52,6 +52,8 @@ namespace NppSharp
 		_codePage = codePage;
 		_rawPos = _lineStart;
 		_charLen = -1;
+		_lineText = nullptr;
+		_charLen = -1;
 
 		_foldStarts = _foldEnds = 0;
 
@@ -82,7 +84,7 @@ namespace NppSharp
 			}
 			else
 			{
-				_charLen = _lineStart - _lineEnd;
+				_charLen = _lineEnd - _lineStart;
 			}
 		}
 		return _charLen;
