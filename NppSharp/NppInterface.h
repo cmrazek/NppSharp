@@ -117,6 +117,7 @@ namespace NppSharp
 		void	OnCharAdded(int ch);
 		void	OnDoubleClick(int pos, bool ctrl, bool alt, bool shift);
 		void	OnModified(npp::SCNotification *pNotify);
+		void	OnUpdateUI(npp::SCNotification *pNotify);
 
 		virtual event NppEventHandler^				GetCommands;
 		virtual event NppEventHandler^				RegisterToolbarIcons;
@@ -138,6 +139,9 @@ namespace NppSharp
 		virtual event CharAddedEventHandler^		CharAdded;
 		virtual event DoubleClickEventHandler^		DoubleClick;
 		virtual event ModifiedEventHandler^			Modification;
+		virtual event NppEventHandler^				SelectionChanged;
+		virtual event NppEventHandler^				ScrolledVertically;
+		virtual event NppEventHandler^				ScrolledHorizontally;
 
 		virtual void ShowOutputWindow();
 		virtual void HideOutputWindow();
@@ -188,6 +192,10 @@ namespace NppSharp
 		String^	GetFileNameByBufferId(unsigned int bufferId);
 		void	DockWindow_Shutdown();
 		HBITMAP	MakeCompatibleBitmap(HBITMAP hUserBitmap);
+		void	CreateCommandMenus();
+		HMENU	GetCommandMenu(String^ menuName, String^ insertBefore, bool &newMenuOut);
+		HMENU	FindSubMenu(HMENU hParentMenu, String^ subMenuName);
+		HMENU	FindNppSharpMenu();
 
 		HWND								_nppHandle;
 		HWND								_scHandle1;

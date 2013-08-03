@@ -176,6 +176,21 @@ namespace NppSharp
 		/// Triggered when the active document is modified.
 		/// </summary>
 		event ModifiedEventHandler Modification;
+
+        /// <summary>
+        /// Triggered when the user changes the selection.
+        /// </summary>
+        event NppEventHandler SelectionChanged;
+
+        /// <summary>
+        /// Triggered when the user scrolls the view vertically.
+        /// </summary>
+        event NppEventHandler ScrolledVertically;
+
+        /// <summary>
+        /// Triggered when the user scrolls the view horizontally.
+        /// </summary>
+        event NppEventHandler ScrolledHorizontally;
 		#endregion
 
 		#region Editor

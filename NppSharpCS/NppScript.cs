@@ -874,6 +874,21 @@ namespace NppSharp
 		/// </summary>
 		public event ModifiedEventHandler Modification;
 
+        /// <summary>
+        /// Triggered when the user changes the selection.
+        /// </summary>
+        public event NppEventHandler SelectionChanged;
+
+        /// <summary>
+        /// Triggered when the user scrolls the view vertically.
+        /// </summary>
+        public event NppEventHandler ScrolledVertically;
+
+        /// <summary>
+        /// Triggered when the user scrolls the view horizontally.
+        /// </summary>
+        public event NppEventHandler ScrolledHorizontally;
+
 		internal void InitEvents()
 		{
 			INpp npp = Plugin.NppIntf;
@@ -895,6 +910,9 @@ namespace NppSharp
 			npp.CharAdded += OnCharAdded;
 			npp.DoubleClick += OnDoubleClick;
 			npp.Modification += OnModification;
+            npp.SelectionChanged += OnSelectionChanged;
+            npp.ScrolledVertically += OnScrolledVertically;
+            npp.ScrolledHorizontally += OnScrolledHorizontally;
 		}
 
 		/// <summary>
@@ -1006,6 +1024,24 @@ namespace NppSharp
 			ModifiedEventHandler ev = Modification;
 			if (ev != null) ev(this, e);
 		}
+
+        internal void OnSelectionChanged(object sender, EventArgs e)
+        {
+            var ev = SelectionChanged;
+            if (ev != null) ev(this, e);
+        }
+
+        internal void OnScrolledVertically(object sender, EventArgs e)
+        {
+            var ev = ScrolledVertically;
+            if (ev != null) ev(this, e);
+        }
+
+        internal void OnScrolledHorizontally(object sender, EventArgs e)
+        {
+            var ev = ScrolledHorizontally;
+            if (ev != null) ev(this, e);
+        }
 		#endregion
 
 		#region Dock Window

@@ -76,6 +76,7 @@
     <Compile Include="IDockWindow.cs" />
     <Compile Include="ILexer.cs" />
     <Compile Include="ILexerLine.cs" />
+    <Compile Include="NppMenuAttribute.cs" />
     <Compile Include="TextPtr.cs" />
     <Compile Include="LexerCommentsAttribute.cs" />
     <Compile Include="LexerException.cs" />
@@ -115,6 +116,7 @@
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TextLocation.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ColorPicker.resx">

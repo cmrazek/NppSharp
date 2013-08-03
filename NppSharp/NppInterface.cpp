@@ -3,6 +3,7 @@
 #include <vcclr.h>
 #include "OutputWindow.h"
 #include "TextPtrA.h"
+#include "ClrUtil.h"
 
 namespace NppSharp
 {
@@ -224,6 +225,24 @@ namespace NppSharp
 		}
 	}
 
+	void NppInterface::OnUpdateUI(npp::SCNotification *pNotify)
+	{
+		if (pNotify->updated & SC_UPDATE_SELECTION)
+		{
+			SelectionChanged(this, gcnew EventArgs());
+		}
+
+		if (pNotify->updated & SC_UPDATE_V_SCROLL)
+		{
+			ScrolledVertically(this, gcnew EventArgs());
+		}
+
+		if (pNotify->updated & SC_UPDATE_H_SCROLL)
+		{
+			ScrolledHorizontally(this, gcnew EventArgs());
+		}
+	}
+
 	void NppInterface::ExecuteCommandByIndex(int cmdIndex)
 	{
 		if (cmdIndex < 0 || cmdIndex >= _commands->Count) return;
@@ -306,6 +325,7 @@ namespace NppSharp
 	void NppInterface::OnTbModification()
 	{
 		RegisterToolbarIcons(this, gcnew EventArgs());
+		CreateCommandMenus();
 	}
 
 	int NppInterface::GetPluginCommandId(PluginCommand^ cmd)
@@ -313,5 +333,186 @@ namespace NppSharp
 		int index = cmd->Index;
 		if (index >= 0 && index < _numFuncItems) return _funcItems[index]._cmdID;
 		return 0;
+	}
+
+	void NppInterface::CreateCommandMenus()
+	{
+		HMENU	hNppSharpMenu = FindNppSharpMenu();
+
+		for each(PluginCommand^ cmd in _commands)
+		{
+			if (String::IsNullOrWhiteSpace(cmd->MenuName)) continue;
+
+			bool	newMenu = false;
+			HMENU	hMenu = GetCommandMenu(cmd->MenuName, cmd->MenuInsertBefore, newMenu);
+			if (hMenu)
+			{
+				if (!newMenu && cmd->Separator) ::AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
+
+				int cmdId = GetPluginCommandId(cmd);
+				wstring cmdName = L"";
+
+				if (hNppSharpMenu && cmdId != 0)
+				{
+					wchar_t menuName[256];
+					MENUITEMINFO info;
+					memset(&info, 0, sizeof(info));
+					info.cbSize = sizeof(info);
+					info.fMask = MIIM_STRING;
+					info.dwTypeData = menuName;
+					info.cch = 255;
+					if (::GetMenuItemInfo(hNppSharpMenu, cmdId, FALSE, &info))
+					{
+						cmdName = info.dwTypeData;
+					}
+				}
+				
+				if (cmdName.empty())
+				{
+					if (cmd->Shortcut != nullptr)
+					{
+						cmdName = ClrStringToWString(String::Concat(cmd->Name, gcnew String("\t"), cmd->Shortcut->ToString()));
+					}
+					else
+					{
+						cmdName = ClrStringToWString(cmd->Name);
+					}
+				}
+
+				
+				if (::AppendMenu(hMenu, MF_STRING, cmdId, cmdName.c_str()))
+				{
+					if (hNppSharpMenu) DeleteMenu(hNppSharpMenu, cmdId, MF_BYCOMMAND);
+				}
+			}
+		}
+	}
+
+	HMENU NppInterface::GetCommandMenu(String^ menuPath, String^ insertBefore, bool &newMenuOut)
+	{
+		newMenuOut = false;
+
+		HMENU hParentMenu = ::GetMenu(_nppHandle);
+		if (!hParentMenu) return NULL;
+
+		for each (String^ menuNameIter in menuPath->Split('|'))
+		{
+			if (String::IsNullOrWhiteSpace(menuNameIter)) continue;
+
+			String^ menuName = menuNameIter;
+			bool separator = false;
+			if (menuNameIter->StartsWith("-"))
+			{
+				menuName = menuNameIter->Substring(1);
+				separator = true;
+			}
+
+			if (String::IsNullOrWhiteSpace(menuName)) continue;
+
+			wstring cmdMenuName = ClrStringToWString(menuName);
+			wstring cmdMenuNameClean = ClrStringToWString(menuName->Replace("&", ""));
+			wstring insertBeforeName = !String::IsNullOrWhiteSpace(insertBefore) ? ClrStringToWString(insertBefore->Replace("&", "")) : L"";
+
+			int		menuInsertIndex = -1;
+			HMENU	hMenu = NULL;
+
+			for (int menuIndex = 0, numMenus = ::GetMenuItemCount(hParentMenu); menuIndex < numMenus; menuIndex++)
+			{
+				wchar_t menuName[256];
+				MENUITEMINFO info;
+				memset(&info, 0, sizeof(info));
+				info.cbSize = sizeof(info);
+				info.fMask = MIIM_STRING | MIIM_SUBMENU;
+				info.dwTypeData = menuName;
+				info.cch = 255;
+				if (::GetMenuItemInfo(hParentMenu, menuIndex, TRUE, &info))
+				{
+					wstring existingMenuName = ClrStringToWString((gcnew String(info.dwTypeData))->Replace("&", ""));
+					if (!existingMenuName.length()) continue;
+
+					if (!_wcsicmp(existingMenuName.c_str(), cmdMenuNameClean.c_str()))
+					{
+						hMenu = info.hSubMenu;
+						break;
+					}
+					else if (menuInsertIndex == -1)
+					{
+						if (insertBeforeName.length() && !_wcsicmp(existingMenuName.c_str(), insertBeforeName.c_str())) menuInsertIndex = menuIndex;
+						else if (!_wcsicmp(existingMenuName.c_str(), L"X")) menuInsertIndex = menuIndex;	// The menu item used to close the current window.
+					}
+				}
+			}
+
+			if (hMenu == NULL)
+			{
+				hMenu = ::CreatePopupMenu();
+				if (!hMenu) return NULL;
+
+				if (menuInsertIndex >= 0)
+				{
+					if (separator) ::InsertMenu(hParentMenu, menuInsertIndex++, MF_BYPOSITION | MF_SEPARATOR, 0, NULL);
+
+					if (!::InsertMenu(hParentMenu, menuInsertIndex, MF_BYPOSITION | MF_POPUP, (UINT_PTR)hMenu, cmdMenuName.c_str()))
+					{
+						::DestroyMenu(hMenu);
+						return NULL;
+					}
+				}
+				else
+				{
+					if (separator) ::AppendMenu(hParentMenu, MF_SEPARATOR, 0, NULL);
+
+					if (!::AppendMenu(hParentMenu, MF_POPUP, (UINT_PTR)hMenu, cmdMenuName.c_str()))
+					{
+						::DestroyMenu(hMenu);
+						return NULL;
+					}
+				}
+
+				newMenuOut = true;
+			}
+
+			hParentMenu = hMenu;
+		}
+
+		return hParentMenu;
+	}
+
+	HMENU NppInterface::FindSubMenu(HMENU hParentMenu, String^ subMenuName)
+	{
+		if (!hParentMenu || String::IsNullOrWhiteSpace(subMenuName)) return NULL;
+
+		wstring subMenuNameCstr = ClrStringToWString(subMenuName->Replace("&", ""));
+
+		int numMenus = ::GetMenuItemCount(hParentMenu);
+		for (int menuIndex = 0; menuIndex < numMenus; menuIndex++)
+		{
+			wchar_t menuName[256];
+			MENUITEMINFO info;
+			memset(&info, 0, sizeof(info));
+			info.cbSize = sizeof(info);
+			info.fMask = MIIM_STRING | MIIM_SUBMENU;
+			info.dwTypeData = menuName;
+			info.cch = 255;
+			if (::GetMenuItemInfo(hParentMenu, menuIndex, TRUE, &info))
+			{
+				wstring existingMenuName = ClrStringToWString((gcnew String(info.dwTypeData))->Replace("&", ""));
+				if (!_wcsicmp(existingMenuName.c_str(), subMenuNameCstr.c_str()))
+				{
+					return info.hSubMenu;
+				}
+			}
+		}
+
+		return NULL;
+	}
+
+	HMENU NppInterface::FindNppSharpMenu()
+	{
+		HMENU hMenu;
+		if (!(hMenu = ::GetMenu(_nppHandle))) return NULL;
+		if (!(hMenu = FindSubMenu(hMenu, NPP_PLUGIN_MENU_NAME))) return NULL;
+		if (!(hMenu = FindSubMenu(hMenu, MENU_NAME))) return NULL;
+		return hMenu;
 	}
 }

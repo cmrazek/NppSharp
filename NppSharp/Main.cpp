@@ -186,8 +186,6 @@ namespace NppSharp
 
 			case NPPN_SHUTDOWN:
 				g.npp->OnShutdown();
-				//logWrite(L"Received shutdown notification, closing log.");
-				//logClose();
 				break;
 
 			case NPPN_TBMODIFICATION:
@@ -256,6 +254,10 @@ namespace NppSharp
 
 			case SCN_MODIFIED:
 				g.npp->OnModified(pNotify);
+				break;
+
+			case SCN_UPDATEUI:
+				g.npp->OnUpdateUI(pNotify);
 				break;
 			}
 		}

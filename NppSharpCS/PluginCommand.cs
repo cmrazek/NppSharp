@@ -28,6 +28,8 @@ namespace NppSharp
 		private bool _showInToolbar = false;
 		private Bitmap _toolbarIcon = null;
 		private int _index = 0;
+		private string _menuName = "";
+		private string _menuInsertBefore = "";
 
 		internal event PluginCommandEventHandler Execute;
 
@@ -138,6 +140,24 @@ namespace NppSharp
 		{
 			get { return _index; }
 			set { _index = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the name of the menu under which this command will be visible.
+		/// </summary>
+		public string MenuName
+		{
+			get { return _menuName; }
+			set { _menuName = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the name of the menu where a new menu (if required) will be inserted before.
+		/// </summary>
+		public string MenuInsertBefore
+		{
+			get { return _menuInsertBefore; }
+			set { _menuInsertBefore = value; }
 		}
 	}
 }
