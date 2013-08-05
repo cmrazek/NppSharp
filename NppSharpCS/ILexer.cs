@@ -55,7 +55,10 @@ namespace NppSharp
 		/// <para>
 		/// The return value indicates what the state of the current line should be.
 		/// On the next line, the previousLineState argument will be set to the value returned from this line.
-		/// You may use this integer any way you see fit.
+		/// </para>
+		/// <para>
+		/// The low 16-bits of this integer are free for your use.
+		/// The high 16-bits are used by NppSharp to maintain the fold level of the document and you should not overwrite if your lexer supports folding.
 		/// </para>
 		/// <para>
 		/// Notepad++ will not style the entire document at one time; only the sections that are

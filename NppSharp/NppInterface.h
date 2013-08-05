@@ -85,7 +85,7 @@ namespace NppSharp
 		virtual int GetLineEndPos(int line);
 		virtual int GetLineLength(int line);
 		virtual property String^ SelectedText { String^ get(); void set(String^); }
-		virtual property NppSharp::SelectionMode SelectionMode { NppSharp::SelectionMode get(); }	//void set(NppSharp::SelectionMode); }
+		virtual property NppSharp::SelectionMode SelectionMode { NppSharp::SelectionMode get(); }
 		virtual void MoveCaretInsideView();
 		virtual TextLocation GetWordEndPos(TextLocation pos, bool onlyWordChars);
 		virtual TextLocation GetWordStartPos(TextLocation pos, bool onlyWordChars);
@@ -99,6 +99,8 @@ namespace NppSharp
 		virtual int TextLocationToOffset(TextLocation tl);
 		virtual TextLocation OffsetToTextLocation(int offset);
 		virtual int MoveOffsetByChars(int offset, int numChars);
+		virtual int GetLineState(int line);
+		virtual property unsigned int CurrentBufferId { unsigned int get(); }
 
 		void	OnReady();
 		void	OnShutdown();
@@ -184,9 +186,14 @@ namespace NppSharp
 		Color			WebHexToColor(String^ str);
 
 		// AutoCompletion
-		virtual void	ShowAutoCompletion(int lengthEntered, IEnumerable<String^>^ list, bool ignoreCase);
-		virtual void	CancelAutoCompletion();
-		
+		virtual void					ShowAutoCompletion(int lengthEntered, IEnumerable<String^>^ list, bool ignoreCase);
+		virtual void					CancelAutoCompletion();
+		virtual property bool			AutoCompletionIsActive { bool get(); }
+		virtual void					ShowFunctionSignature(TextLocation location, String^ funcSignature);
+		virtual void					SetFunctionSignatureHighlight(int startIndex, int length);
+		virtual void					CancelFunctionSignature();
+		virtual property bool			FunctionSignatureIsActive { bool get(); }
+		virtual property TextLocation	FunctionSignatureLocation { TextLocation get(); }
 
 	private:
 		String^	GetFileNameByBufferId(unsigned int bufferId);

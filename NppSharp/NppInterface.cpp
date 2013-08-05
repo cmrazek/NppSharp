@@ -515,4 +515,9 @@ namespace NppSharp
 		if (!(hMenu = FindSubMenu(hMenu, MENU_NAME))) return NULL;
 		return hMenu;
 	}
+
+	unsigned int NppInterface::CurrentBufferId::get()
+	{
+		return ::SendMessage(_nppHandle, NPPM_GETCURRENTBUFFERID, 0, 0);
+	}
 }

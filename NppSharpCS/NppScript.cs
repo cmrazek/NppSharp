@@ -786,6 +786,24 @@ namespace NppSharp
 		{
 			Plugin.NppIntf.MoveSelectedLinesDown();
 		}
+
+		/// <summary>
+		/// Gets the lexer state of the specified line.
+		/// </summary>
+		/// <param name="line">The line number.</param>
+		/// <returns>An int representing the lexer state of the line.</returns>
+		public int GetLineState(int line)
+		{
+			return Plugin.NppIntf.GetLineState(line);
+		}
+
+		/// <summary>
+		/// Gets the buffer ID for the current document.
+		/// </summary>
+		public uint CurrentBufferId
+		{
+			get { return Plugin.NppIntf.CurrentBufferId; }
+		}
 		#endregion
 
 		#region Events
@@ -874,20 +892,20 @@ namespace NppSharp
 		/// </summary>
 		public event ModifiedEventHandler Modification;
 
-        /// <summary>
-        /// Triggered when the user changes the selection.
-        /// </summary>
-        public event NppEventHandler SelectionChanged;
+		/// <summary>
+		/// Triggered when the user changes the selection.
+		/// </summary>
+		public event NppEventHandler SelectionChanged;
 
-        /// <summary>
-        /// Triggered when the user scrolls the view vertically.
-        /// </summary>
-        public event NppEventHandler ScrolledVertically;
+		/// <summary>
+		/// Triggered when the user scrolls the view vertically.
+		/// </summary>
+		public event NppEventHandler ScrolledVertically;
 
-        /// <summary>
-        /// Triggered when the user scrolls the view horizontally.
-        /// </summary>
-        public event NppEventHandler ScrolledHorizontally;
+		/// <summary>
+		/// Triggered when the user scrolls the view horizontally.
+		/// </summary>
+		public event NppEventHandler ScrolledHorizontally;
 
 		internal void InitEvents()
 		{
@@ -910,9 +928,9 @@ namespace NppSharp
 			npp.CharAdded += OnCharAdded;
 			npp.DoubleClick += OnDoubleClick;
 			npp.Modification += OnModification;
-            npp.SelectionChanged += OnSelectionChanged;
-            npp.ScrolledVertically += OnScrolledVertically;
-            npp.ScrolledHorizontally += OnScrolledHorizontally;
+			npp.SelectionChanged += OnSelectionChanged;
+			npp.ScrolledVertically += OnScrolledVertically;
+			npp.ScrolledHorizontally += OnScrolledHorizontally;
 		}
 
 		/// <summary>
@@ -1025,23 +1043,23 @@ namespace NppSharp
 			if (ev != null) ev(this, e);
 		}
 
-        internal void OnSelectionChanged(object sender, EventArgs e)
-        {
-            var ev = SelectionChanged;
-            if (ev != null) ev(this, e);
-        }
+		internal void OnSelectionChanged(object sender, EventArgs e)
+		{
+			var ev = SelectionChanged;
+			if (ev != null) ev(this, e);
+		}
 
-        internal void OnScrolledVertically(object sender, EventArgs e)
-        {
-            var ev = ScrolledVertically;
-            if (ev != null) ev(this, e);
-        }
+		internal void OnScrolledVertically(object sender, EventArgs e)
+		{
+			var ev = ScrolledVertically;
+			if (ev != null) ev(this, e);
+		}
 
-        internal void OnScrolledHorizontally(object sender, EventArgs e)
-        {
-            var ev = ScrolledHorizontally;
-            if (ev != null) ev(this, e);
-        }
+		internal void OnScrolledHorizontally(object sender, EventArgs e)
+		{
+			var ev = ScrolledHorizontally;
+			if (ev != null) ev(this, e);
+		}
 		#endregion
 
 		#region Dock Window
@@ -1131,6 +1149,59 @@ namespace NppSharp
 		public void CancelAutoCompletion()
 		{
 			Plugin.NppIntf.CancelAutoCompletion();
+		}
+
+		/// <summary>
+		/// Gets a flag indicating if an auto-completion list is currently visible.
+		/// </summary>
+		public bool AutoCompletionIsActive
+		{
+			get { return Plugin.NppIntf.AutoCompletionIsActive; }
+		}
+
+		/// <summary>
+		/// Displays the function signature help UI.
+		/// </summary>
+		/// <param name="location">The location where the function signature box should appear (typically appears on the line below)</param>
+		/// <param name="funcSignature">The function signature text to be displayed.</param>
+		public void ShowFunctionSignature(TextLocation location, string funcSignature)
+		{
+			Plugin.NppIntf.ShowFunctionSignature(location, funcSignature);
+		}
+
+		/// <summary>
+		/// Sets the portion of the function signature text that will be highlighted.
+		/// </summary>
+		/// <param name="startIndex">The starting index (zero based)</param>
+		/// <param name="length">Number of characters to highlight.</param>
+		public void SetFunctionSignatureHighlight(int startIndex, int length)
+		{
+			Plugin.NppIntf.SetFunctionSignatureHighlight(startIndex, length);
+		}
+
+		/// <summary>
+		/// Hides the function signature help UI.
+		/// </summary>
+		public void CancelFunctionSignature()
+		{
+			Plugin.NppIntf.CancelFunctionSignature();
+		}
+
+		/// <summary>
+		/// Gets a flag indicating if the function signature UI is currently visible.
+		/// </summary>
+		public bool FunctionSignatureIsActive
+		{
+			get { return Plugin.NppIntf.FunctionSignatureIsActive; }
+		}
+
+		/// <summary>
+		/// Gets the starting location for the function signature UI.
+		/// </summary>
+		/// <remarks>This is passed in as the 'location' argument in ShowFunctionSignature().</remarks>
+		public TextLocation FunctionSignatureLocation
+		{
+			get { return Plugin.NppIntf.FunctionSignatureLocation; }
 		}
 		#endregion
 	}

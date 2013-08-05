@@ -177,20 +177,20 @@ namespace NppSharp
 		/// </summary>
 		event ModifiedEventHandler Modification;
 
-        /// <summary>
-        /// Triggered when the user changes the selection.
-        /// </summary>
-        event NppEventHandler SelectionChanged;
+		/// <summary>
+		/// Triggered when the user changes the selection.
+		/// </summary>
+		event NppEventHandler SelectionChanged;
 
-        /// <summary>
-        /// Triggered when the user scrolls the view vertically.
-        /// </summary>
-        event NppEventHandler ScrolledVertically;
+		/// <summary>
+		/// Triggered when the user scrolls the view vertically.
+		/// </summary>
+		event NppEventHandler ScrolledVertically;
 
-        /// <summary>
-        /// Triggered when the user scrolls the view horizontally.
-        /// </summary>
-        event NppEventHandler ScrolledHorizontally;
+		/// <summary>
+		/// Triggered when the user scrolls the view horizontally.
+		/// </summary>
+		event NppEventHandler ScrolledHorizontally;
 		#endregion
 
 		#region Editor
@@ -645,6 +645,18 @@ namespace NppSharp
 		/// <param name="numChars">The number of characters to move.</param>
 		/// <returns>The new byte-offset</returns>
 		int MoveOffsetByChars(int offset, int numChars);
+
+		/// <summary>
+		/// Gets the lexer state of a line.
+		/// </summary>
+		/// <param name="line">The line number.</param>
+		/// <returns>The state assigned by the lexer.</returns>
+		int GetLineState(int line);
+
+		/// <summary>
+		/// Gets the buffer ID for the current document.
+		/// </summary>
+		uint CurrentBufferId { get; }
 		#endregion
 
 		#region Output Window
@@ -763,6 +775,41 @@ namespace NppSharp
 		/// Cancels any action auto-completion.
 		/// </summary>
 		void CancelAutoCompletion();
+
+		/// <summary>
+		/// Gets a value indicating if the autocompletion list is currently active.
+		/// </summary>
+		bool AutoCompletionIsActive { get; }
+
+		/// <summary>
+		/// Displays the function signature help UI.
+		/// </summary>
+		/// <param name="location">The location where the function signature box should appear (typically appears on the line below)</param>
+		/// <param name="funcSignature">The function signature text to be displayed.</param>
+		void ShowFunctionSignature(TextLocation location, string funcSignature);
+
+		/// <summary>
+		/// Sets the portion of the function signature text that will be highlighted.
+		/// </summary>
+		/// <param name="startIndex">The starting index (zero based)</param>
+		/// <param name="length">Number of characters to highlight.</param>
+		void SetFunctionSignatureHighlight(int startIndex, int length);
+
+		/// <summary>
+		/// Hides the function signature help UI.
+		/// </summary>
+		void CancelFunctionSignature();
+
+		/// <summary>
+		/// Gets a flag indicating if the function signature UI is currently visible.
+		/// </summary>
+		bool FunctionSignatureIsActive { get; }
+
+		/// <summary>
+		/// Gets the starting location for the function signature UI.
+		/// </summary>
+		/// <remarks>This is passed in as the 'location' argument in ShowFunctionSignature().</remarks>
+		TextLocation FunctionSignatureLocation { get; }
 		#endregion
 	}
 
@@ -1039,7 +1086,7 @@ namespace NppSharp
 		public bool Redo { get; private set; }
 
 		/// <summary>
-		/// Gets the number of lines added by this modification.
+		/// Gets the number of lines added by this modification.  For deletions, this will be a negative value.
 		/// </summary>
 		public int LinesAdded { get; private set; }
 
