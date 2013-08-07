@@ -705,7 +705,8 @@ namespace NppSharp
 
 	int NppInterface::GetLineState(int line)
 	{
-		return ::SendMessageA(_scHandle, SCI_GETLINESTATE, line, 0);
+		if (line < 1) line = 1;
+		return ::SendMessageA(_scHandle, SCI_GETLINESTATE, line - 1, 0);
 	}
 
 }
