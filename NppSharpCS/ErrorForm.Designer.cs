@@ -28,6 +28,7 @@ namespace NppSharp
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ErrorForm));
 			this.txtMessage = new System.Windows.Forms.TextBox();
 			this.btnOk = new System.Windows.Forms.Button();
@@ -36,15 +37,19 @@ namespace NppSharp
 			this.tabDetails = new System.Windows.Forms.TabPage();
 			this.txtDetails = new System.Windows.Forms.TextBox();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.cmTextBox = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabControl.SuspendLayout();
 			this.tabMessage.SuspendLayout();
 			this.tabDetails.SuspendLayout();
 			this.panel1.SuspendLayout();
+			this.cmTextBox.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// txtMessage
 			// 
 			this.txtMessage.BackColor = System.Drawing.SystemColors.Window;
+			this.txtMessage.ContextMenuStrip = this.cmTextBox;
 			this.txtMessage.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.txtMessage.Location = new System.Drawing.Point(3, 3);
 			this.txtMessage.Multiline = true;
@@ -56,6 +61,7 @@ namespace NppSharp
 			// btnOk
 			// 
 			this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnOk.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.btnOk.Location = new System.Drawing.Point(314, 6);
 			this.btnOk.Name = "btnOk";
 			this.btnOk.Size = new System.Drawing.Size(75, 23);
@@ -100,6 +106,7 @@ namespace NppSharp
 			// txtDetails
 			// 
 			this.txtDetails.BackColor = System.Drawing.SystemColors.Window;
+			this.txtDetails.ContextMenuStrip = this.cmTextBox;
 			this.txtDetails.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.txtDetails.Location = new System.Drawing.Point(3, 3);
 			this.txtDetails.Multiline = true;
@@ -118,11 +125,27 @@ namespace NppSharp
 			this.panel1.Size = new System.Drawing.Size(392, 32);
 			this.panel1.TabIndex = 0;
 			// 
+			// cmTextBox
+			// 
+			this.cmTextBox.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectAllToolStripMenuItem});
+			this.cmTextBox.Name = "cmTextBox";
+			this.cmTextBox.Size = new System.Drawing.Size(168, 48);
+			// 
+			// selectAllToolStripMenuItem
+			// 
+			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+			this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+			this.selectAllToolStripMenuItem.Text = "Select &All";
+			this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+			// 
 			// ErrorForm
 			// 
 			this.AcceptButton = this.btnOk;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.CancelButton = this.btnOk;
 			this.ClientSize = new System.Drawing.Size(392, 166);
 			this.Controls.Add(this.tabControl);
 			this.Controls.Add(this.panel1);
@@ -138,6 +161,7 @@ namespace NppSharp
 			this.tabDetails.ResumeLayout(false);
 			this.tabDetails.PerformLayout();
 			this.panel1.ResumeLayout(false);
+			this.cmTextBox.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -151,5 +175,7 @@ namespace NppSharp
 		private System.Windows.Forms.TabPage tabDetails;
 		private System.Windows.Forms.TextBox txtDetails;
 		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.ContextMenuStrip cmTextBox;
+		private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
 	}
 }
