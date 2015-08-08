@@ -350,7 +350,7 @@ namespace NppSharp
 				if (!newMenu && cmd->Separator) ::AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
 
 				int cmdId = GetPluginCommandId(cmd);
-				wstring cmdName = L"";
+				std::wstring cmdName = L"";
 
 				if (hNppSharpMenu && cmdId != 0)
 				{
@@ -409,9 +409,9 @@ namespace NppSharp
 
 			if (String::IsNullOrWhiteSpace(menuName)) continue;
 
-			wstring cmdMenuName = ClrStringToWString(menuName);
-			wstring cmdMenuNameClean = ClrStringToWString(menuName->Replace("&", ""));
-			wstring insertBeforeName = !String::IsNullOrWhiteSpace(insertBefore) ? ClrStringToWString(insertBefore->Replace("&", "")) : L"";
+			std::wstring cmdMenuName = ClrStringToWString(menuName);
+			std::wstring cmdMenuNameClean = ClrStringToWString(menuName->Replace("&", ""));
+			std::wstring insertBeforeName = !String::IsNullOrWhiteSpace(insertBefore) ? ClrStringToWString(insertBefore->Replace("&", "")) : L"";
 
 			int		menuInsertIndex = -1;
 			HMENU	hMenu = NULL;
@@ -427,7 +427,7 @@ namespace NppSharp
 				info.cch = 255;
 				if (::GetMenuItemInfo(hParentMenu, menuIndex, TRUE, &info))
 				{
-					wstring existingMenuName = ClrStringToWString((gcnew String(info.dwTypeData))->Replace("&", ""));
+					std::wstring existingMenuName = ClrStringToWString((gcnew String(info.dwTypeData))->Replace("&", ""));
 					if (!existingMenuName.length()) continue;
 
 					if (!_wcsicmp(existingMenuName.c_str(), cmdMenuNameClean.c_str()))
@@ -482,7 +482,7 @@ namespace NppSharp
 	{
 		if (!hParentMenu || String::IsNullOrWhiteSpace(subMenuName)) return NULL;
 
-		wstring subMenuNameCstr = ClrStringToWString(subMenuName->Replace("&", ""));
+		std::wstring subMenuNameCstr = ClrStringToWString(subMenuName->Replace("&", ""));
 
 		int numMenus = ::GetMenuItemCount(hParentMenu);
 		for (int menuIndex = 0; menuIndex < numMenus; menuIndex++)
@@ -496,7 +496,7 @@ namespace NppSharp
 			info.cch = 255;
 			if (::GetMenuItemInfo(hParentMenu, menuIndex, TRUE, &info))
 			{
-				wstring existingMenuName = ClrStringToWString((gcnew String(info.dwTypeData))->Replace("&", ""));
+				std::wstring existingMenuName = ClrStringToWString((gcnew String(info.dwTypeData))->Replace("&", ""));
 				if (!_wcsicmp(existingMenuName.c_str(), subMenuNameCstr.c_str()))
 				{
 					return info.hSubMenu;

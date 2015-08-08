@@ -27,3 +27,4 @@ Thumbs.db
 /Setup/Bin/*
 /Setup/Redist/*
 /Setup/Output/*
+/ipch/*

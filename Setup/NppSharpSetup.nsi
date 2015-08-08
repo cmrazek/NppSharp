@@ -3,7 +3,7 @@
 ;---------------------------------------------------------------------------------------------------
 
 Name "NppSharp"
-OutFile "Output\NppSharp_Setup_1.3.2.1.exe"
+OutFile "Output\NppSharp_Setup_1.3.3.exe"
 InstallDir "$PROGRAMFILES32\Notepad++"
 
 ;---------------------------------------------------------------------------------------------------
@@ -29,12 +29,13 @@ Section ""
 	SetOutPath "$INSTDIR"
 	File "bin\NppSharpInterface.dll"
 	File "bin\NppSharpInterface.xml"
+	File "bin\MSVCP140.dll"
 	
 	CreateDirectory "$INSTDIR\plugins\config\NppSharp"
 	CreateDirectory "$INSTDIR\plugins\config\NppSharp\Scripts"
 	
 	SetOutPath "$INSTDIR\plugins\config\NppSharp"
-	File "bin\NppSharpDoc.chm"
+	File /nonfatal "bin\NppSharpDoc.chm"
 	
 	; Write uninstall strings
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\NppSharp" "DisplayName" "NppSharp"

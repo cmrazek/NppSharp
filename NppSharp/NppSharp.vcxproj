@@ -14,7 +14,7 @@
     <ProjectGuid>{D3EE14CE-4384-42C2-BCBA-F9C446D061BE}</ProjectGuid>
     <RootNamespace>NppSharp</RootNamespace>
     <Keyword>ManagedCProj</Keyword>
-	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
