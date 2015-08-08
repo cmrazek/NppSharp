@@ -10,11 +10,11 @@ namespace NppSharp
 	struct Globals
 	{
 	public:
-		bool					initialized;
-		gcroot<NppInterface^>	npp;
-		npp::FuncItem*			funcList;
-		wstring					strConfigDir;
-		list<npp::ShortcutKey>	shortcuts;
+		bool						initialized;
+		gcroot<NppInterface^>		npp;
+		npp::FuncItem*				funcList;
+		std::wstring				strConfigDir;
+		std::list<npp::ShortcutKey>	shortcuts;
 
 		Globals()
 			: initialized(false)
@@ -97,12 +97,12 @@ namespace NppSharp
 		}
 		catch (Exception^ ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("CLR Exception in SetPluginInfo:\n", ex));
+			std::wstring str = ClrStringToWString(String::Concat("CLR Exception in SetPluginInfo:\n", ex));
 			::MessageBox(nppData._nppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (std::exception ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("STD Exception in SetPluginInfo:\n", gcnew String(ex.what())));
+			std::wstring str = ClrStringToWString(String::Concat("STD Exception in SetPluginInfo:\n", gcnew String(ex.what())));
 			::MessageBox(nppData._nppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (...)
@@ -155,12 +155,12 @@ namespace NppSharp
 		}
 		catch (Exception^ ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("CLR Exception in GetFuncList:\n", ex));
+			std::wstring str = ClrStringToWString(String::Concat("CLR Exception in GetFuncList:\n", ex));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (std::exception ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("STD Exception in GetFuncList:\n", gcnew String(ex.what())));
+			std::wstring str = ClrStringToWString(String::Concat("STD Exception in GetFuncList:\n", gcnew String(ex.what())));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (...)
@@ -261,12 +261,12 @@ namespace NppSharp
 		}
 		catch (Exception^ ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnNotify:\n", ex));
+			std::wstring str = ClrStringToWString(String::Concat("CLR Exception in OnNotify:\n", ex));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (std::exception ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("STD Exception in OnNotify:\n", gcnew String(ex.what())));
+			std::wstring str = ClrStringToWString(String::Concat("STD Exception in OnNotify:\n", gcnew String(ex.what())));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (...)
@@ -284,12 +284,12 @@ namespace NppSharp
 		}
 		catch (Exception^ ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnCommand:\n", ex));
+			std::wstring str = ClrStringToWString(String::Concat("CLR Exception in OnCommand:\n", ex));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (std::exception ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("STD Exception in OnCommand:\n", gcnew String(ex.what())));
+			std::wstring str = ClrStringToWString(String::Concat("STD Exception in OnCommand:\n", gcnew String(ex.what())));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (...)
@@ -307,13 +307,13 @@ namespace NppSharp
 		}
 		catch (Exception^ ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerCount:\n", ex));
+			std::wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerCount:\n", ex));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 			return 0;
 		}
 		catch (std::exception ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerCount:\n", gcnew String(ex.what())));
+			std::wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerCount:\n", gcnew String(ex.what())));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 			return 0;
 		}
@@ -328,7 +328,7 @@ namespace NppSharp
 	{
 		try
 		{
-			string str = ClrStringToAString(g.npp->GetLexerName(num));
+			std::string str = ClrStringToAString(g.npp->GetLexerName(num));
 			if ((int)str.length() < bufLen)
 			{
 				strcpy(buf, str.c_str());
@@ -341,12 +341,12 @@ namespace NppSharp
 		}
 		catch (Exception^ ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerName:\n", ex));
+			std::wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerName:\n", ex));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (std::exception ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerName:\n", gcnew String(ex.what())));
+			std::wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerName:\n", gcnew String(ex.what())));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (...)
@@ -359,7 +359,7 @@ namespace NppSharp
 	{
 		try
 		{
-			wstring str = ClrStringToWString(g.npp->GetLexerDescription(num));
+			std::wstring str = ClrStringToWString(g.npp->GetLexerDescription(num));
 			if ((int)str.length() < bufLen)
 			{
 				wcscpy(buf, str.c_str());
@@ -372,12 +372,12 @@ namespace NppSharp
 		}
 		catch (Exception^ ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerStatusText:\n", ex));
+			std::wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerStatusText:\n", ex));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (std::exception ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerStatusText:\n", gcnew String(ex.what())));
+			std::wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerStatusText:\n", gcnew String(ex.what())));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 		}
 		catch (...)
@@ -396,13 +396,13 @@ namespace NppSharp
 		}
 		catch (Exception^ ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerFactory:\n", ex));
+			std::wstring str = ClrStringToWString(String::Concat("CLR Exception in OnGetLexerFactory:\n", ex));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 			return NULL;
 		}
 		catch (std::exception ex)
 		{
-			wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerFactory:\n", gcnew String(ex.what())));
+			std::wstring str = ClrStringToWString(String::Concat("STD Exception in OnGetLexerFactory:\n", gcnew String(ex.what())));
 			::MessageBox(g.npp->NppHandle, str.c_str(), L"Error", MB_OK | MB_ICONERROR);
 			return NULL;
 		}

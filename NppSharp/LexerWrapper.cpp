@@ -157,7 +157,7 @@ namespace NppSharp
 		{
 			NppSharp::WriteOutputLine(NppSharp::OutputStyle::Error, String::Concat("CLR exception in lexer:\r\n", ex));
 		}
-		catch (exception ex)
+		catch (std::exception ex)
 		{
 			NppSharp::WriteOutputLine(NppSharp::OutputStyle::Error, String::Concat("STD exception in lexer:\r\n", gcnew String(ex.what())));
 		}

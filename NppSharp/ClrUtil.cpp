@@ -6,16 +6,16 @@ using namespace System::Runtime::InteropServices;
 
 namespace NppSharp
 {
-	wstring ClrStringToWString(String^ str)
+	std::wstring ClrStringToWString(String^ str)
 	{
 		pin_ptr<const wchar_t> ret = PtrToStringChars(str);
 		return ret;
 	}
 
-	string ClrStringToAString(String^ str)
+	std::string ClrStringToAString(String^ str)
 	{
 		char *pszText = (char*)(void*)Marshal::StringToHGlobalAnsi(str);
-		string ret = pszText;
+		std::string ret = pszText;
 		Marshal::FreeHGlobal((IntPtr)pszText);
 		return ret;
 	}

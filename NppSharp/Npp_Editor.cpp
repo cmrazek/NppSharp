@@ -560,7 +560,7 @@ namespace NppSharp
 		if (len == 0) return "";
 		len--;
 
-		StringBufA buf(len - 1);
+		StringBufA buf(len);
 		::SendMessageA(_scHandle, SCI_GETSELTEXT, 0, (LPARAM)buf.Ptr());
 
 		if (::SendMessage(_scHandle, SCI_GETCODEPAGE, 0, 0) == SC_CP_UTF8)

@@ -22,7 +22,7 @@ namespace NppSharp
 
 	const wchar_t* StringStore::AddString(String ^str)
 	{
-		wstring wstr = ClrStringToWString(str);
+		std::wstring wstr = ClrStringToWString(str);
 
 		for (StringStoreList::iterator i = _strings.begin(), ii = _strings.end(); i != ii; ++i)
 		{

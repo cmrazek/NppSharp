@@ -21,7 +21,7 @@ namespace NppSharp
 			wchar_t*	pString;
 			int			refCount;
 		};
-		typedef list<StringStoreDef*> StringStoreList;
+		typedef std::list<StringStoreDef*> StringStoreList;
 
 		StringStoreList	_strings;
 	};

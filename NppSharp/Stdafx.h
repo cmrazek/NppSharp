@@ -6,7 +6,7 @@
 #include <list>
 #include <map>
 #include <vector>
-using namespace std;
+//using namespace std;
 
 namespace npp
 {

@@ -99,7 +99,7 @@ namespace NppSharp
 	void NppInterface::SetOutputStyleDef(OutputStyleDef^ osd, OutputStyleDef^ defaultOsd)
 	{
 		// Font Name
-		string fontName;
+		std::string fontName;
 		if (!String::IsNullOrEmpty(osd->FontName))
 		{
 			fontName = ClrStringToAString(osd->FontName);

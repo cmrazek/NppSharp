@@ -29,20 +29,20 @@ namespace NppSharp
 	{
 		OutputItemAction	action;
 		int					style;
-		wstring				text;
+		std::wstring				text;
 
-		OutputItem(OutputItemAction action, int style = 0, const wstring &text = L"")
+		OutputItem(OutputItemAction action, int style = 0, const std::wstring &text = L"")
 			: action(action)
 			, style(style)
 			, text(text)
 		{ }
 	};
-	typedef list<OutputItem> OutputItemList;
+	typedef std::list<OutputItem> OutputItemList;
 
 	struct OutputStyleRec
 	{
 		int		style;
-		string	fontName;
+		std::string	fontName;
 		int		size;
 		bool	bold;
 		bool	italic;
@@ -50,7 +50,7 @@ namespace NppSharp
 		int		foreColor;
 		int		backColor;
 	};
-	typedef list<OutputStyleRec*> OutputStyleList;
+	typedef std::list<OutputStyleRec*> OutputStyleList;
 
 	class OutputWindow
 	{
