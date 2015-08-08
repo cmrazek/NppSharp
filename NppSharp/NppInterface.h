@@ -85,7 +85,7 @@ namespace NppSharp
 		virtual int GetLineEndPos(int line);
 		virtual int GetLineLength(int line);
 		virtual property String^ SelectedText { String^ get(); void set(String^); }
-		virtual property NppSharp::SelectionMode SelectionMode { NppSharp::SelectionMode get(); }	//void set(NppSharp::SelectionMode); }
+		virtual property NppSharp::SelectionMode SelectionMode { NppSharp::SelectionMode get(); }
 		virtual void MoveCaretInsideView();
 		virtual TextLocation GetWordEndPos(TextLocation pos, bool onlyWordChars);
 		virtual TextLocation GetWordStartPos(TextLocation pos, bool onlyWordChars);
@@ -99,6 +99,8 @@ namespace NppSharp
 		virtual int TextLocationToOffset(TextLocation tl);
 		virtual TextLocation OffsetToTextLocation(int offset);
 		virtual int MoveOffsetByChars(int offset, int numChars);
+		virtual int GetLineState(int line);
+		virtual property unsigned int CurrentBufferId { unsigned int get(); }
 
 		void	OnReady();
 		void	OnShutdown();
@@ -117,6 +119,7 @@ namespace NppSharp
 		void	OnCharAdded(int ch);
 		void	OnDoubleClick(int pos, bool ctrl, bool alt, bool shift);
 		void	OnModified(npp::SCNotification *pNotify);
+		void	OnUpdateUI(npp::SCNotification *pNotify);
 
 		virtual event NppEventHandler^				GetCommands;
 		virtual event NppEventHandler^				RegisterToolbarIcons;
@@ -138,6 +141,9 @@ namespace NppSharp
 		virtual event CharAddedEventHandler^		CharAdded;
 		virtual event DoubleClickEventHandler^		DoubleClick;
 		virtual event ModifiedEventHandler^			Modification;
+		virtual event NppEventHandler^				SelectionChanged;
+		virtual event NppEventHandler^				ScrolledVertically;
+		virtual event NppEventHandler^				ScrolledHorizontally;
 
 		virtual void ShowOutputWindow();
 		virtual void HideOutputWindow();
@@ -180,14 +186,23 @@ namespace NppSharp
 		Color			WebHexToColor(String^ str);
 
 		// AutoCompletion
-		virtual void	ShowAutoCompletion(int lengthEntered, IEnumerable<String^>^ list, bool ignoreCase);
-		virtual void	CancelAutoCompletion();
-		
+		virtual void					ShowAutoCompletion(int lengthEntered, IEnumerable<String^>^ list, bool ignoreCase);
+		virtual void					CancelAutoCompletion();
+		virtual property bool			AutoCompletionIsActive { bool get(); }
+		virtual void					ShowFunctionSignature(TextLocation location, String^ funcSignature);
+		virtual void					SetFunctionSignatureHighlight(int startIndex, int length);
+		virtual void					CancelFunctionSignature();
+		virtual property bool			FunctionSignatureIsActive { bool get(); }
+		virtual property TextLocation	FunctionSignatureLocation { TextLocation get(); }
 
 	private:
 		String^	GetFileNameByBufferId(unsigned int bufferId);
 		void	DockWindow_Shutdown();
 		HBITMAP	MakeCompatibleBitmap(HBITMAP hUserBitmap);
+		void	CreateCommandMenus();
+		HMENU	GetCommandMenu(String^ menuName, String^ insertBefore, bool &newMenuOut);
+		HMENU	FindSubMenu(HMENU hParentMenu, String^ subMenuName);
+		HMENU	FindNppSharpMenu();
 
 		HWND								_nppHandle;
 		HWND								_scHandle1;

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using System.Drawing;
-using System.IO;
 
 namespace NppSharp
 {
@@ -118,9 +119,9 @@ namespace NppSharp
 			cmd.SortOrder = -2;
 			AddCommand(cmd);
 
-			cmd = new PluginCommand("-");
-			cmd.SortOrder = -1;
-			AddCommand(cmd);
+			var topSeparator = new PluginCommand("-");
+			topSeparator.SortOrder = -1;
+			AddCommand(topSeparator);
 
 			ScriptManager.AddCommands();
 
@@ -129,14 +130,20 @@ namespace NppSharp
 
 			// Add separators
 			List<PluginCommand> cmdList = new List<PluginCommand>();
-			bool first = true;
+			bool firstInNppSharpMenu = true;
 			foreach (PluginCommand c in _commands)
 			{
-				if (c.Separator && !first) cmdList.Add(new PluginCommand("-"));
+				if (c.Separator && !firstInNppSharpMenu &&
+					string.IsNullOrWhiteSpace(c.MenuName))	// If c.MenuName is set, the this command would just be deleted from the NppSharp menu anyway, so don't add a separator as a command.
+				{
+					cmdList.Add(new PluginCommand("-"));
+				}
 				cmdList.Add(c);
-				first = false;
+				if (string.IsNullOrWhiteSpace(c.MenuName)) firstInNppSharpMenu = false;
 			}
 			_commands = cmdList;
+
+			if (!_commands.Any(c => string.IsNullOrWhiteSpace(c.MenuName) && c.SortOrder >= 0)) _commands.Remove(topSeparator);
 		}
 
 		private static void OnCommandExecuted(object sender, ExecuteCommandEventArgs e)

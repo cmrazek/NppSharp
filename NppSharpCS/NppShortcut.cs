@@ -65,5 +65,36 @@ namespace NppSharp
 			get { return _keyCode; }
 			set { _keyCode = value; }
 		}
+
+		/// <summary>
+		/// Gets the text representation of this shortcut.
+		/// </summary>
+		/// <returns>The text representation of this shortcut.</returns>
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+
+			if (_ctrl)
+			{
+				sb.Append("Ctrl");
+			}
+
+			if (_alt)
+			{
+				if (sb.Length > 0) sb.Append("+");
+				sb.Append("Alt");
+			}
+
+			if (_shift)
+			{
+				if (sb.Length > 0) sb.Append("+");
+				sb.Append("Shift");
+			}
+
+			if (sb.Length > 0) sb.Append("+");
+			sb.Append(_keyCode.ToString());
+
+			return sb.ToString();
+		}
 	}
 }

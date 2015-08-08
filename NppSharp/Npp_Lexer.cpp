@@ -47,7 +47,8 @@ namespace NppSharp
 
 	void NppInterface::RefreshCustomLexers()
 	{
-		LexerWrapper::RefreshAllLexers();
+		//::SendMessageA(_scHandle, SCI_CLEARDOCUMENTSTYLE, 0, 0);
+		::SendMessageA(_scHandle, SCI_COLOURISE, 0, -1);
 	}
 
 	int NppInterface::GetLexerCount()

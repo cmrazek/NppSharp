@@ -96,5 +96,19 @@ namespace NppSharp
 			DialogResult = DialogResult.OK;
 			Close();
 		}
+
+		private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				var ctrl = ActiveControl;
+				if (ctrl != null && typeof(TextBox).IsAssignableFrom(ctrl.GetType()))
+				{
+					(ctrl as TextBox).SelectAll();
+				}
+			}
+			catch (Exception)
+			{ }
+		}
 	}
 }

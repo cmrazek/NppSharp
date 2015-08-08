@@ -703,4 +703,10 @@ namespace NppSharp
 		return offset;
 	}
 
+	int NppInterface::GetLineState(int line)
+	{
+		if (line < 1) line = 1;
+		return ::SendMessageA(_scHandle, SCI_GETLINESTATE, line - 1, 0);
+	}
+
 }

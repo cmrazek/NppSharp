@@ -18,7 +18,11 @@ namespace NppSharp
 	{
 		if (_str != nullptr) return _str;
 
-		if (_codePage == SC_CP_UTF8)
+		if (_ptr == NULL || _length <= 0)
+		{
+			_str = gcnew String(L"");
+		}
+		else if (_codePage == SC_CP_UTF8)
 		{
 			_str = NativeUtf8ToClrString(_ptr, _length);
 		}

@@ -11,6 +11,7 @@ namespace NppSharp
 	{
 		#region Variables
 		private int _showCommandIndex = 0;
+		private object _lock = new object();
 		#endregion
 
 		#region Construction
@@ -27,7 +28,10 @@ namespace NppSharp
 		/// </summary>
 		public void Show()
 		{
-			Plugin.NppIntf.ShowOutputWindow();
+			lock (_lock)
+			{
+				Plugin.NppIntf.ShowOutputWindow();
+			}
 		}
 
 		/// <summary>
@@ -35,7 +39,10 @@ namespace NppSharp
 		/// </summary>
 		public void Hide()
 		{
-			Plugin.NppIntf.HideOutputWindow();
+			lock (_lock)
+			{
+				Plugin.NppIntf.HideOutputWindow();
+			}
 		}
 
 		/// <summary>
@@ -43,13 +50,16 @@ namespace NppSharp
 		/// </summary>
 		public bool Visible
 		{
-			get { return Plugin.NppIntf.OutputWindowVisible; }
+			get { lock (_lock) { return Plugin.NppIntf.OutputWindowVisible; } }
 			set
 			{
-				if (value != Plugin.NppIntf.OutputWindowVisible)
+				lock (_lock)
 				{
-					if (value) Plugin.NppIntf.ShowOutputWindow();
-					else Plugin.NppIntf.HideOutputWindow();
+					if (value != Plugin.NppIntf.OutputWindowVisible)
+					{
+						if (value) Plugin.NppIntf.ShowOutputWindow();
+						else Plugin.NppIntf.HideOutputWindow();
+					}
 				}
 			}
 		}
@@ -62,7 +72,10 @@ namespace NppSharp
 		/// <param name="text">The text to be written.</param>
 		public void Write(string text)
 		{
-			Plugin.NppIntf.WriteOutput(text);
+			lock (_lock)
+			{
+				Plugin.NppIntf.WriteOutput(text);
+			}
 		}
 
 		/// <summary>
@@ -72,7 +85,10 @@ namespace NppSharp
 		/// <param name="args">Arguments to be used in the string formatting.</param>
 		public void Write(string format, params object[] args)
 		{
-			Plugin.NppIntf.WriteOutput(string.Format(format, args));
+			lock (_lock)
+			{
+				Plugin.NppIntf.WriteOutput(string.Format(format, args));
+			}
 		}
 
 		/// <summary>
@@ -83,10 +99,13 @@ namespace NppSharp
 		/// <remarks>After this function ends, the style will be remain what it was before this function was called.</remarks>
 		public void Write(OutputStyle style, string text)
 		{
-			OutputStyle oldStyle = Style;
-			Style = style;
-			Plugin.NppIntf.WriteOutput(text);
-			Style = oldStyle;
+			lock (_lock)
+			{
+				OutputStyle oldStyle = Style;
+				Style = style;
+				Plugin.NppIntf.WriteOutput(text);
+				Style = oldStyle;
+			}
 		}
 
 		/// <summary>
@@ -98,10 +117,13 @@ namespace NppSharp
 		/// <remarks>After this function ends, the style will be remain what it was before this function was called.</remarks>
 		public void Write(OutputStyle style, string format, object[] args)
 		{
-			OutputStyle oldStyle = Style;
-			Style = style;
-			Plugin.NppIntf.WriteOutput(string.Format(format, args));
-			Style = oldStyle;
+			lock (_lock)
+			{
+				OutputStyle oldStyle = Style;
+				Style = style;
+				Plugin.NppIntf.WriteOutput(string.Format(format, args));
+				Style = oldStyle;
+			}
 		}
 
 		/// <summary>
@@ -110,7 +132,10 @@ namespace NppSharp
 		/// <param name="text">The text to be written.</param>
 		public void WriteLine(string text)
 		{
-			Plugin.NppIntf.WriteOutputLine(text);
+			lock (_lock)
+			{
+				Plugin.NppIntf.WriteOutputLine(text);
+			}
 		}
 
 		/// <summary>
@@ -120,7 +145,10 @@ namespace NppSharp
 		/// <param name="args">Arguments to be used in the string formatting.</param>
 		public void WriteLine(string format, params object[] args)
 		{
-			Plugin.NppIntf.WriteOutputLine(string.Format(format, args));
+			lock (_lock)
+			{
+				Plugin.NppIntf.WriteOutputLine(string.Format(format, args));
+			}
 		}
 
 		/// <summary>
@@ -131,10 +159,13 @@ namespace NppSharp
 		/// <remarks>After this function ends, the style will be remain what it was before this function was called.</remarks>
 		public void WriteLine(OutputStyle style, string text)
 		{
-			OutputStyle oldStyle = Style;
-			Style = style;
-			Plugin.NppIntf.WriteOutputLine(text);
-			Style = oldStyle;
+			lock (_lock)
+			{
+				OutputStyle oldStyle = Style;
+				Style = style;
+				Plugin.NppIntf.WriteOutputLine(text);
+				Style = oldStyle;
+			}
 		}
 
 		/// <summary>
@@ -146,10 +177,13 @@ namespace NppSharp
 		/// <remarks>After this function ends, the style will be remain what it was before this function was called.</remarks>
 		public void WriteLine(OutputStyle style, string format, params object[] args)
 		{
-			OutputStyle oldStyle = Style;
-			Style = style;
-			Plugin.NppIntf.WriteOutputLine(string.Format(format, args));
-			Style = oldStyle;
+			lock (_lock)
+			{
+				OutputStyle oldStyle = Style;
+				Style = style;
+				Plugin.NppIntf.WriteOutputLine(string.Format(format, args));
+				Style = oldStyle;
+			}
 		}
 
 		/// <summary>
@@ -157,7 +191,10 @@ namespace NppSharp
 		/// </summary>
 		public void Clear()
 		{
-			Plugin.NppIntf.ClearOutputWindow();
+			lock (_lock)
+			{
+				Plugin.NppIntf.ClearOutputWindow();
+			}
 		}
 		#endregion
 
@@ -167,8 +204,8 @@ namespace NppSharp
 		/// </summary>
 		public OutputStyle Style
 		{
-			get { return Plugin.NppIntf.OutputStyle; }
-			set { Plugin.NppIntf.OutputStyle = value; }
+			get { lock (_lock) { return Plugin.NppIntf.OutputStyle; } }
+			set { lock (_lock) { Plugin.NppIntf.OutputStyle = value; } }
 		}
 		#endregion
 
@@ -178,7 +215,10 @@ namespace NppSharp
 		/// </summary>
 		public void GoToTop()
 		{
-			Plugin.NppIntf.OutputWindowGoToTop();
+			lock (_lock)
+			{
+				Plugin.NppIntf.OutputWindowGoToTop();
+			}
 		}
 
 		/// <summary>
@@ -186,7 +226,10 @@ namespace NppSharp
 		/// </summary>
 		public void GoToBottom()
 		{
-			Plugin.NppIntf.OutputWindowGoToBottom();
+			lock (_lock)
+			{
+				Plugin.NppIntf.OutputWindowGoToBottom();
+			}
 		}
 		#endregion
 	}

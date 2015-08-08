@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.CSharp;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Reflection;
-using System.IO;
-using System.Text.RegularExpressions;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.CSharp;
 
 namespace NppSharp
 {
@@ -364,11 +365,10 @@ namespace NppSharp
 		{
 			foreach (CommandClass cmdClass in _classes)
 			{
-				int classSortOrder = Int32.MaxValue;
-				foreach (NppSortOrderAttribute so in cmdClass.classType.GetCustomAttributes(typeof(NppSortOrderAttribute), false))
-				{
-					classSortOrder = so.SortOrder;
-				}
+				var classSortAttrib = cmdClass.classType.TryGetAttribute<NppSortOrderAttribute>();
+				int classSortOrder = classSortAttrib != null ? classSortAttrib.SortOrder : Int32.MaxValue;
+
+				var classMenuAttrib = cmdClass.classType.TryGetAttribute<NppMenuAttribute>();
 
 				foreach (CommandMethod cmdMethod in cmdClass.methods)
 				{
@@ -398,6 +398,18 @@ namespace NppSharp
 						cmd.ShowInToolbar = true;
 						cmd.ToolbarIcon = t.LoadIcon(cmdClass.instance, _fileName);
 						if (cmd.ToolbarIcon == null) cmd.ToolbarIcon = Res.DefaultToolbarIcon;
+					}
+
+					var menuAttrib = (from a in cmdMethod.method.GetCustomAttributes(typeof(NppMenuAttribute), false).Cast<NppMenuAttribute>() where !string.IsNullOrWhiteSpace(a.Name) select a).FirstOrDefault();
+					if (classMenuAttrib != null && !string.IsNullOrWhiteSpace(classMenuAttrib.Name))
+					{
+						cmd.MenuName = menuAttrib != null && !string.IsNullOrWhiteSpace(menuAttrib.Name) ? string.Concat(classMenuAttrib.Name, "|", menuAttrib.Name) : classMenuAttrib.Name;
+						cmd.MenuInsertBefore = classMenuAttrib.InsertBefore;
+					}
+					else if (menuAttrib != null && !string.IsNullOrWhiteSpace(menuAttrib.Name))
+					{
+						cmd.MenuName = menuAttrib.Name;
+						cmd.MenuInsertBefore = menuAttrib.InsertBefore;
 					}
 
 					cmdMethod.commandIndex = Plugin.AddCommand(cmd);
